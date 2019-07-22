@@ -1,0 +1,52 @@
+# Spatial Models
+
+The termas "residual"and "error terms" are used interchangebly. 
+
+
+## Correlation Errors
+
+### Spherical
+
+### Exponential
+
+### Gaussian
+
+### Matérn
+
+### Auto-regressive (AR)
+Sometimes called a "lag" model
+
+*one dimension*
+
+
+*two dimensions*
+
+
+### Moving averge (MA)
+Sometimes called an "error model"
+
+*one dimension*
+
+
+*two dimensions*
+
+
+
+### ARIMA 
+Combined AR and MA approaches
+
+*one dimension*
+
+
+*two dimensions*
+
+## Nearest Neighbor Approaches
+
+These approaches look at the residuals from adjacent plots residuals to model error terms. 
+
+## Trend Analysis
+
+### Row, column and combined and row plus column trends. 
+
+### Splines
+

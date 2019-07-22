@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1563739167953.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2667849274",
+    "id" : "C1F7188C",
+    "lastKnownWriteTime" : 1563770785,
+    "last_content_update" : 1563770785769,
+    "path" : "C:/Users/jpiaskowski/Sync/my R folder/Field Trial Spatial Analysis Guide/01-intro.Rmd",
+    "project_path" : "01-intro.Rmd",
+    "properties" : {
+        "cursorPosition" : "74,0",
+        "scrollLine" : "62"
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

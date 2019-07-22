@@ -1,0 +1,1 @@
+"0","boxplot(yield ~ col, data = Nin, col = ""gold"", main = ""yield across columns"")"
