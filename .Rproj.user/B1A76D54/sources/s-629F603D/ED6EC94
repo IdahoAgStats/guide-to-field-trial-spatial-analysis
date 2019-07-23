@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1563822560182.000,
+    "dirty" : true,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "ED6EC94",
+    "lastKnownWriteTime" : 1563823293,
+    "last_content_update" : 1563823386367,
+    "path" : "~/Sync/my R folder/Field Trial Spatial Analysis Guide/03-spatial models.Rmd",
+    "project_path" : "03-spatial models.Rmd",
+    "properties" : {
+        "cursorPosition" : "56,9",
+        "scrollLine" : "48"
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

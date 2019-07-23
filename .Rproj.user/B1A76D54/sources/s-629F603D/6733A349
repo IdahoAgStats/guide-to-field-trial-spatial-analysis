@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1563822555185.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "6733A349",
+    "lastKnownWriteTime" : 1563664198,
+    "last_content_update" : 1563664198,
+    "path" : "~/Sync/my R folder/Field Trial Spatial Analysis Guide/04-example analysis.Rmd",
+    "project_path" : "04-example analysis.Rmd",
+    "properties" : {
+        "cursorPosition" : "0,0",
+        "scrollLine" : "0"
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

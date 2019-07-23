@@ -1,0 +1,12 @@
+
+
+
+.Rproj.user
+.Rhistory
+.RData
+README.html
+_book
+_bookdown_files
+render-r-script-demo.html
+.netlify
+.Rbuildignore

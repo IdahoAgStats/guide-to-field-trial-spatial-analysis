@@ -1,0 +1,84 @@
+# Example Analysis
+
+## Load Data
+
+This tutorial uses the Nebraska Interstate wheat trials, first published by Stroup et al in 1991 and reused extensively in field spatial variation studies. 
+
+```{r message=FALSE, warning=FALSE}
+library(agridat); library(dplyr); library(tidyr)
+data("stroup.nin")
+
+Nin <- stroup.nin %>% mutate(col.width = col * 1.2, row.length = row * 4.3) %>% 
+  mutate(name = case_when(is.na(as.character(rep)) ~ NA_character_, TRUE ~ as.character(gen))) %>% 
+  arrange(row, col)
+```
+
+### Examine Data
+
+```{r}
+str(Nin)
+head(Nin)
+```
+
+This data set actually has no missing data. It is balanced trial. There are empty fill plot with no data. 
+
+
+Plot raw data as it appeared in the field: 
+```{r message=FALSE, warning=FALSE}
+library(ggplot2); library(desplot)
+```
+
+
+```{r fig.height=6, message=FALSE, warning=FALSE}
+
+ggplot(Nin, aes(x = row, y = col)) +
+  geom_tile(aes(fill = yield), col = "white") +
+  geom_text(aes(label = name)) +
+  geom_tileborder(aes(group = 1, grp = rep), lwd = 1.2) +
+  scale_fill_gradient(low = "white", high = "blue") +
+  scale_x_continuous(breaks = seq(1,max(Nin$row), 1)) +
+  scale_y_continuous(breaks = 1:max(Nin$col)) +
+  labs(x = "row", y = "column", title = "field plot layout") + 
+  theme_classic() +
+  theme(axis.text = element_text(size = 12),
+        axis.title = element_text(size = 14),
+        legend.title = element_text(size = 14),
+        legend.text = element_text(size = 12))
+
+```
+Black lines indicate missing 
+
+```{r}
+library(rayshader)
+options(cores = 3)
+```
+
+```{r}
+dev.off()
+# this function is so slow!!
+layout.gg <- ggplot(Nin, aes(x = row.length, y = col.width)) +
+  geom_tile(aes(fill = yield), col = "black") +
+  scale_fill_gradient(low = "white", high = "blue") +
+  theme_void() 
+
+plot_gg(layout.gg, multicore = T, width = 10, height = 5, scale = 200, 
+        background = "white",shadowcolor = "#3a4f70") 
+```
+
+
+
+
+It's also helpful to plot raw response data: 
+```{r}
+boxplot(yield ~ rep, data = Nin, xlab = "rep", ylab = "yield (bu/acres)", col = "red2", main = "yield across blocks")
+boxplot(yield ~ row, data = Nin, xlab = "row", ylab = "yield (bu/acres)",col = "dodgerblue2", main = "yield across rows")
+boxplot(yield ~ col, data = Nin, col = "gold", xlab = "column", ylab = "yield (bu/acres)",main = "yield across columns")
+```
+
+
+
+## Test for Spatial Correlation
+
+## Empirical Variogram
+
+
