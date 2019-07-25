@@ -1,0 +1,23 @@
+# Applying Spatial Covariates
+
+Once spatial autocorrelation has been identified in field trials.  
+
+## Correlated Errors I: spatial distance
+
+
+
+
+## Correlated Errors II: gridded data
+
+### AR1
+
+### MA1
+
+### ARIMA
+
+## Nearest Neighbor Approaches
+
+## Splines
+
+
+
