@@ -1,7 +1,0 @@
-"0","# this function is so slow!!"
-"0","layout.gg <- ggplot(Nin, aes(x = row.length, y = col.width)) +"
-"0","  geom_tile(aes(fill = yield), col = ""black"") +"
-"0","  scale_fill_gradient(low = ""white"", high = ""blue"") +"
-"0","  theme_void() "
-"0","plot_gg(layout.gg, multicore = T, width = 10, height = 5, scale = 200, "
-"0","        background = ""white"",shadowcolor = ""#3a4f70"") "

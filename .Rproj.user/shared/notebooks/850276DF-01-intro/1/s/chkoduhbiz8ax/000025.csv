@@ -1,6 +1,0 @@
-"0","  "
-"0","ggplot(sp.config, aes(x = row, y = column)) +"
-"0","  geom_tile(aes(fill = queen), col = ""black"") + "
-"0","  scale_fill_manual(values = c(""yellow"", ""white"", ""red"")) +   "
-"0","  theme_void() +"
-"0","  ggtitle(""Queen"")  "

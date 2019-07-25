@@ -1,5 +1,0 @@
-"0","library(agridat); library(dplyr); library(tidyr)"
-"0","data(""stroup.nin"")"
-"0","Nin <- stroup.nin %>% mutate(col.width = col * 1.2, row.length = row * 4.3) %>% "
-"0","  mutate(name = case_when(is.na(as.character(rep)) ~ NA_character_, TRUE ~ as.character(gen))) %>% "
-"0","  arrange(row, col)"

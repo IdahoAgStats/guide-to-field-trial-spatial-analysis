@@ -1,28 +1,223 @@
 # Spatial Models
 
-The termas "residual"and "error terms" are used interchangebly. 
+General linear statistical models are modelled as thus:
+
+$$Y_i = \beta_0 + X_i\beta_1 + \epsilon_i$$
+The error terms, $\epsilon_i$ are assumed normally distributed with a mean of zero and a variance of $\sigma^2$ :
+
+$$e_i ~\sim N(0, \sigma^2)$$
+The error terms, or residuals, are assumed to be *identically* and *independently* distributed. This implies a constant variance of the error terms and zero covariance between residuals. 
+
+If N = 3, the expanded model looks like this:  
+
+$$\left[ {\begin{array}{ccc} Y_1\\ Y_2\\ Y_3 \end{array} } \right] = \beta_0 + 
+\left[ {\begin{array}{ccc} X_1\\ X_2\\ X_3 \end{array}  } \right] \beta_1 +
+\left[ {\begin{array}{ccc} \epsilon_1\\ \epsilon_2\\ \epsilon_3 \end{array}  } \right] $$
 
 
-## Correlation Errors
+$$e_i ~\sim N \Bigg( 0, 
+\left[ {\begin{array}{ccc} \sigma^2 & 0 & 0 \\ 0 & \sigma^2 & 0\\ 0 & 0 & \sigma^2\end{array}  } \right] \Bigg) $$
 
-### Spherical
 
-### Exponential
+
+If spatial variation is present, the off-diagonals of the variance-covariance matrix are not zero - hence the error terms are not independently distributed. As a result, hypotheses test and parameter estimates from uncorrected linear models will provide erroneous results. 
+
+## Distance-based Correlation Error Models
+
+There are mathematical tools for modelling how error terms are correlated with each other based on pairwise physical distance between observations. These models can be used to weight observations. Often, the data are assumed to be *isotropic*, where distance but not direction impacts error spatial correlation
+
+There are several methods for estimating the semivariance as a direct function of distance.
+
+### Exponential Model
+
+$$ \gamma (h)\left\{ {\begin{array}{cc} 0 & h = 0\\ C_0+C_1 \left [ 1-e^{-(\frac{h}{r})} \right] & h > 0 \end{array} } \right. $$
+where
+
+$$ C_0 = nugget \\ C_1 = partial \hfill sill \\ r = range$$
+```{r echo=FALSE Exp-CE-fig, fig.cap='Exponential Model', out.width='70%', fig.asp=0.75, fig.align='center'}
+c0 <- 0.5
+sill = 1.7
+psill = sill - c0
+range = 0.5
+x <- seq(0,2, by = 0.01)
+y <- c0 + psill*(1-exp(-1*x/range))
+
+
+plot(x, y, xlim = c(0,2), ylim = c(0, 2), axes = F, pch = 21, bg = "black", ann = F, type = "l")
+arrows(0, 0, 0, 2, code = 2) 
+arrows(0, 0, 2, 0, code = 2)
+mtext(expression(paste(gamma, "(h)")), at = 2, side = 2, las = 2)
+mtext("h", at = 2, side = 1)
+abline(h = sill, lty = 2)
+abline(v = range*3, lty = 2)
+points(0, c0, pch = 21, bg = "white")
+mtext(expression('C'[0]), side = 2, at = c0, las = 2)
+mtext(expression('r'[p]), side = 1, at = range*3)
+mtext(expression('C'[0]+'C'[1]), side = 2, at = sill, las = 2)
+```
+
+$3r = r_p$ is the "practical range", which is 95% of the true value for $C_1$. 
+
 
 ### Gaussian
+(a squared version of the exponential model)
 
-### Matérn
+$$ \gamma (h)\left\{ {\begin{array}{cc} 0 & h = 0\\ C_0+C_1 \left [ 1-e^{-(\frac{h}{r})^2} \right] & h > 0 \end{array} } \right. $$
+where
 
-### Auto-regressive (AR)
-Sometimes called a "lag" model
+$$ C_0 = nugget \\ C_1 = partial \hfill sill \\ r = range$$
 
-*one dimension*
+```{r echo=FALSE Gau-CE-fig, fig.cap='Gaussian Model', out.width='70%', fig.asp=0.75, fig.align='center'}
+c0 <- 0.5
+sill = 1.7
+psill = sill - c0
+range = 0.75
+x <- seq(0,2, by = 0.01)
+y <- c0 + psill*(1-exp(-1*(x/range)^2))
 
 
-*two dimensions*
+plot(x, y, xlim = c(0,2), ylim = c(0, 2), axes = F, pch = 21, bg = "black", ann = F, type = "l")
+arrows(0, 0, 0, 2, code = 2) 
+arrows(0, 0, 2, 0, code = 2)
+mtext(expression(paste(gamma, "(h)")), at = 2, side = 2, las = 2)
+mtext("h", at = 2, side = 1)
+abline(h = sill, lty = 2)
+abline(v = range*sqrt(3), lty = 2)
+points(0, c0, pch = 21, bg = "white")
+mtext(expression('C'[0]), side = 2, at = c0, las = 2)
+mtext(expression('r'[p]), side = 1, at = range*sqrt(3))
+mtext(expression('C'[0]+'C'[1]), side = 2, at = sill, las = 2)
+```
+
+$\sqrt 3r = r_p$ is the "practical range", which is 95% of the true value for $C_1$. 
+
+### Spherical model
+
+$$ \gamma (h) = \left\{ {\begin{array}{cc} 0 & h = 0\\ C_0+C_1 \left[ \frac{3h}{2r}-0.5\bigg( \frac{h}{r}\bigg)^3 \right] & 0 <h \leq r \\ 
+C_0 + C_1 & h > r \end{array} } \right. $$
+where
+
+$$ C_0 = nugget \\ C_1 = partial \hfill sill \\ r = range$$
+
+```{r echo=FALSE Sph-CE-fig, fig.cap='Spherical Model', out.width='70%', fig.asp=0.75, fig.align='center'}
+c0 <- 0.5
+sill <- 1.7
+psill <- sill - c0
+range = 1.3
+x <- seq(0,2, by = 0.01)
+y <- ifelse(x <= range, c0 + psill*((3*x)/(2*range) - 0.5*(x/range)^3),
+            sill)
+
+
+plot(x, y, xlim = c(0,2), ylim = c(0, 2), axes = F, pch = 21, bg = "black", ann = F, type = "l")
+arrows(0, 0, 0, 2, code = 2) 
+arrows(0, 0, 2, 0, code = 2)
+mtext(expression(paste(gamma, "(h)")), at = 2, side = 2, las = 2)
+mtext("h", at = 2, side = 1)
+abline(h = sill, lty = 2)
+abline(v = range, lty = 2)
+points(0, c0, pch = 21, bg = "white")
+mtext(expression('C'[0]), side = 2, at = c0, las = 2)
+mtext('r', side = 1, at = range)
+mtext(expression('C'[0]+'C'[1]), side = 2, at = sill, las = 2)
+```
+
+### Other models 
+
+There are many more models - Matérn, Cauchy, Logistic - that may describe spatial correlation in a data set. 
+
+There are two addition models that have no range or sill. If your data fits these, consider doing a trend analysis.
+
+### Linear model
+
+$$ \gamma (h)=\left\{ {\begin{array}{cc} 0 & h = 0\\ C_0+C_1h & h > 0 \end{array} } \right. $$
+where
+
+$$ C_0 = nugget \\ C_1 = slope $$
+
+```{r echo=FALSE linear-CE-fig, fig.cap='Linear Error Model', out.width='70%', fig.asp=0.75, fig.align='center'}
+c0 <- 0.5
+plot(0, c0, xlim = c(0,2), ylim = c(0, 2), axes = F, ann = F)
+lines(c(0, 2),c(c0, 1.7), xlim = c(0,2), ylim = c(0, 2))
+arrows(0, 0, 0, 2, code = 2) 
+arrows(0, 0, 2, 0, code = 2)
+mtext(expression(paste(gamma, "(h)")), at = 2, side = 2, las = 2)
+points(0, c0, pch = 21, bg = "white")
+mtext("h", at = 2, side = 1)
+mtext(expression('C'[0]), side = 2, at = c0, las = 2)
+```
+
+There is no sill or range in the linear model, so the variance will continue to increase as a function of distance. 
+
+### Power Model
+
+$$ \gamma (h)=\left\{ {\begin{array}{cc} 0 & h = 0\\ C_0+C_1h^\lambda & h > 0 \end{array} } \right. $$
+where
+
+$$ 0 \leq \lambda <\leq 2 \\ C_0 = nugget \\ C_1 = scaling factor $$
+```{r echo=FALSE power-CE-fig, fig.cap='Power Model', out.width='70%', fig.asp=0.75, fig.align='center'}
+c0 <- 0.5
+c1 <- 1
+lambda <- 0.5
+x <- seq(0,2, by = 0.01)
+y <- c0 + c1*(x^lambda)
+
+
+plot(x, y, xlim = c(0,2), ylim = c(0, 2), axes = F, pch = 21, bg = "black", ann = F, type = "l")
+arrows(0, 0, 0, 2, code = 2) 
+arrows(0, 0, 2, 0, code = 2)
+mtext(expression(paste(gamma, "(h)")), at = 2, side = 2, las = 2)
+mtext("h", at = 2, side = 1)
+points(0, c0, pch = 21, bg = "white")
+mtext(expression('C'[0]), side = 2, at = c0, las = 2)
+
+```
+
+When $\lambda = 1$, that is equivalent to the linear model. Example above is when $\lambda = 0.5$ (i.e. a square-root transformation) and $C_1 = 1$.  There is also no sill or range in the power model. 
+
+## Correlated Error Models for Gridded Data
+
+Planned field experiments often have the advantage of being arranged in regular grid pattern that can be adequately described using Euclidian sapce. This simplifies aspects of understanding how error terms are related by distance since the data occur in evenly spaced increments. Furthermore, in many agricultural trials, there may be no interest in spatial interpolation between units. 
+
+### Auto-regressive (AR1)
+
+Sometimes called a "lag" model, the AR1 model assumes that variance can be modelled as exponential function based unit distance in a single direction. For example, an experiment consisted of 20 plots (plot = the experiment units) arranged in 4 rows, each with 3 ranges with have this layout: 
+
+```{r}
+plot(1, col = "white", xlim = c(0,4), ylim = c(0,3), ann = F, xaxt = "n", yaxt = "n") # xlab = "row", ylab = "ranges")
+grid(6, 10, lty = 1, col = "black")
+mtext("ranges", side = 2, at = 1.5)
+mtext("rows", side = 1, at = 2)
+```
+
+The AR1 structure across 4 rows is models the error terms as thus:
+
+$$ V_{AR1} = \left[ {\begin{array}{cccc} 
+1 & \rho^2 & \rho^3 & \rho^4 \\
+\rho^2 & 1 & \rho^2 & \rho^3  \\
+\rho^3 & \rho^2 & 1 & \rho^2   \\
+\rho^4 & \rho^3 & \rho^2 & 1
+\end{array} } \right] $$
+
+This covariance model describes the correlation of observations in the *row direction only.* 
+
+And similarily the AR1 structure across 3 ranges is modelled as thus: 
+
+$$ V_{AR1} = \left[ {\begin{array}{ccc} 
+1 & \rho^2 & \rho^3 \\
+\rho^2 & 1 & \rho^2  \\
+\rho^3 & \rho^2 & 1
+\end{array} } \right] $$
+
+This covariance model describes the correlation of observations in the *range direction only.* 
+
+In combined AR1xAR1 model, the parameter, $\rho$ may need to estimated separated across the row and column directions depending on the shape of the plots and site-specific field variation. Very rectangular plots are likely to require a separate estimate of the $\rho$ parameter for each direction. 
+
+
 
 
 ### Moving averge (MA)
+
 Sometimes called an "error model"
 
 *one dimension*
@@ -33,6 +228,7 @@ Sometimes called an "error model"
 
 
 ### ARIMA 
+
 Combined AR and MA approaches
 
 *one dimension*
@@ -42,11 +238,16 @@ Combined AR and MA approaches
 
 ## Nearest Neighbor Approaches
 
-These approaches look at the residuals from adjacent plots residuals to model error terms. 
+These approaches look at the residuals from adjacent plots residuals to model error terms.  
 
 ## Trend Analysis
 
 ### Row, column and combined and row plus column trends. 
 
 ### Splines
+
+Please note that these error models are for modelling localised variation based on physical proximity. It is assumed that eventually a distance in the experiment can be reached in which 2 observations can be treated independent. 
+
+If there are spatial trends that extend along the entire scope of an experiment (for instance, due to position on a slope), then an additional trend analysis should be conducted. 
+
 

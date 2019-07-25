@@ -67,15 +67,14 @@ Three important concepts of an empirical variogram are *nugget*, *sill* and  *ra
 
 ![Example Empirical Variogram](img/Sadoti2014_spherical.jpg)
 
-* range
-* sill 
-* nugget
+* range = distance up to which is there is spatial correlation
+* sill = uncorrelated variance of the variable of interest
+* nugget = measurement error,short-distance spatial variance and other unaccounted for variance
 
 2 other concepts: 
 
-* partial sill
-* nugget effect
-
+* partial sill = sill - nugget
+* nugget effect = the nugget/sill ratio, interpreted opposite of $r^2$
 
 #### OLD STUFF
 
