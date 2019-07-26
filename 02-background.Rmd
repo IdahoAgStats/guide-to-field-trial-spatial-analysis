@@ -185,7 +185,7 @@ Planned field experiments often have the advantage of being arranged in regular 
 
 For example, imagine an experiment consisting of 8 plots (plot = the experiment units) arranged in 2 rows, each with 4 ranges with this layout: 
 
-```{r plot-grid echo=FALSE, fig.asp=0.35}
+```{r plot-grid-fig, echo=FALSE, fig.asp=0.35}
 # plot(1, col = "white", xlim = c(0,4), ylim = c(0,2), ann = F, xaxt = "n", yaxt = "n") # xlab = "row", ylab = "ranges")
 # grid(6, 10, lty = 1, col = "black")
 # mtext("ranges", side = 2, at = 1.5)
@@ -302,7 +302,7 @@ Setting weights of neighbors is dealt with in the next chapter\@ref(ch3),
 
 ### Row, column and combined and row plus column trends.
 
-Experiment wide-trends should be modelled with directional trend models. These are comparatively simple models:
+Experiment wide-trends should be modeled with directional trend models. These are comparatively simple models:
 
 $$Y_{ijk} = \beta_0 + X_{i1}\beta_1 +  Row_{j2}\beta_2 + Range_{k3}\beta_3 +\epsilon_{ijk}$$ 
 
@@ -310,6 +310,4 @@ If the assumption of independent, normal, and identical errors are met, then thi
 
 ### Splines
 
-There is a rich field of research on using localised splines to model field heterogeneity. These models are complicated! 
-
-
+There is a rich field of research on using localised splines to model field heterogeneity. These models are complex and hence not described. More resources can be found in the references section. 

@@ -1,0 +1,214 @@
+# Applying Spatial Covariates {#ch4}
+
+
+```{r message=FALSE, warning=FALSE}
+library(agridat); library(dplyr); library(tidyr)
+data("stroup.nin")
+
+Nin <- stroup.nin %>% mutate(col.width = col * 1.2, row.length = row * 4.3) %>% 
+  mutate(name = case_when(is.na(as.character(rep)) ~ NA_character_, 
+                          TRUE ~ as.character(gen))) %>% arrange(col, row) 
+
+Nin.na <- filter(Nin, !is.na(rep))
+
+Nin.spatial <- Nin.na
+coordinates(Nin.spatial) <- ~ col.width + row.length
+
+```
+
+Once spatial autocorrelation has been identified in field trials, the next logical step is to employ a modelling technique that will reduce the impact of spatial varition on the final estiamtes from the analysis.  
+
+## Prep work
+
+As a reminder, the first thing is to run a standard linear model. A common model specification for the randomised complete block design (RCBD) is to include cultivar as a fixed effect and block as a random effect. 
+
+Here is the R code for RCBD analsysis of the NIN data set loaded in Section 3 \@ref(ch:ch3) that was found to have strong spatial correlation:
+
+```{r message=FALSE, warning=FALSE}
+library(nlme)
+
+nin.lme <- lme(yield ~ gen, random = ~1|rep,
+              data = Nin,
+              na.action = na.exclude)
+
+anova(nin.lme)
+```
+
+```{r}
+library(spdep)
+xy.rook <- cell2nb(nrow = max(Nin$row), ncol = max(Nin$col), type="rook") 
+moran.test(residuals(nin.lme), nb2listw(xy.rook), na.action = na.exclude)
+```
+
+The variables "gen" refers to the cultivar or breeding line being trialled, and "rep" is the block, and the dependent variable, "yield" is grain yield. Basic exploratory analysis was conducted in Section 3 \@ref(ch:ch3). 
+
+## Correlated Errors I: spatial distance 
+
+**Gaussian Example**
+
+In order to fit models using correlated error model, we will need to first obtain preliminary estimates of the nugget, sill and range: from fitting an empirical variogram. 
+
+```{r}
+library(gstat)
+max_dist <- 0.6*max(dist(coordinates(Nin.spatial)))
+resid.var1 <- variogram(yield ~ rep + gen, 
+                        cutoff = max_dist,
+                        width = max_dist/29, 
+                        data = Nin.spatial)
+nugget_start <- min(resid.var1$gamma)
+``` 
+
+
+```
+
+Nin.vgm1 <- vgm(model = "Exp", nugget = nugget_start) 
+Nin.vgm2 <- vgm(model = "Sph", nugget = nugget_start) 
+
+Nin.vgm4 <- vgm(model = "Mat", nugget = nugget_start)
+
+Nin.variofit1 <- fit.variogram(resid.var1, Nin.vgm1)
+Nin.variofit2 <- fit.variogram(resid.var1, Nin.vgm2)
+
+Nin.variofit4 <- fit.variogram(resid.var1, Nin.vgm4)
+```
+
+In the previous section, an isotropic Gaussian function was identified as the best mocel for describing the decay of eror correlation over distance.
+
+```{r}
+Nin.vgm <- vgm(model = "Gau", nugget = nugget_start) 
+Nin.variofit <- fit.variogram(resid.var1, Nin.vgm)
+
+nugget <- Nin.variofit$psill[1] 
+range <- Nin.variofit$range[2] 
+sill <- sum(Nin.variofit$psill) 
+nugget.effect <-  nugget/sill
+```
+
+Next, create a correlated error structure (from the **nlme** package).
+```{r}
+cor.gaus <- corSpatial(value = c(range, nugget.effect), 
+                  form = ~ row.length + col.width, 
+                  nugget = T, fixed = F,
+                  type = "gaussian", 
+                  metric = "euclidean")
+```
+
+Last, update the linear mixed model with the correlated error strucutre and inspect the results:
+```{r}
+nin.gaus <- update(nin.lme, corr = cor.gaus)
+anova(nin.gaus)
+#moran.test(residuals(nin.gaus), nb2listw(xy.rook), na.action = na.exclude)
+```
+
+Other models can be implemented quite similarily:
+
+### Exponential
+
+```{r}
+rm(Nin.vgm, Nin.variofit, nugget, sill, range, nugget.effect)
+
+Nin.vgm <- vgm(model = "Exp", nugget = nugget_start) 
+Nin.variofit <- fit.variogram(resid.var1, Nin.vgm)
+
+nugget <- Nin.variofit$psill[1] 
+range <- Nin.variofit$range[2] 
+sill <- sum(Nin.variofit$psill) 
+nugget.effect <-  nugget/sill
+
+cor.exp <- corSpatial(value = c(range, nugget.effect), 
+                  form = ~ row.length + col.width, 
+                  nugget = T, fixed = F,
+                  type = "exponential", 
+                  metric = "euclidean")
+
+nin.exp <- update(nin.lme, corr = cor.exp)
+anova(nin.exp)
+```
+
+### Spherical
+
+```{r}
+rm(Nin.vgm, Nin.variofit, nugget, sill, range, nugget.effect)
+
+Nin.vgm <- vgm(model = "Sph", nugget = nugget_start) 
+Nin.variofit <- fit.variogram(resid.var1, Nin.vgm)
+
+nugget <- Nin.variofit$psill[1] 
+range <- Nin.variofit$range[2] 
+sill <- sum(Nin.variofit$psill) 
+nugget.effect <-  nugget/sill
+
+cor.sph <- corSpatial(value = c(range, nugget.effect), 
+                  form = ~ row.length + col.width, 
+                  nugget = T, fixed = F,
+                  type = "spherical", 
+                  metric = "euclidean")
+
+nin.sph <- update(nin.lme, corr = cor.sph)
+anova(nin.sph)
+```
+
+### Power
+
+```{r}
+rm(Nin.vgm, Nin.variofit, nugget, sill, range, nugget.effect)
+
+cor.pow <- corSpatial(form = ~ row.length + col.width, 
+                  nugget = T, fixed = F,
+                  type = "ratio", 
+                  metric = "euclidean")
+
+nin.pow <- update(nin.lme, corr = cor.pow)
+anova(nin.pow)
+```
+
+In the **nlme* package, there is also an option for a linear model in the `corSpatial()` function. However, it is recommended that a linear trend be fitted to the data instead. 
+
+The package **spaMM* implements additional correlation models such as Matérn, Cauchy and more. 
+
+## Nearest Neighbor Approaches
+
+### estimating lagged autocorrelation
+
+Prior to running any nearest neighbor appraoches, it is helpful to understand the lagged spatial autocorrelation. 
+
+### Durban
+??
+
+### Spatial lag model
+
+```{r message=FALSE, warning=FALSE}
+library(spatialreg)
+
+nin.lag <- lagsarlm(yield ~ gen + rep,
+                       listw = nb2listw(xy.rook),
+                       data = Nin, na.action = na.exclude)
+
+moran.mc(residuals(nin.lag), nb2listw(xy.rook), 999, na.action = na.exclude)
+```
+
+### Spatial error model
+
+```{r}
+nin.sem <- errorsarlm(yield ~ gen + rep,
+                       listw = nb2listw(xy.rook),
+                       data = Nin, na.action = na.exclude)
+
+moran.mc(residuals(nin.sem), nb2listw(xy.rook), 999, na.action = na.exclude)
+```
+
+### Combined spatial lag and error model (ARMA)
+
+```{r}
+nin.arma <- sacsarlm(yield ~ gen + rep,
+                       listw = nb2listw(xy.rook),
+                       data = Nin, na.action = na.exclude)
+
+moran.mc(residuals(nin.arma), nb2listw(xy.rook), 999, na.action = na.exclude)
+```
+
+
+## p-Splines
+
+
+### AR1xAR1 (not possible!!)

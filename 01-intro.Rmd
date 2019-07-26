@@ -10,9 +10,14 @@ Spatial correlation is similarity of plots that are close to one another. Larger
 
 ### Moran's I
 
-Moran's I is similar like a correlation coefficient. It is a test for correation between units (plots in our case). There are many options for defining adjacent neighbors and how to weight each neighbors's influence. 
+Moran's I, sometimes called "Global Moran's I" is similar like a correlation coefficient. It is a test for correation between units (plots in our case). 
 
-There are two common configuations for defininig neighbor's: the rook and queen configurations. These are exctly what their chess analogy suggest: "rook" defines neighbhors in an row/column fashion, while "queen" defines nieghbors in a row/column configuation an also neighbors located diagonally at a 45 degree angle from the row/column neighbors. Determining this can be complicated when working with irregularly-placed data (e.g. county seats), but is quite unambiguous for gridded data commonly seen in panned field experiments:
+$$ I = \frac{N}{W}\frac{\sum_i \sum_j w_{ij} (x_i - \bar{x})(x_j - \bar{x})}{\sum_i(x_i - \bar{x})^2} 
+\qquad i \neq j$$
+
+Where N is total number of spatial locations indexed by $i$ and $j$, x is the variable of interest, $w_{ij}$ are a spatial weights between each $i$ and $j$, and W is the sum of all weights. The expected values of Moran's I is $-1/(N-1)$. Values greater than that indicate positive spatial correlation (areas close to each other are similar), while values less than the expected Moran's I indicate dissimilarity as spatial distance between points decreases. 
+
+There are several options for defining adjacent neighbors and how to weight each neighbors's influence. The two common configuations for defininig neighbors are the rook and queen configurations. These are exactly what their chess analogy suggest: "rook" defines neighbhors in an row/column fashion, while "queen" defines nieghbors in a row/column configuation an also neighbors located diagonally at a 45 degree angle from the row/column neighbors. Determining this can be somewhat complicated when working with irregularly-placed data (e.g. county seats), but is quite unambiguous for gridded data commonly seen in panned field experiments:
 
 ```{r echo=FALSE}
 library(ggplot2)
@@ -21,41 +26,43 @@ na <- "Not adjacent"
 o <- "Observation of interest"
 n <- "Adjacent neighbor"
 
-sp.config <- data.frame(row = rep(1:5, 5), 
-                        column = rep(1:5, each = 5),
-                        rook = c(rep(na, 5),
+sp.config <- data.frame(row = rep(rep(1:5, 5), 2),
+                        column = rep(rep(1:5, each = 5),2),
+                        categ = c(rep(na, 5), #rook 
                                  na, na, n, na, na,
                                  na, n, o, n, na,
                                  na, na, n, na, na,
+                                 rep(na, 5),
+                                 rep(na, 5),  # start queen
+                                 na, n, n, n, na,
+                                 na, n, o, n, na,
+                                 na, n, n, n, na,
                                  rep(na, 5)),
-                        queen = c(rep(na, 5),
-                                 na, n, n, n, na,
-                                 na, n, o, n, na,
-                                 na, n, n, n, na,
-                                 rep(na, 5)))
+                        config = rep(c("rook", "queen"), each = 25) )
+
+sp.config$categ <- factor(sp.config$categ, levels = c(o, n, na))
 
 ggplot(sp.config, aes(x = row, y = column)) +
-  geom_tile(aes(fill = rook), col = "black") +
-  scale_fill_manual(values = c("yellow", "white", "red")) + 
-  guides(fill = F) + 
-  theme_void() + 
-  coord_fixed() + 
-  ggtitle("Rook")
-  
-ggplot(sp.config, aes(x = row, y = column)) +
-  geom_tile(aes(fill = queen), col = "black") + 
-  scale_fill_manual(values = c("yellow", "white", "red")) +   
+  geom_tile(aes(fill = categ), col = "black") +
+  scale_fill_manual(values = c("red", "yellow", "white")) +
+  facet_grid(. ~ config ) +
   theme_void() +
-  coord_fixed() + 
-  ggtitle("Queen")  
+  coord_fixed() +
+  theme(legend.title = element_blank(), 
+        strip.text = element_text(size = 14),
+        legend.text = element_text(size = 13))
+ 
 ```
 
+Another test for diagnosing spatial correlation is Geary's C:
 
+$$ I = \frac{(N -1)}{2W}\frac{\sum_i \sum_j w_{ij} (x_i - x_j)^2}{\sum_i(x_i - \bar{x})^2} \qquad i \neq j$$
 
+These terms have the same meaning in Moran's I. The expected value of Geary's C is 1. Values higher than 1 indicate positive spatial correlation and less than 1 indicate negative spatial correlation. 
 
 ### Empirical variogram & semivariance
 
-An empirical varigram is a visual tool for understanding how error terms are related to each other over spatial distanc. It relies on semivariance ($\gamma$), a statistic expressing variance as a function of pairwise distances between data points.   
+An empirical varigram is a visual tool for understanding how error terms are related to each other over spatial distance. It relies on semivariance ($\gamma$), a statistic expressing variance as a function of pairwise distances between data points at points $i$ and $j$.   
 
 $$\gamma(h) = \frac{1}{2|N(h)|}\sum_{N(h)}(x_i - x_j)^2$$
 
