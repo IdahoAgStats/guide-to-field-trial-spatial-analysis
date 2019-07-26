@@ -2,8 +2,6 @@
 
 ## Why care about spatial variation?
 
-
-
 Goal in this case is to understand and account for spatial variation. These are lattice data
 
 ## Diagnosing spatial autocorrelation

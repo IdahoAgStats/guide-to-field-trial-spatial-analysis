@@ -1,4 +1,4 @@
-# Applying Spatial Covariates
+# Applying Spatial Covariates {#ch3-part2}
 
 Once spatial autocorrelation has been identified in field trials.  
 

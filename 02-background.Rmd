@@ -1,8 +1,12 @@
 # Spatial Models
 
-General linear statistical models are modelled as thus:
+This section contains some of the background behind why spatial models are used and how they work. Understanding this section is not essential, but it is extremely helpful. This section relies on information introduced in part I, s please make sure you have read that section, especially if you are new to empirical variograms and spatial statistics.  
+
+General linear statistical models are commonly modelled as thus:
 
 $$Y_i = \beta_0 + X_i\beta_1 + \epsilon_i$$
+$\beta_1$ is a slope describing the relationship between a continuous variable and the dependent variable, $Y_i$. If $X_i$ is a categorical variable, such as a crop variety, then there will be $p-1$ slopes estimated, where p is the number of unique treatements levels in $X$. 
+
 The error terms, $\epsilon_i$ are assumed normally distributed with a mean of zero and a variance of $\sigma^2$ :
 
 $$e_i ~\sim N(0, \sigma^2)$$
@@ -18,8 +22,6 @@ $$\left[ {\begin{array}{ccc} Y_1\\ Y_2\\ Y_3 \end{array} } \right] = \beta_0 +
 $$e_i ~\sim N \Bigg( 0, 
 \left[ {\begin{array}{ccc} \sigma^2 & 0 & 0 \\ 0 & \sigma^2 & 0\\ 0 & 0 & \sigma^2\end{array}  } \right] \Bigg) $$
 
-
-
 If spatial variation is present, the off-diagonals of the variance-covariance matrix are not zero - hence the error terms are not independently distributed. As a result, hypotheses test and parameter estimates from uncorrected linear models will provide erroneous results. 
 
 ## Distance-based Correlation Error Models
@@ -33,7 +35,8 @@ There are several methods for estimating the semivariance as a direct function o
 $$ \gamma (h)\left\{ {\begin{array}{cc} 0 & h = 0\\ C_0+C_1 \left [ 1-e^{-(\frac{h}{r})} \right] & h > 0 \end{array} } \right. $$
 where
 
-$$ C_0 = nugget \\ C_1 = partial \hfill sill \\ r = range$$
+$$ C_0 = nugget \\ C_1 = partial \: sill \\ r = range$$ 
+
 ```{r echo=FALSE Exp-CE-fig, fig.cap='Exponential Model', out.width='70%', fig.asp=0.75, fig.align='center'}
 c0 <- 0.5
 sill = 1.7
@@ -65,7 +68,7 @@ $3r = r_p$ is the "practical range", which is 95% of the true value for $C_1$.
 $$ \gamma (h)\left\{ {\begin{array}{cc} 0 & h = 0\\ C_0+C_1 \left [ 1-e^{-(\frac{h}{r})^2} \right] & h > 0 \end{array} } \right. $$
 where
 
-$$ C_0 = nugget \\ C_1 = partial \hfill sill \\ r = range$$
+$$ C_0 = nugget \\ C_1 = partial \: sill \\ r = range$$
 
 ```{r echo=FALSE Gau-CE-fig, fig.cap='Gaussian Model', out.width='70%', fig.asp=0.75, fig.align='center'}
 c0 <- 0.5
@@ -97,7 +100,7 @@ $$ \gamma (h) = \left\{ {\begin{array}{cc} 0 & h = 0\\ C_0+C_1 \left[ \frac{3h}{
 C_0 + C_1 & h > r \end{array} } \right. $$
 where
 
-$$ C_0 = nugget \\ C_1 = partial \hfill sill \\ r = range$$
+$$ C_0 = nugget \\ C_1 = partial \: sill \\ r = range$$
 
 ```{r echo=FALSE Sph-CE-fig, fig.cap='Spherical Model', out.width='70%', fig.asp=0.75, fig.align='center'}
 c0 <- 0.5
@@ -154,7 +157,7 @@ There is no sill or range in the linear model, so the variance will continue to 
 $$ \gamma (h)=\left\{ {\begin{array}{cc} 0 & h = 0\\ C_0+C_1h^\lambda & h > 0 \end{array} } \right. $$
 where
 
-$$ 0 \leq \lambda <\leq 2 \\ C_0 = nugget \\ C_1 = scaling factor $$
+$$ 0 \leq \lambda <\leq 2 \\ C_0 = nugget \\ C_1 = scaling \: factor $$
 ```{r echo=FALSE power-CE-fig, fig.cap='Power Model', out.width='70%', fig.asp=0.75, fig.align='center'}
 c0 <- 0.5
 c1 <- 1
@@ -177,54 +180,87 @@ When $\lambda = 1$, that is equivalent to the linear model. Example above is whe
 
 ## Correlated Error Models for Gridded Data
 
-Planned field experiments often have the advantage of being arranged in regular grid pattern that can be adequately described using Euclidian sapce. This simplifies aspects of understanding how error terms are related by distance since the data occur in evenly spaced increments. Furthermore, in many agricultural trials, there may be no interest in spatial interpolation between units. 
+Planned field experiments often have the advantage of being arranged in regular grid pattern that can be adequately described using Euclidian sapce. This simplifies aspects of understanding how error terms are related by distance since the data occur in evenly spaced increments. Furthermore, in many agricultural trials, there may be no interest in spatial interpolation between units. Some of these models work with irregular data, but the models presented are simplified forms when experimental units are arranged in regular grid.
+
+For example, imagine an experiment consisting of 8 plots (plot = the experiment units) arranged in 2 rows, each with 4 ranges with this layout: 
+
+```{r echo=FALSE}
+# plot(1, col = "white", xlim = c(0,4), ylim = c(0,2), ann = F, xaxt = "n", yaxt = "n") # xlab = "row", ylab = "ranges")
+# grid(6, 10, lty = 1, col = "black")
+# mtext("ranges", side = 2, at = 1.5)
+# mtext("rows", side = 1, at = 2)
+
+library(ggplot2)
+
+dt <- data.frame(plot = paste0("plot ",1:8), row = rep(1:2, each = 4), range = rep(1:4, 2))
+
+ggplot(dt, aes(x = range, y = row)) +
+  geom_tile(col = "black", fill = "white") +
+  geom_text(aes(label = plot)) +
+  scale_y_continuous(breaks = c(1, 2)) +
+  theme_classic() 
+```
+
+The statistical model for that experiment. (let's pretend $X_i$ are different fertilizer treatments applied randomly - this is not ideal, but it's a nice small example)
+
+$$ 
+\left[ {\begin{array} \ Y_1 \\ Y_2 \\ \vdots \\ Y_n \end{array} } \right] = \beta_0 + 
+\left[ {\begin{array} \ X_1 \\ X_2 \\ \vdots \\ X_n \end{array} } \right] \beta_1 +
+\left[ {\begin{array} \ \epsilon_1 \\ \epsilon_2 \\ \vdots \\ \epsilon_n \end{array} } \right]
+$$
 
 ### Auto-regressive (AR1)
 
-Sometimes called a "lag" model, the AR1 model assumes that variance can be modelled as exponential function based unit distance in a single direction. For example, an experiment consisted of 20 plots (plot = the experiment units) arranged in 4 rows, each with 3 ranges with have this layout: 
+Sometimes called a "lag" model, the AR1 model assumes that variance can be modelled as exponential function based unit distance in a single direction. 
 
-```{r}
-plot(1, col = "white", xlim = c(0,4), ylim = c(0,3), ann = F, xaxt = "n", yaxt = "n") # xlab = "row", ylab = "ranges")
-grid(6, 10, lty = 1, col = "black")
-mtext("ranges", side = 2, at = 1.5)
-mtext("rows", side = 1, at = 2)
-```
+The AR1 structure across 2 rows is modelled as thus: 
 
-The AR1 structure across 4 rows is models the error terms as thus:
-
-$$ V_{AR1} = \left[ {\begin{array}{cccc} 
-1 & \rho^2 & \rho^3 & \rho^4 \\
-\rho^2 & 1 & \rho^2 & \rho^3  \\
-\rho^3 & \rho^2 & 1 & \rho^2   \\
-\rho^4 & \rho^3 & \rho^2 & 1
-\end{array} } \right] $$
+$$\mathbf { V_{AR(1)row}}  = \sigma^2
+\left[ {\begin{array}{cc} 
+1 & \rho \\
+\rho & 1 
+\end{array} } \right] \otimes \mathbf{I_4} $$
 
 This covariance model describes the correlation of observations in the *row direction only.* 
 
-And similarily the AR1 structure across 3 ranges is modelled as thus: 
+And similarily the AR1 structure across 4 ranges is modelled as thus: 
 
-$$ V_{AR1} = \left[ {\begin{array}{ccc} 
-1 & \rho^2 & \rho^3 \\
-\rho^2 & 1 & \rho^2  \\
-\rho^3 & \rho^2 & 1
+$$ \mathbf {V_{AR(1)range}} = \sigma^2 \mathbf{I_4} \otimes
+\left[ {\begin{array}{cccc} 
+1 & \rho & \rho^2 & \rho^3 \\
+\rho & 1 & \rho & \rho^2  \\
+\rho^2 & \rho & 1 & \rho  \\
+\rho^3 & \rho^2 & \rho & 1
 \end{array} } \right] $$
+
+ 
 
 This covariance model describes the correlation of observations in the *range direction only.* 
 
 In combined AR1xAR1 model, the parameter, $\rho$ may need to estimated separated across the row and column directions depending on the shape of the plots and site-specific field variation. Very rectangular plots are likely to require a separate estimate of the $\rho$ parameter for each direction. 
 
+$$ \mathbf {V_{AR(1)row} \otimes V_{AR(1)range}} = \sigma^2
+\left[ {\begin{array}{cccc | cccc} 
 
+1 & \rho_1 & \rho_1^2 & \rho_1^3 & \rho_2 & \rho_1\rho_2 & \rho_1^2\rho_2 & \rho_1^3\rho_2 \\
+\rho_1 & 1 & \rho_1 & \rho_1^2 & \rho_1\rho_2 & \rho_2 & \rho_1\rho_2 & \rho_1^2\rho_2\\
+\rho_1^2 & \rho_1 & 1 & \rho_1 & \rho_1^2\rho_2 & \rho_1\rho_2 & \rho_2 & \rho_1\rho_2\\
+\rho_1^3 & \rho_1^2 & \rho_1 & 1 & \rho_1^3\rho_2 & \rho_1^2\rho_2 & \rho_1\rho_2 & \rho_2 \\
+\hline
+\rho_2 & \rho_1\rho_2 & \rho_1^2\rho_2 & \rho_1^3\rho_2 & 1 & \rho_1 & \rho_1^2 & \rho_1^3 \\
+\rho_1\rho_2 & \rho_2 & \rho_1\rho_2 & \rho_1^2\rho_2 & \rho_1 & 1 & \rho_1 & \rho_1^2 \\
+\rho_1^2\rho_2 & \rho_1\rho_2 & \rho_2 & \rho_1\rho_2 & \rho_1^2 & \rho_1 & 1 & \rho_1 \\
+\rho_1^3\rho_2 & \rho_1^2\rho_2 & \rho_1\rho_2 & \rho_2 &\rho_1^3 & \rho_1^2 & \rho_1 & 1 \\
+
+\end{array} } \right]
+$$
+
+**Note**: $\rho_1$ and  $\rho_2$ are the parameter estimate for $V_{AR1(1) row}$ and $V_{AR(1)range}$, respectively.
 
 
 ### Moving averge (MA)
 
-Sometimes called an "error model"
-
-*one dimension*
-
-
-*two dimensions*
-
+The moving average model is quite similar to auto-regressive model. Auto-regressive models a variables's spatial dependence on nearby experimental units. 
 
 
 ### ARIMA 
@@ -242,7 +278,13 @@ These approaches look at the residuals from adjacent plots residuals to model er
 
 ## Trend Analysis
 
-### Row, column and combined and row plus column trends. 
+### Row, column and combined and row plus column trends.
+
+Experiment wide-trends should be modelled with directional trend models. These are comparatively simple models:
+
+$$Y_{ijk} = \beta_0 + X_{i1}\beta_1 +  Row_{j2}\beta_2 + Range_{k3}\beta_3 +\epsilon_{ijk}$$ 
+
+If the assumption of independent, normal, and identical errors are met, then this model will suffice. If spatial variation is still present, additional measures will need to be taken. 
 
 ### Splines
 

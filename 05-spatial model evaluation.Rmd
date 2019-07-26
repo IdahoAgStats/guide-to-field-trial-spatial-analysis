@@ -1,8 +1,8 @@
-# Comparing Spatial Models
+# Comparing Spatial Models {#ch3-part3}
 
-Some _significant_ applications are demonstrated in this chapter.
 
 ## Example one
+
 
 ## Example two
 
