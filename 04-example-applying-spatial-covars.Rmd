@@ -207,8 +207,15 @@ nin.arma <- sacsarlm(yield ~ gen + rep,
 moran.mc(residuals(nin.arma), nb2listw(xy.rook), 999, na.action = na.exclude)
 ```
 
-
 ## p-Splines
 
+```{r}
+library(sommer); 
 
-### AR1xAR1 (not possible!!)
+```
+
+
+
+### AR1xAR1
+
+It appears that this is not possible in open source R functions at this time. However, options for ARxAR1 models are available in SAS and Asreml. 

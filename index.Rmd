@@ -18,55 +18,55 @@ To help people conducting planned agricultural field trials to understand and  i
 
 current resources are focused on geospatia appications - LANDSAT data across large area, point information on soils and geology, and other information that typiically requiresa a moderate to deep understanding of obht GIS tools and spatial analytica techniques. 
 
-Furthermore, there is not a comprehensive one-stop-shop for spatial analytical techniques for fied experiments that is also freely available. 
-
-
-
-
+Furthermore, there is not a comprehensive one-stop-shop for spatial analytical techniques for field experiments that is also freely available. 
 
 ## Prerequisites
 
-In order to run the scripts in this demonstration, you will to download R, avaiable free through the [Comprehensive R Archive Network](). While this is sufficient for running R scripts, You may also find it hepful to use RStudio, which provides a nice graphical user interface for R. RStudio can be downloaded [here]().
+In order to run the scripts in this demonstration, you will to download R, avaiable free through the [Comprehensive R Archive Network](https://cran.r-project.org/). While this is sufficient for running R scripts, You may also find it hepful to use RStudio, which provides a nice graphical user interface for R. RStudio can be downloaded [here](https://www.rstudio.com/products/rstudio/download/).
 
 If you already have R installed, please make sure you have version 3.5.0 or newer. 
 
-This demonstration is not intended to provide instructions on general R usage. However, There are numerous web resources for learning the Basics of R:
-
-* 
-* 
-* 
-*
+This demonstration is not intended to provide instructions on general R usage. However, There are numerous web resources for learning the Basics of R. [Software carpentry](https://software-carpentry.org/lessons/) offers several lesson plans covering the foundation of R.  
 
 ## Packages we will use 
 
+|package------|usage---------|
+|dplyr, tidyr, forcats | basic data manipulation from the Tidyverse | 
+|agridat | for loading a demonstration data set |
+| purrr | data summary | 
+|ggplot, desplot | plotting | 
+|gstat | empirical variogram | 
+|nlme | mixed model analysis | 
+|car | ANOVA functions | no |
+| sf | for manipulating spatia objects | 
+|spdep | ..... | 
+|spreg | for spatial lag and Spatial error models | 
+|sommer | row-column effects, p-splines |
+|spaMM  | correlated error modes and generalised linear models | 
 
-## Acknowledgements
+
+## Contributors
+
+Julia Piaskowski is the main author of this resource. 
+
+This book was written with [bookdown](https://bookdown.org/yihui/bookdown 
 
 ## License
+Incorporating Spatial Analysis into Agricultural Field Experiments by Julia Piaskowski is licensed under a [Creative Commons Attribution-NonCommercial 4.0 International License](https://creativecommons.org/licenses/by-nc/4.0/).
 
- 
-
-
-
-#### OLD STUFF
-
-This is a _sample_ book written in **Markdown**. You can use anything that Pandoc's Markdown supports, e.g., a math equation $a^2 + b^2 = c^2$.
-
-The **bookdown** package can be installed from CRAN or Github:
-
-```{r eval=FALSE}
-install.packages("bookdown")
-# or the development version
-# devtools::install_github("rstudio/bookdown")
+```{r, echo=FALSE,out.width="20%",fig.align='center'}
+knitr::include_graphics(c("img/CC-by-nc.png"))
 ```
 
-Remember each Rmd file contains one and only one chapter, and a chapter is defined by the first-level heading `#`.
-
-To compile this example to PDF, you need XeLaTeX. You are recommended to install TinyTeX (which includes XeLaTeX): <https://yihui.name/tinytex/>.
+## References
+ 
+### R packages
 
 ```{r include=FALSE}
 # automatically create a bib database for R packages
 knitr::write_bib(c(
-  .packages(), 'bookdown', 'knitr', 'rmarkdown'
+  .packages(), 'bookdown', 'knitr', 'rmarkdown', 'gstat',
+  'dplyr','ggplot2', 'nlme', 'car', 'sf', 'spdep', 'spreg'
+  'sommer'
 ), 'packages.bib')
 ```

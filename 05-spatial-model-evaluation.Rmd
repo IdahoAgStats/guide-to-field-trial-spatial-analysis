@@ -1,4 +1,4 @@
-# Comparing Spatial Models {#ch3-part3}
+# Comparing Spatial Models {#ch5}
 
 
 ## Example one
