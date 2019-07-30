@@ -8,10 +8,11 @@ This tutorial uses the Nebraska Interstate wheat trials, first published by Stro
 library(agridat); library(dplyr); library(tidyr)
 data("stroup.nin")
 
-Nin <- stroup.nin %>% mutate(col.width = col * 1.2, row.length = row * 4.3) %>% 
+Nin <- stroup.nin %>% mutate(col.width = col * 1.2, 
+                             row.length = row * 4.3) %>% 
   mutate(name = case_when(is.na(as.character(rep)) ~ NA_character_, 
-                          TRUE ~ as.character(gen))) %>% arrange(col, row) %>% 
-  mutate(plot = 1:n())
+                          TRUE ~ as.character(gen))) %>% 
+  arrange(col, row)
 
 Nin.na <- filter(Nin, !is.na(rep))
 ```
@@ -36,8 +37,7 @@ library(ggplot2); library(desplot)
 
 ggplot(Nin, aes(x = row, y = col)) +
   geom_tile(aes(fill = yield), col = "white") +
-  #geom_text(aes(label = name)) +
-  geom_text(aes(label = plot)) +
+  geom_text(aes(label = name)) +
   geom_tileborder(aes(group = 1, grp = rep), lwd = 1.2) +
   scale_fill_gradient(low = "white", high = "blue") +
   scale_x_continuous(breaks = seq(1,max(Nin$row), 1)) +
@@ -52,7 +52,7 @@ ggplot(Nin, aes(x = row, y = col)) +
 ```
 Black lines delineate the blocks. 
 
-```{r}
+```{r eval=FALSE, include=FALSE}
 library(rayshader)
 options(cores = 3)
 ```
@@ -71,8 +71,6 @@ plot_gg(layout.gg, multicore = T, width = 10, height = 5, scale = 300,
 render_snapshot(clear = T)
 ```
 
-
-
 It's also helpful to plot raw response data: 
 ```{r Nin-boxplot-fig, fig.width=6, fig.asp = .6}
 par(mfrow=c(1,3))
@@ -88,13 +86,12 @@ par(mfrow=c(1,1))
 
 First, run a standard linear model of the experiment: 
 ```{r message=FALSE, warning=FALSE}
-library(nlme); library(car)
+library(nlme)
 
 nin.lme <- lme(yield ~ gen, random = ~1|rep,
               data = Nin,
               na.action = na.exclude)
-
-Anova(nin.lme, type = "2")
+anova(nin.lme)
 ```
 
 Next, establish and weight neighbors. In this example, only adjacent neighbors in the rook formation are used and are weighted proportionally according to their representation as neighbors to an individual. That is, if a unit has 4 adjacent neighbors, each neighbor is weighted as 0.25. If there are only two neighbors, each is weighted as 0.5. 
@@ -104,7 +101,7 @@ The function `cell2nb` is a simplified function for setting neighbors when worki
 
 ```{r message=FALSE, warning=FALSE}
 library(spdep)
-xy.rook <- cell2nb(nrow = max(Nin$row), ncol = max(Nin$col), type="rook") # make sur your data sorted by the variables assigned to row and col (in that order), and there is one and only one observation in the data set for each unique row/col combination. Even missing plots need a row
+xy.rook <- cell2nb(nrow = max(Nin$row), ncol = max(Nin$col), type="rook") # make sure your data sorted by the variables assigned to row and col (in that order), and there is one and only one observation in the data set for each unique row/col combination. Even missing plots need a row
 
 ```
 
@@ -125,7 +122,7 @@ moran.test(resid.lme, nb2listw(xy.rook), na.action = na.exclude)
 moran.mc(resid.lme, nb2listw(xy.rook), 999, na.action = na.exclude)
 ```
 
-Plot Spatial dependence of resids
+Plot Spatial dependence of residuals
 
 ```{r resid-cor-fig, message=FALSE, warning=FALSE}
 library(purrr)
@@ -183,13 +180,15 @@ Establish models for variogram fitting.
 Nin.vgm1 <- vgm(model = "Exp", nugget = nugget_start) # exponential
 Nin.vgm2 <- vgm(model = "Sph", nugget = nugget_start) # spherical
 Nin.vgm3 <- vgm(model = "Gau", nugget = nugget_start) # Gaussian
+Nin.vgm4 <- vgm(model = "Mat", nugget = nugget_start) # Matern
 ```
 
 Fit the variograms to the data:
-```{r}
+```{r message=FALSE, warning=FALSE}
 Nin.variofit1 <- fit.variogram(resid.var1, Nin.vgm1)
 Nin.variofit2 <- fit.variogram(resid.var1, Nin.vgm2)
 Nin.variofit3 <- fit.variogram(resid.var1, Nin.vgm3)
+Nin.variofit4 <- fit.variogram(resid.var1, Nin.vgm4, fit.kappa = T)
 ```
 
 Look at the results! (this is fun)
@@ -199,6 +198,7 @@ Look at the results! (this is fun)
 plot(resid.var1, Nin.variofit1, main = "Exponential model")
 plot(resid.var1, Nin.variofit2, main = "Spherical model")
 plot(resid.var1, Nin.variofit3, main = "Gaussian model")
+plot(resid.var1, Nin.variofit4, main = "Matern model")
 ```
 
 How to pick the best one? Looking at how well each captures the error is the best approach. The attribute "SSError" indicates how well each model was able to predict the binned error terms as a function of distance. 
@@ -207,6 +207,7 @@ How to pick the best one? Looking at how well each captures the error is the bes
 print("Exponential"); attr(Nin.variofit1, "SSErr")
 print("Spherical"); attr(Nin.variofit2, "SSErr")
 print("Gaussian"); attr(Nin.variofit3, "SSErr")
+print("Matern"); attr(Nin.variofit4, "SSErr")
 ```
 
 `Nin.Variofit3` had the lowest error terms, corresponding to the Gaussian model.
@@ -226,13 +227,14 @@ sill <- sum(Nin.variofit3$psill) # maximum semivariance
 ```
 
 
-Try out Anistropic Models:
+Try out anistropic Models:
 
 Reestablish models for variogram fitting. 
 ```{r}
 Nin.vgm1a <- vgm(model = "Exp", anis = c(90, 0.5)) # 90 refers to the angle of the main direction and 0.5 creates a second 90 degree axis of variability to estimate 
 Nin.vgm2a <- vgm(model = "Sph", anis = c(90, 0.5))
 Nin.vgm3a <- vgm(model = "Gau", anis = c(90, 0.5))
+
 ```
 
 Fit the variograms to the data:
@@ -240,10 +242,12 @@ Fit the variograms to the data:
 Nin.variofit1a <- fit.variogram(resid.var1, Nin.vgm1a)
 Nin.variofit2a <- fit.variogram(resid.var1, Nin.vgm2a)
 Nin.variofit3a <- fit.variogram(resid.var1, Nin.vgm3a)
+Nin.variofit4a <- fit.variogram(resid.var1, Nin.vgm4a, fit.kappa = T)
 
 print("Exponential"); attr(Nin.variofit1a, "SSErr")
 print("Spherical"); attr(Nin.variofit2a, "SSErr")
 print("Gaussian"); attr(Nin.variofit3a, "SSErr")
+
 ```
 
 Error terms are considerably higher than in the anistropic model!
@@ -256,5 +260,5 @@ Hmm, that plot is not very convincing.
 
 In this field trial, there is evidence spatial correlation as a function of distance, but there is not evidence that spatial autocorrelation is impacted by the direction.
 
-It's important to remember these methods are intended to describe localised spatial correlation. Field-wide spatial gradients should be modelled as a separate trend. 
+It's important to remember these methods are intended to describe localised spatial correlation. Field-wide spatial gradients, such as position on a slope, should be modelled as a separate trend. 
 

@@ -1,4 +1,4 @@
-# Introduction {#intro}
+# Introduction {#ch1}
 
 ## Why care about spatial variation?
 
@@ -80,5 +80,3 @@ Three important concepts of an empirical variogram are *nugget*, *sill* and  *ra
 
 * partial sill = sill - nugget
 * nugget effect = the nugget/sill ratio, interpreted opposite of $r^2$
-
-

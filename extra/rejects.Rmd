@@ -1,0 +1,49 @@
+# rejected scripts
+
+### Spatial error model
+
+```{r}
+nin.sem <- errorsarlm(yield ~ gen + rep,
+                       listw = nb2listw(xy.rook),
+                       data = Nin, na.action = na.exclude)
+
+mat.preds <- coef
+```
+
+### Combined spatial lag and error model (ARMA)
+
+```{r}
+nin.arma <- sacsarlm(yield ~ gen + rep,
+                       listw = nb2listw(xy.rook),
+                       data = Nin, na.action = na.exclude)
+
+
+```
+
+Obtaining predictions from the objects of `lagsarlm()`, `errorsarlm()`, and `sacsarlm()` is a challenging task not covered here. 
+
+```{r eval=FALSE, include=FALSE}
+# comparable with nlme
+
+nin.matern <- fitme(yield ~ gen + (1|rep) +
+                      Matern(1|col.width + row.length),
+                    fixed = list(rho = 1/range, nu = kappa),
+                    data = Nin, method="ML")
+
+preds = predict(nin.matern, re.form = ~gen,
+                variance = list(fixefVar=TRUE))
+
+matern.preds <- data.frame(gen = attributes(preds)$frame,
+                           emmeans = preds,
+                           var = attributes(preds)$fixefVar) %>%
+  distinct() %>% mutate(SE = sqrt(var))
+
+```
+
+
+# doesn't work, treatments have to be numberic (WTF)
+```{r}
+library(spANOVA)
+model <- aovSar.rcbd(Nin$yield, Nin$gen, Nin$rep,
+  ```
+                     

@@ -1,0 +1,8 @@
+# Conclusion {#ch6}
+
+There are many more other packages for exploring and modeling spatial variability in field trials. Some other useful packages available on CRAN:
+
+|package------|usage---------|
+| Mcspatial | nonparametric spatial analysis |
+|ngspatial | spatial models with a focus on generalised linear models |
+|spaMM  | correlated error modes and generalised linear models |

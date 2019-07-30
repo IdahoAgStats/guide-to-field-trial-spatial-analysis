@@ -1,4 +1,4 @@
-# Spatial Models {ch2-bg}
+# Spatial Models {#ch2}
 
 This section contains some of the background behind why spatial models are used and how they work. Understanding this section is not essential, but it is extremely helpful. This section relies on information introduced in part I, s please make sure you have read that section, especially if you are new to empirical variograms and spatial statistics.  
 

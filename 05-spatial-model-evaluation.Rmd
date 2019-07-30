@@ -1,9 +1,79 @@
 # Comparing Spatial Models {#ch5}
 
+There is not a consensus on how to pick the best model. Some studies rely on log likelihood, while others seek to maximize the experimental power. Others have sought to minimize the root mean square error from cross validation.  
 
-## Example one
+Assemble all the model objects into one list and check their class.
+```{r}
+library(purrr)
+all.models <- mget(ls(pattern = "^nin.*"))
+# check class
+map(all.models, class)
+```
 
 
-## Example two
+## Spatial dependence of residuals
+
+It would be helpful to know if these methods were effective in reducing the spatial dependence among the error residuals. 
+
+The first step is to extract the residuals from each model. The function below is needed because of wonky handling of NA values by the packages **sommer** and **SpATS**. 
+
+```{r message=FALSE, warning=FALSE}
+L1 <- nrow(Nin)
+non_na <- !is.na(Nin$yield)
+L2 <- sum(non_na)
+
+residuals <- map(all.models, function (x) {
+  
+  resids <- residuals(x)
+  
+  if(length(resids) == L2) {
+    resids_pl = rep(NA, L1)
+    resids_pl[non_na] = resids
+    resids = resids_pl
+  }
+  return(resids)
+})
+```
+ Run Global Moran's I test on the extracted residuals.
+
+```{r message=FALSE, warning=FALSE}
+Moran.I <- map_df(residuals, function(x) {
+  mi = moran.test(x, nb2listw(xy.rook), na.action = na.exclude)
+  mi.stat <- mi$estimate
+  mi.stat$p.value <- mi$p.value
+  return(mi.stat)
+}) %>% mutate(model = names(all.models)) %>% dplyr::select(c(5, 1:4)) %>% 
+  mutate_at(2:5, round, 4) %>% arrange(p.value)
+
+Moran.I
+```
+
+Only 4 of the models - nin.arma, nin.sem, nin.lag, nin.arma and nin.spline - resulted in an improvement in Moran's I. The significant p-values indicate that auto-correlation is still present in those models. However, that doesn't mean the other models are ineffective. The other models incorporate the spatial autocorrelation directly into the error terms, preserving autocorrelation. 
+
+## Experimental Power
+
+Simulation studies indicate that incorporating spatial correlation into field trial analysis can improve the overall power of the experiment (the probability of detecting true differences in treatments). When working with data from an experiment, power is a transformed p-value. 
+
+```{r message=FALSE, warning=FALSE}
+nlme.mods <- list(nin.lme, nin.exp, nin.gaus, nin.sph, nin.pow)
+
+anovas <- map_df(nlme.mods, anova)
+
+```
+
+
+## Model variation explained
+
+```{r}
+
+```
+
+
+## Standard Error of variety estimates
+
+```{r}
+
+```
+
 
 

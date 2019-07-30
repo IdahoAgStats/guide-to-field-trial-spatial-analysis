@@ -28,7 +28,7 @@ If you already have R installed, please make sure you have version 3.5.0 or newe
 
 This demonstration is not intended to provide instructions on general R usage. However, There are numerous web resources for learning the Basics of R. [Software carpentry](https://software-carpentry.org/lessons/) offers several lesson plans covering the foundation of R.  
 
-## Packages we will use 
+## Packages used in this tutorial 
 
 |package------|usage---------|
 |dplyr, tidyr, forcats | basic data manipulation from the Tidyverse | 
@@ -37,13 +37,14 @@ This demonstration is not intended to provide instructions on general R usage. H
 |ggplot, desplot | plotting | 
 |gstat | empirical variogram | 
 |nlme | mixed model analysis | 
-|car | ANOVA functions | no |
-| sf | for manipulating spatia objects | 
-|spdep | ..... | 
+| emmeans| for extracting least squares means |
+| sp, sf | for manipulating spatial objects | 
+|spdep | multiple functions for spatial dependence | 
 |spreg | for spatial lag and Spatial error models | 
-|sommer | row-column effects, p-splines |
-|spaMM  | correlated error modes and generalised linear models | 
+|SpATS | spatial splines for field trials |
+|sommer | mixed models with AR1xAR1 approximation |
 
+All packages are available on CRAN.
 
 ## Contributors
 
@@ -52,21 +53,20 @@ Julia Piaskowski is the main author of this resource.
 This book was written with [bookdown](https://bookdown.org/yihui/bookdown 
 
 ## License
+
 Incorporating Spatial Analysis into Agricultural Field Experiments by Julia Piaskowski is licensed under a [Creative Commons Attribution-NonCommercial 4.0 International License](https://creativecommons.org/licenses/by-nc/4.0/).
 
 ```{r, echo=FALSE,out.width="20%",fig.align='center'}
 knitr::include_graphics(c("img/CC-by-nc.png"))
 ```
 
-## References
- 
-### R packages
+## R package References
 
 ```{r include=FALSE}
 # automatically create a bib database for R packages
 knitr::write_bib(c(
   .packages(), 'bookdown', 'knitr', 'rmarkdown', 'gstat',
-  'dplyr','ggplot2', 'nlme', 'car', 'sf', 'spdep', 'spreg'
+  'dplyr','ggplot2', 'nlme', 'car', 'sf', 'spdep', 'spreg',
   'sommer'
 ), 'packages.bib')
 ```
