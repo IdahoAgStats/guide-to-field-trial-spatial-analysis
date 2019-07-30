@@ -12,13 +12,11 @@ description: "This includes instructions for diagnosing spatial variation in agr
 
 # Preface 
 
-## Tutorial goals
+## Tutorial goal
 
-To help people conducting planned agricultural field trials to understand and  incorporate spatial variation routinely into analysis of field trials.  
+*To help people conducting planned agricultural field trials understand and  incorporate spatial variation routinely into analysis of field trials.*
 
-current resources are focused on geospatia appications - LANDSAT data across large area, point information on soils and geology, and other information that typiically requiresa a moderate to deep understanding of obht GIS tools and spatial analytica techniques. 
-
-Furthermore, there is not a comprehensive one-stop-shop for spatial analytical techniques for field experiments that is also freely available. 
+Current educational resources are focused largely on geospatial appications that typically require a a moderate to deep understanding of  mapping tools and spatial analytical techniques. Furthermore, there is not a comprehensive resources for spatial analytical techniques for field experiments that is also freely available. This tutorial is intended to fill that gap. 
 
 ## Prerequisites
 
@@ -31,16 +29,15 @@ This demonstration is not intended to provide instructions on general R usage. H
 ## Packages used in this tutorial 
 
 |package------|usage---------|
-|dplyr, tidyr, forcats | basic data manipulation from the Tidyverse | 
-|agridat | for loading a demonstration data set |
+|dplyr, tidyr | basic data manipulation | 
 | purrr | data summary | 
 |ggplot, desplot | plotting | 
+|agridat | for loading a demonstration data set |
+| sp, sf | for manipulating spatial objects | 
+|spdep | multiple functions for spatial dependence | 
 |gstat | empirical variogram | 
 |nlme | mixed model analysis | 
 | emmeans| for extracting least squares means |
-| sp, sf | for manipulating spatial objects | 
-|spdep | multiple functions for spatial dependence | 
-|spreg | for spatial lag and Spatial error models | 
 |SpATS | spatial splines for field trials |
 |sommer | mixed models with AR1xAR1 approximation |
 

@@ -44,6 +44,26 @@ matern.preds <- data.frame(gen = attributes(preds)$frame,
 # doesn't work, treatments have to be numberic (WTF)
 ```{r}
 library(spANOVA)
-model <- aovSar.rcbd(Nin$yield, Nin$gen, Nin$rep,
-  ```
-                     
+model <- aovSar.rcbd(Nin$yield, Nin$gen, Nin$rep)
+```
+
+```{r eval=FALSE, include=FALSE}
+library(rayshader)
+options(cores = 3)
+```
+
+```{r eval=FALSE, include=FALSE}
+# this function is so slow!!
+layout.gg <- ggplot(Nin, aes(x = row.length, y = col.width)) +
+  geom_tile(aes(fill = yield), col = "black") +
+  scale_fill_gradient(low = "white", high = "blue") +
+  coord_fixed() + 
+  theme_void() 
+
+plot_gg(layout.gg, multicore = T, width = 10, height = 5, scale = 300, 
+        background = "white",shadowcolor = "#3a4f70") 
+
+render_snapshot(clear = T)
+```
+  
+                    

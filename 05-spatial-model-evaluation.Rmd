@@ -55,7 +55,7 @@ Only 4 of the models - nin.arma, nin.sem, nin.lag, nin.arma and nin.spline - res
 Simulation studies indicate that incorporating spatial correlation into field trial analysis can improve the overall power of the experiment (the probability of detecting true differences in treatments). When working with data from an experiment, power is a transformed p-value. 
 
 ```{r message=FALSE, warning=FALSE}
-nlme.mods <- list(nin.lme, nin.exp, nin.gaus, nin.sph, nin.pow)
+nlme.mods <- list(nin.lme, nin.exp, nin.gaus, nin.sph, nin.pow, nin.matern)
 
 anovas <- map_df(nlme.mods, anova)
 

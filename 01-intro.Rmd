@@ -2,24 +2,26 @@
 
 ## Why care about spatial variation?
 
-Goal in this case is to understand and account for spatial variation. These are lattice data
+The goal of variety testing programs is to provide the agricultural industry reliable information about regional crop variety performance. Crop variety trials employ common experimental designs such as randomised complete block design to account for environmental heterogeneity. However, those techniques are quite often inadequate to fully account for spatial heterogeneity that arises due to field position, soil conditions, disease, wildlife impacts and more. 
 
-## Diagnosing spatial autocorrelation
+As a result, the assumption of ANOVA are violated, invalidating the analysis, and variety estimates themselves are incorrect. Incorporating spatial correlation between experimental plots can improve the overall accuracy and precision of these estimates. 
 
-Spatial correlation is similarity of plots that are close to one another. Larger spatial gradients need to modelled indpendently - perhaps through blocking. 
+## Diagnosing spatial auto-correlation
+
+Spatial correlation is similarity of plots that are close to one another.  That correlation is expected to decline with distance. This is different from experiment-wide gradients, such as a salinity gradient or position on a slope. 
 
 ### Moran's I
 
-Moran's I, sometimes called "Global Moran's I" is similar like a correlation coefficient. It is a test for correation between units (plots in our case). 
+Moran's I, sometimes called "Global Moran's I" is similar like a correlation coefficient. It is a test for correlation between units (plots in our case). 
 
 $$ I = \frac{N}{W}\frac{\sum_i \sum_j w_{ij} (x_i - \bar{x})(x_j - \bar{x})}{\sum_i(x_i - \bar{x})^2} 
 \qquad i \neq j$$
 
 Where N is total number of spatial locations indexed by $i$ and $j$, x is the variable of interest, $w_{ij}$ are a spatial weights between each $i$ and $j$, and W is the sum of all weights. The expected values of Moran's I is $-1/(N-1)$. Values greater than that indicate positive spatial correlation (areas close to each other are similar), while values less than the expected Moran's I indicate dissimilarity as spatial distance between points decreases. 
 
-There are several options for defining adjacent neighbors and how to weight each neighbors's influence. The two common configuations for defininig neighbors are the rook and queen configurations. These are exactly what their chess analogy suggest: "rook" defines neighbhors in an row/column fashion, while "queen" defines nieghbors in a row/column configuation an also neighbors located diagonally at a 45 degree angle from the row/column neighbors. Determining this can be somewhat complicated when working with irregularly-placed data (e.g. county seats), but is quite unambiguous for gridded data commonly seen in panned field experiments:
+There are several options for defining adjacent neighbors and how to weight each neighbor's influence. The two common configurations for defining neighbors are the rook and queen configurations. These are exactly what their chess analogy suggest: "rook" defines neighbors in an row/column fashion, while "queen" defines neighbors in a row/column configuration an also neighbors located diagonally at a 45 degree angle from the row/column neighbors. Determining this can be somewhat complicated when working with irregularly-placed data (e.g. county seats), but is quite unambiguous for gridded data commonly seen in panned field experiments:
 
-```{r echo=FALSE}
+```{r echo=FALSE, message=FALSE, warning=FALSE}
 library(ggplot2)
 
 na <- "Not adjacent"
@@ -62,11 +64,11 @@ These terms have the same meaning in Moran's I. The expected value of Geary's C 
 
 ### Empirical variogram & semivariance
 
-An empirical varigram is a visual tool for understanding how error terms are related to each other over spatial distance. It relies on semivariance ($\gamma$), a statistic expressing variance as a function of pairwise distances between data points at points $i$ and $j$.   
+An empirical variogram is a visual tool for understanding how error terms are related to each other over spatial distance. It relies on semivariance ($\gamma$), a statistic expressing variance as a function of pairwise distances between data points at points $i$ and $j$.   
 
 $$\gamma(h) = \frac{1}{2|N(h)|}\sum_{N(h)}(x_i - x_j)^2$$
 
-Semivariances are binned for distance intervals. The average values for semivariance and distance interval can be fit to correlated error models such a exponential, spherical, gaussian and Matér. How to dothis is explored further in section 2 of this guide. 
+Semivariances are binned for distance intervals. The average values for semivariance and distance interval can be fit to correlated error models such a exponential, spherical, Gaussian and Matérn. How to do this is explored further in \@ref(ch:ch2) of this guide. 
 
 Three important concepts of an empirical variogram are *nugget*, *sill* and  *range* 
 
@@ -74,9 +76,9 @@ Three important concepts of an empirical variogram are *nugget*, *sill* and  *ra
 
 * range = distance up to which is there is spatial correlation
 * sill = uncorrelated variance of the variable of interest
-* nugget = measurement error,short-distance spatial variance and other unaccounted for variance
+* nugget = measurement error, or short-distance spatial variance and other unaccounted for variance
 
-2 other concepts: 
+**2 other concepts:** 
 
 * partial sill = sill - nugget
 * nugget effect = the nugget/sill ratio, interpreted opposite of $r^2$

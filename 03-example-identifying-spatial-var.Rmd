@@ -1,6 +1,6 @@
 # Example Analysis {#ch3}
 
-## Load Data
+## Load data
 
 This tutorial uses the Nebraska Interstate wheat trials, first published by Stroup et al in 1991 and reused extensively in field spatial variation studies. 
 
@@ -17,7 +17,7 @@ Nin <- stroup.nin %>% mutate(col.width = col * 1.2,
 Nin.na <- filter(Nin, !is.na(rep))
 ```
 
-### Examine Data
+### Examine data
 
 ```{r}
 head(Nin)
@@ -26,8 +26,7 @@ str(Nin)
 
 This data set actually has no missing data -- this is a balanced trial. However, there are empty fill plot with no data which creates some issues regarding NA handling. 
 
-
-Plot raw data as it appeared in the field: 
+Plot raw yield data as it appeared in the field: 
 ```{r message=FALSE, warning=FALSE}
 library(ggplot2); library(desplot)
 ```
@@ -52,25 +51,6 @@ ggplot(Nin, aes(x = row, y = col)) +
 ```
 Black lines delineate the blocks. 
 
-```{r eval=FALSE, include=FALSE}
-library(rayshader)
-options(cores = 3)
-```
-
-```{r eval=FALSE, include=FALSE}
-# this function is so slow!!
-layout.gg <- ggplot(Nin, aes(x = row.length, y = col.width)) +
-  geom_tile(aes(fill = yield), col = "black") +
-  scale_fill_gradient(low = "white", high = "blue") +
-  coord_fixed() + 
-  theme_void() 
-
-plot_gg(layout.gg, multicore = T, width = 10, height = 5, scale = 300, 
-        background = "white",shadowcolor = "#3a4f70") 
-
-render_snapshot(clear = T)
-```
-
 It's also helpful to plot raw response data: 
 ```{r Nin-boxplot-fig, fig.width=6, fig.asp = .6}
 par(mfrow=c(1,3))
@@ -80,7 +60,7 @@ boxplot(yield ~ col, data = Nin, col = "gold", xlab = "column", ylab = "yield (b
 par(mfrow=c(1,1))
 ```
 
-## Test for Spatial Correlation
+## Test for spatial correlation
 
 ### Moran's I
 
@@ -96,8 +76,7 @@ anova(nin.lme)
 
 Next, establish and weight neighbors. In this example, only adjacent neighbors in the rook formation are used and are weighted proportionally according to their representation as neighbors to an individual. That is, if a unit has 4 adjacent neighbors, each neighbor is weighted as 0.25. If there are only two neighbors, each is weighted as 0.5. 
 
-The function `cell2nb` is a simplified function for setting neighbors when working with data laid out in a regular grid, which is a common feature of many agricultural field trials.
-
+The function `cell2nb` is a simplified function for setting neighbors when working with data laid out in a regular grid. 
 
 ```{r message=FALSE, warning=FALSE}
 library(spdep)
@@ -111,8 +90,7 @@ library(sf)
 plot(xy.rook, coords = st_multipoint(matrix(c(Nin$col, Nin$row), ncol = 2)))
 
 ```
-Each observation considers "neighbors" to be those which touch the cell in a row or column oriention, but not diagonal. 
-
+Each observation considers "neighbors" to be those which touch the cell in a row or column orientation, but not diagonal. 
 
 Conduct Moran's test via standard t-test and using MC sampling. 
 ```{r}
@@ -137,11 +115,11 @@ plot(x = resid.lme, y = res.nn1,
 
 ### Note on Geary's C
 
-At this time, the spdep function `geary.test()` for Geary's C does not handle missing spatial points. This is area to contribute to! The 
+At this time, the **spdep** function `geary.test()` for Geary's C does not handle missing spatial points. This is area to contribute to! The 
  
-## Empirical Variogram Fitting
+## Empirical variogram fitting
 
-First, create a spatial object by adding spatial coordinates to an ordinary data frame. I like to use the actual units of the plots since they are exaggerated rectangals (meters in this example).
+First, create a spatial object by adding spatial coordinates to an ordinary data frame. I like to use the actual units of the plots since they are exaggerated rectangles (meters in this example).
 
 ```{r}
 Nin.spatial <- Nin.na
@@ -156,7 +134,7 @@ max_dist = 0.6*max(dist(coordinates(Nin.spatial)))
 max_dist
 ``` 
 
-Calculate semivariance for an istropic model and plot the variogram. 
+Calculate semivariance for an isotropic model and plot the variogram. 
 
 ```{r}
 library(gstat)
@@ -169,7 +147,7 @@ plot(resid.var1)
 
 Test out correlated error models:
 
-First, set the starting nugget values as the minimum of the semi-variance. There is likely more sophicated methods to establish the starting value for nugget, but I have found that extracting the minimum value of the semivariance to work well as a starting point. 
+First, set the starting nugget values as the minimum of the semi-variance. There is likely more sophisticated methods to establish the starting value for nugget, but I have found that extracting the minimum value of the semivariance to work well as a starting point. 
 
 ```{r}
 nugget_start <- min(resid.var1$gamma)
@@ -190,6 +168,8 @@ Nin.variofit2 <- fit.variogram(resid.var1, Nin.vgm2)
 Nin.variofit3 <- fit.variogram(resid.var1, Nin.vgm3)
 Nin.variofit4 <- fit.variogram(resid.var1, Nin.vgm4, fit.kappa = T)
 ```
+
+### Compare variograms
 
 Look at the results! (this is fun)
 
@@ -226,10 +206,12 @@ range <- Nin.variofit3$range[2] # distance to establish independence between dat
 sill <- sum(Nin.variofit3$psill) # maximum semivariance
 ```
 
+### Explore anisotropy
 
-Try out anistropic Models:
+Most field experiments occur on a relatively small scale,where the entire experimental layout is less than 0.25 square miles. As such, isotropic models (where spatial correlation is based on distance but not direction) are often adequate for understanding localised field heterogeneity. However, there are always exceptions where a spatial correlation in a field trail is best describe by an anistropic model.  
 
-Reestablish models for variogram fitting. 
+
+Reestablish models for variogram fitting: 
 ```{r}
 Nin.vgm1a <- vgm(model = "Exp", anis = c(90, 0.5)) # 90 refers to the angle of the main direction and 0.5 creates a second 90 degree axis of variability to estimate 
 Nin.vgm2a <- vgm(model = "Sph", anis = c(90, 0.5))
@@ -250,7 +232,7 @@ print("Gaussian"); attr(Nin.variofit3a, "SSErr")
 
 ```
 
-Error terms are considerably higher than in the anistropic model!
+Error terms are considerably higher than in the isotropic model.
 
 ```{r}
 plot(resid.var1, Nin.variofit1a, main = "Exponential model")
@@ -258,7 +240,9 @@ plot(resid.var1, Nin.variofit1a, main = "Exponential model")
 
 Hmm, that plot is not very convincing. 
 
-In this field trial, there is evidence spatial correlation as a function of distance, but there is not evidence that spatial autocorrelation is impacted by the direction.
+In this field trial, there is evidence spatial correlation as a function of distance, but there is not evidence that spatial auto-correlation is impacted by the direction.
+
+*Another reminder on field trends*:  
 
 It's important to remember these methods are intended to describe localised spatial correlation. Field-wide spatial gradients, such as position on a slope, should be modelled as a separate trend. 
 
