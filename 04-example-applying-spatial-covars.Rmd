@@ -32,7 +32,7 @@ nin.lme <- lme(yield ~ gen, random = ~1|rep,
               na.action = na.exclude)
 
 # extract the least squares means for vareity
-lme.preds <- as.data.frame(emmeans(nin.lme, "gen"))
+preds.lme <- as.data.frame(emmeans(nin.lme, "gen"))
 ```
 
 ```{r eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
@@ -86,7 +86,7 @@ nin.gaus <- update(nin.lme, corr = cor.gaus)
 
 Extract variety estimates: 
 ```{r}
-gaus.preds <- as.data.frame(emmeans(nin.gaus, "gen"))
+preds.gaus <- as.data.frame(emmeans(nin.gaus, "gen"))
 ```
 
 Other models can be implemented quite similarly:
@@ -111,7 +111,7 @@ cor.exp <- corSpatial(value = c(range, nugget.effect),
                   metric = "euclidean")
 
 nin.exp <- update(nin.lme, corr = cor.exp)
-exp.preds <- as.data.frame(emmeans(nin.exp, "gen"))
+preds.exp <- as.data.frame(emmeans(nin.exp, "gen"))
 ```
 
 ### Spherical
@@ -134,7 +134,7 @@ cor.sph <- corSpatial(value = c(range, nugget.effect),
                   metric = "euclidean")
 
 nin.sph <- update(nin.lme, corr = cor.sph)
-gaus.sph <- as.data.frame(emmeans(nin.sph, "gen"))
+preds.sph <- as.data.frame(emmeans(nin.sph, "gen"))
 ```
 
 ### Power
@@ -146,7 +146,7 @@ cor.pow <- corSpatial(form = ~ row.length + col.width,
                   metric = "euclidean")
 
 nin.pow <- update(nin.lme, corr = cor.pow)
-pow.preds <- as.data.frame(emmeans(nin.pow, "gen"))
+preds.pow <- as.data.frame(emmeans(nin.pow, "gen"))
 ```
 
 In the **nlme* package, there is also an option for a linear model in the `corSpatial()` function. However, if a linear trend is present without a range or sill, it is recommended that a linear trend be fitted to the data instead. 
@@ -170,9 +170,9 @@ cor.mat <- corMatern(value = c(1/range, kappa, nugget.effect),
                   form = ~ row.length + col.width, 
                   nugget = T, fixed = F,
                   metric = "euclidean")
-nin.mat <- update(nin.lme, corr = cor.mat)
+nin.matern <- update(nin.lme, corr = cor.mat)
 
-mat.preds2 <- as.data.frame(emmeans(nin.pow, "gen"))
+preds.mat <- as.data.frame(emmeans(nin.matern, "gen"))
 ```
 
 ### AR1xAR1
@@ -183,13 +183,16 @@ The package **Sommer** implements a version of the AR1xAR1 covariance structure.
 ```{r message=FALSE, warning=FALSE}
 library(sommer) 
 
+Nin$colF <- as.factor(Nin$col)
+Nin$rowF <- as.factor(Nin$row)
+
 nin.ar1ar1 <- mmer(yield ~ gen,
                      random = ~ rep + 
                       vs(colF:rowF, Gu = kronecker(AR1(colF, rho=0.5), AR1(rowF, rho = 0.5), make.dimnames = TRUE)),
                    na.method.X = "include", na.method.Y = "exclude",
                    rcov = ~ units, data = Nin)
 
-ar1ar1.preds <- predict(nin.ar1ar1, classify = 'gen')$predictions %>% 
+preds.ar1ar1 <- predict(nin.ar1ar1, classify = 'gen')$predictions %>% 
   rename(emmean = "predicted.value.yield", SE = "standard.errors.yield")
 ```
 
@@ -203,22 +206,22 @@ library(SpATS)
 Nin$colF <- Nin$R <- as.factor(Nin$col)
 Nin$rowF <- Nin$C <- as.factor(Nin$row)
 
-Nin.spline <- SpATS(response = "yield", 
+nin.spline <- SpATS(response = "yield", 
                     spatial = ~ PSANOVA(col, row, nseg = c(10,20),
                                         degree = 3, pord = 2), 
                     genotype = "gen",  
                     random = ~ rep + rowF + colF, 
                     data = Nin, control = list(tolerance = 1e-03))
 
-spline.preds <- predict(Nin.spline, which = "gen") %>% 
-  select(gen, emmean = "predicted.values", SE = "standard.errors")
+preds.spline <- predict(nin.spline, which = "gen") %>% 
+  dplyr::select(gen, emmean = "predicted.values", SE = "standard.errors")
 ```
 
 Examine spatial trends
 ```{r}
-plot(Nin.spline)
+plot(nin.spline)
 ```
 
-## Nearest neighbor approaches
+## Spatial approaches
 
-At this time, there are not suitable options for running nearest neighbor analyses of variety trial data. Existing options in **spatialreg**, **spANOVA**, and **spaMM** are extraordinarily difficult to use, lack sufficient options for typical experimental design in variety trials and/or do not provide the desired output. 
+At this time, there are not suitable options for running spatial regression of variety trial data. Existing options in **spatialreg**, **spANOVA**, and **spaMM** are extraordinarily difficult to use, lack sufficient options for typical experimental design in variety trials and/or do not provide the desired output. 
