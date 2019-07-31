@@ -219,10 +219,10 @@ Nin.vgm3a <- vgm(model = "Gau", anis = c(90, 0.5))
 ```
 
 Fit the variograms to the data:
-```{r message=FALSE, warning=FALSE}
+```{r message=FALSE, warning=FALSE, error=TRUE}
 Nin.variofit1a <- fit.variogram(resid.var1, Nin.vgm1a)
 Nin.variofit2a <- fit.variogram(resid.var1, Nin.vgm2a)
-try(Nin.variofit3a <- fit.variogram(resid.var1, Nin.vgm3a))
+Nin.variofit3a <- fit.variogram(resid.var1, Nin.vgm3a)
 Nin.variofit4a <- fit.variogram(resid.var1, Nin.vgm4a, fit.kappa = T)
 
 print("Exponential"); attr(Nin.variofit1a, "SSErr")

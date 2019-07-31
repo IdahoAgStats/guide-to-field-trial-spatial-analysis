@@ -50,7 +50,7 @@ All packages are available on CRAN.
 
 ## Contributors
 
-Julia Piaskowski is the main author of this resource. 
+[Julia Piaskowski](mailto:jpiaskowski@uidaho.edu) is the main author of this resource. 
 
 This book was written with [bookdown](https://bookdown.org/yihui/bookdown 
 

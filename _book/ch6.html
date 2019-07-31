@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>References | Incorporating Spatial Analysis into Agricultural Field Experiments.</title>
+  <title>Section 7 Conclusion | Incorporating Spatial Analysis into Agricultural Field Experiments.</title>
   <meta name="description" content="This includes instructions for diagnosing spatial variation in agricultural field trials and incorporating spatial variation into analysis of the trial using freely available tools in R." />
   <meta name="generator" content="bookdown 0.12 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="References | Incorporating Spatial Analysis into Agricultural Field Experiments." />
+  <meta property="og:title" content="Section 7 Conclusion | Incorporating Spatial Analysis into Agricultural Field Experiments." />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="References | Incorporating Spatial Analysis into Agricultural Field Experiments." />
+  <meta name="twitter:title" content="Section 7 Conclusion | Incorporating Spatial Analysis into Agricultural Field Experiments." />
   
   <meta name="twitter:description" content="This includes instructions for diagnosing spatial variation in agricultural field trials and incorporating spatial variation into analysis of the trial using freely available tools in R." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="ch6.html">
-
+<link rel="prev" href="ch5.html">
+<link rel="next" href="references.html">
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -216,17 +216,32 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="references" class="section level1 unnumbered">
-<h1>References</h1>
+<div id="ch6" class="section level1">
+<h1><span class="header-section-number">Section 7</span> Conclusion</h1>
+<div id="other-packages" class="section level2">
+<h2><span class="header-section-number">7.1</span> Other packages</h2>
+<p>There are many more other packages for exploring and modeling spatial variability in field trials. Some other useful packages available on CRAN:</p>
+<p>|package——|usage———|
+| Mcspatial | nonparametric spatial analysis |
+|ngspatial | spatial models with a focus on generalised linear models |
+|spaMM | correlated error modes and generalised linear models |
+|spANOVA | spatial analysis for field trials |</p>
+</div>
+<div id="final-recommendations" class="section level2">
+<h2><span class="header-section-number">7.2</span> Final recommendations</h2>
+<p>There is no denying that considerable work is needed to develop suitable R functions so researchers can routinely incorporate spatial covariance into field trial analysis. Many current tools are unwieldy to use and have insufficient options to support variety trial analysis.</p>
+<p>Unti this situation is improved, it is probably wisest to focus on using spatial models that are well-supported at this time. Any of the options implemented in the <strong>nlme</strong> package (or that work with that package) are decent choices with excellent support for extracting least-squares means, running ANOVA, and standard model diagnsotics. Furthermore, <strong>nlme</strong> supports generalised linear models.</p>
+<p>Doing something to contol for spatial auto-correlation is highly likely to improve the accuracy and precision of variety estimates and is recommended over doing nothing.</p>
 
+</div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="ch6.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-
+<a href="ch5.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="references.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
