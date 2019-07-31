@@ -1,4 +1,4 @@
-# Introduction {#ch1}
+# Introduction {#intro}
 
 ## Why care about spatial variation?
 

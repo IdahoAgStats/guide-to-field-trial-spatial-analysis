@@ -1,4 +1,4 @@
-# Spatial Models {#ch2}
+# Spatial Models {#background}
 
 This section contains some of the background behind why spatial models are used and how they work. Understanding this section is not essential, but it is extremely helpful. This section relies on information introduced in \@ref(ch:ch1), so please make sure you have read that section if you are new to empirical variograms and spatial statistics.  
 
@@ -320,4 +320,4 @@ If the assumption of independent, normal, and identical errors are met, then thi
 
 ### Splines
 
-There is a rich field of research on using localised splines to model field heterogeneity. These models are complex and hence not described.  
+There is a rich field of research on using localised splines to model field heterogeneity. These models are complex and hence not described here.  

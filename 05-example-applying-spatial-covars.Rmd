@@ -1,5 +1,7 @@
-# Applying Spatial Analytical Techniques {#ch4}
+# Applying Spatial Analytical Techniques {#example-spatial-model}
 
+
+Reload data if it is not already in your R environment: 
 
 ```{r message=FALSE, warning=FALSE}
 library(agridat); library(dplyr); library(tidyr)
@@ -22,8 +24,6 @@ Once spatial auto-correlation has been identified in field trials, the next step
 
 The first thing is to run a standard linear model. A common model specification for the randomised complete block design (RCBD) is to include cultivar as a fixed effect and block as a random effect. 
 
-Below is the R code for RCBD analysis of the NIN data set loaded in \@ref(ch:ch3) that was found to have strong spatial correlation:
-
 ```{r message=FALSE, warning=FALSE}
 library(nlme); library(emmeans)
 
@@ -31,7 +31,7 @@ nin.lme <- lme(yield ~ gen, random = ~1|rep,
               data = Nin,
               na.action = na.exclude)
 
-# extract the least squares means for vareity
+# extract the least squares means for variety
 preds.lme <- as.data.frame(emmeans(nin.lme, "gen"))
 ```
 
@@ -149,9 +149,9 @@ nin.pow <- update(nin.lme, corr = cor.pow)
 preds.pow <- as.data.frame(emmeans(nin.pow, "gen"))
 ```
 
-In the **nlme* package, there is also an option for a linear model in the `corSpatial()` function. However, if a linear trend is present without a range or sill, it is recommended that a linear trend be fitted to the data instead. 
+In the **nlme** package, there is also an option for a linear model in the `corSpatial()` function. However, if a linear trend is present without a range or sill, it is recommended that a linear trend be fitted to the data instead. 
 
-The package **spaMM* implements additional correlation models such as Matérn, Cauchy and more. 
+The package **spaMM** implements additional correlation models such as Matérn, Cauchy and more. 
 
 ```{r message=FALSE, warning=FALSE}
 library(spaMM)
@@ -198,7 +198,7 @@ preds.ar1ar1 <- predict(nin.ar1ar1, classify = 'gen')$predictions %>%
 
 ## Splines
 
-The package **SpATS**, spatial analysis for field trials
+The package **SpATS**, "spatial analysis for field trials", implements  B-splines for row and column effects. 
 ```{r message=FALSE, warning=FALSE}
 library(SpATS)
 
@@ -217,11 +217,11 @@ preds.spline <- predict(nin.spline, which = "gen") %>%
   dplyr::select(gen, emmean = "predicted.values", SE = "standard.errors")
 ```
 
-Examine spatial trends
+Examine spatial trends: 
 ```{r}
 plot(nin.spline)
 ```
 
-## Spatial approaches
+## Spatial regression approaches
 
-At this time, there are not suitable options for running spatial regression of variety trial data. Existing options in **spatialreg**, **spANOVA**, and **spaMM** are extraordinarily difficult to use, lack sufficient options for typical experimental design in variety trials and/or do not provide the desired output. 
+At this time, there are not suitable options for running spatial regression of variety trial data. Existing options in **spatialreg**, **spANOVA**, and **spaMM** are challenging to use, lack sufficient options for typical experimental design in variety trials and/or do not provide the desired output. 

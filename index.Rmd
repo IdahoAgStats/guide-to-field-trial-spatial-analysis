@@ -12,11 +12,15 @@ description: "This includes instructions for diagnosing spatial variation in agr
 
 # Preface
 
-```{r, echo=FALSE,out.width="60%",fig.align='center'}
+```{r, echo=FALSE,out.width="90%",fig.align='center'}
 knitr::include_graphics("img/stats_help.jpg")
 ```
-Image from [Discovering Statstics](https://www.discoveringstatistics.com/2016/04/28/if-youre-not-doing-something-different-youre-not-doing-anything-at-all/).
- 
+<center>
+
+Image from [Discovering Statstics](https://www.discoveringstatistics.com/2016/04/28/if-youre-not-doing-something-different-youre-not-doing-anything-at-all/)
+
+</center>
+
 ## Tutorial goal
 
 *To help people conducting planned agricultural field trials understand and  incorporate spatial variation routinely into analysis of field trials.*
@@ -25,7 +29,7 @@ Current educational resources are focused largely on geospatial appications that
 
 ## Prerequisites
 
-In order to run the scripts in this demonstration, you will to download R, avaiable free through the [Comprehensive R Archive Network](https://cran.r-project.org/). While this is sufficient for running R scripts, You may also find it hepful to use RStudio, which provides a nice graphical user interface for R. RStudio can be downloaded [here](https://www.rstudio.com/products/rstudio/download/).
+In order to run the scripts in this demonstration, you will to download R, avaiable free through the [Comprehensive R Archive Network](https://cran.r-project.org/) (CRAN). While this is sufficient for running R scripts, You may also find it hepful to use RStudio, which provides a nice graphical user interface for R. RStudio can be downloaded [here](https://www.rstudio.com/products/rstudio/download/).
 
 If you already have R installed, please make sure you have version 3.5.0 or newer. 
 
@@ -33,7 +37,8 @@ This demonstration is not intended to provide instructions on general R usage. H
 
 ## Packages used in this tutorial 
 
-|package------|usage---------|
+|package |usage |
+|------------|---------------|
 |dplyr, tidyr | basic data manipulation | 
 | purrr | data summary | 
 |ggplot, desplot | plotting | 
@@ -52,7 +57,7 @@ All packages are available on CRAN.
 
 [Julia Piaskowski](mailto:jpiaskowski@uidaho.edu) is the main author of this resource. 
 
-This book was written with [bookdown](https://bookdown.org/yihui/bookdown 
+This book was written with [bookdown](https://bookdown.org/yihui/bookdown)
 
 ## License
 
@@ -62,7 +67,7 @@ Incorporating Spatial Analysis into Agricultural Field Experiments by Julia Pias
 knitr::include_graphics(c("img/CC-by-nc.png"))
 ```
 
-## R package References
+
 
 ```{r include=FALSE}
 # automatically create a bib database for R packages

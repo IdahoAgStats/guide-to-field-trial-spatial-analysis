@@ -1,4 +1,4 @@
-# Example Analysis {#ch3}
+# Example Analysis {#example-spatial-var}
 
 ## Load data
 
@@ -32,7 +32,7 @@ library(ggplot2); library(desplot)
 ```
 
 
-```{r Nin-yield-layout-fig, fig.height=6, message=FALSE, warning=FALSE}
+```{r Nin-yield-layout-fig, out.width="80%",fig.asp=.7,message=FALSE, warning=FALSE}
 
 ggplot(Nin, aes(x = row, y = col)) +
   geom_tile(aes(fill = yield), col = "white") +
@@ -49,10 +49,11 @@ ggplot(Nin, aes(x = row, y = col)) +
         legend.text = element_text(size = 12))
 
 ```
+
 Black lines delineate the blocks. 
 
 It's also helpful to plot raw response data: 
-```{r Nin-boxplot-fig, fig.width=6, fig.asp = .6}
+```{r Nin-boxplot-fig, out.width="80%",fig.asp = .6}
 par(mfrow=c(1,3))
 boxplot(yield ~ rep, data = Nin, xlab = "rep", ylab = "yield (bu/acres)", col = "red2", main = "yield across blocks")
 boxplot(yield ~ row, data = Nin, xlab = "row", ylab = "yield (bu/acres)",col = "dodgerblue2", main = "yield across rows")
@@ -71,12 +72,11 @@ library(nlme)
 nin.lme <- lme(yield ~ gen, random = ~1|rep,
               data = Nin,
               na.action = na.exclude)
-anova(nin.lme)
 ```
 
 Next, establish and weight neighbors. In this example, only adjacent neighbors in the rook formation are used and are weighted proportionally according to their representation as neighbors to an individual. That is, if a unit has 4 adjacent neighbors, each neighbor is weighted as 0.25. If there are only two neighbors, each is weighted as 0.5. 
 
-The function `cell2nb` is a simplified function for setting neighbors when working with data laid out in a regular grid. 
+The function `cell2nb()` is a simplified function for setting neighbors when working with data laid out in a regular grid. 
 
 ```{r message=FALSE, warning=FALSE}
 library(spdep)
@@ -84,7 +84,7 @@ xy.rook <- cell2nb(nrow = max(Nin$row), ncol = max(Nin$col), type="rook") # make
 ```
 
 *Rook adjacency plot for the NIN data*
-```{r nin-rook-adj-fg, message=FALSE, warning=FALSE}
+```{r nin-rook-adj-fg, message=FALSE, warning=FALSE, fig.cap='Rook adjacency plot for the NIN data'}
 library(sf)
 plot(xy.rook, coords = st_multipoint(matrix(c(Nin$col, Nin$row), ncol = 2)))
 
@@ -114,11 +114,11 @@ plot(x = resid.lme, y = res.nn1,
 
 ### Note on Geary's C
 
-At this time, the **spdep** function `geary.test()` for Geary's C does not handle missing spatial points. This is area to contribute to! The 
+At this time, the **spdep** function `geary.test()` for Geary's C does not handle missing spatial points. This is area to contribute to! 
  
 ## Empirical variogram fitting
 
-First, create a spatial object by adding spatial coordinates to an ordinary data frame. I like to use the actual units of the plots since they are exaggerated rectangles (meters in this example).
+First, create a spatial object by adding spatial coordinates to an ordinary data frame. I like to use the actual size of the plots since they are often exaggerated rectangles (meters in this example).
 
 ```{r}
 Nin.spatial <- Nin.na
@@ -239,9 +239,9 @@ plot(resid.var1, Nin.variofit1a, main = "Exponential model")
 
 Hmm, that plot is not very convincing. 
 
-In this field trial, there is evidence spatial correlation as a function of distance, but there is not evidence that spatial auto-correlation is impacted by the direction.
+In this field trial, there is evidence of spatial correlation as a function of distance, but there is not evidence this spatial correlation is impacted by direction.
 
-*Another reminder on field trends*:  
+**Another reminder on field trends**  
 
 It's important to remember these methods are intended to describe localised spatial correlation. Field-wide spatial gradients, such as position on a slope, should be modelled as a separate trend. 
 
