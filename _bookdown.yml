@@ -3,3 +3,16 @@ delete_merged_file: true
 language:
   ui:
     chapter_name: "Section "
+
+rmd_files: [
+  "index.Rmd",
+
+  "02-intro.Rmd",
+  "03-background.Rmd",
+  "04-example-identifying-spatial-var.Rmd",
+
+  "05-example-applying-spatial-covars.Rmd",
+  "06-spatial-model-evaluation.Rmd",
+  "07-conclusion.Rmd",
+  "08-references.Rmd"
+]

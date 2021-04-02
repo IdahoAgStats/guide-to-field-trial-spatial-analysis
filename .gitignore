@@ -2,3 +2,8 @@
 .Rhistory
 .RData
 .Ruserdata
+README.html
+_book
+_bookdown_files
+.Rbuildignore
+img/github-configs

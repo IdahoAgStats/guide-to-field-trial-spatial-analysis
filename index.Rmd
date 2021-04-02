@@ -23,7 +23,7 @@ Image from [Discovering Statstics](https://www.discoveringstatistics.com/2016/04
 
 ## Tutorial goal
 
-*To help people conducting planned agricultural field trials understand and  incorporate spatial variation routinely into analysis of field trials.*
+*To help people conducting planned agricultural field trials understand and incorporate spatial variation routinely into analysis of field trials.*
 
 Current educational resources are focused largely on geospatial appications that typically require a a moderate to deep understanding of  mapping tools and spatial analytical techniques. Furthermore, there is not a comprehensive resources for spatial analytical techniques for field experiments that is also freely available. This tutorial is intended to fill that gap. 
 

@@ -2,9 +2,9 @@
 
 Now that we've built all these spatials models, how do we pick the right one? 
 
-First, assemble all the model objects into one list.  
+First, assemble all the model objects into one list. They are generated from different processes, as shown by the `class` attribute of each one. 
 ```{r message=FALSE, warning=FALSE}
-library(purrr)
+library(purrr); library(dplyr)
 all.models <- mget(ls(pattern = "^nin.*"))
 # print out their class
 map(all.models, class)
@@ -25,11 +25,17 @@ residuals <- map(all.models, function (x) {
   
   resids <- residuals(x)
   
+  if(is.data.frame(resids)) {
+    colnum = ncol(resids)
+    resids = resids[,colnum]
+  }
+  
   if(length(resids) == L2) {
     resids_pl = rep(NA, L1)
     resids_pl[non_na] = resids
     resids = resids_pl
   }
+  
   return(resids)
 })
 ```
@@ -86,7 +92,6 @@ CV = lapply(nlme.mods, function(x) {
 })
 CV
 ```
-I would further argue that, in general, the coefficient of variation is not an effective metric for evaluating confidence in variety trials. 
 
 ## Experimental power
 
@@ -108,6 +113,8 @@ This table indicates changes in the hypothesis test for "gen".  There is a drama
 
 Retrieve predictions generated in the previous section:
 ```{r}
+#(standardise names for downstream merging step)
+preds.ar1ar1 <- preds.ar1ar1  %>% rename(emmean = "predicted.value", SE = "standard.error") 
 all.preds <- mget(ls(pattern = "^preds.*"))
 ```
 
@@ -120,7 +127,7 @@ colnames(error_df) <- pred.names
 ```
 
 ```{r SE-box-fig, echo=FALSE, fig.cap='Differences in Variety Standard Error', out.width='80%', fig.asp=0.75, fig.align='center'}
-boxplot(error_df, ylab = "standard errors", xlab = "linear model")
+boxplot(error_df, ylab = "standard errors", xlab = "linear model", col = "dodgerblue3")
 ```
 
 ## Compare variety estimates

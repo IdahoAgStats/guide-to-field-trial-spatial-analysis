@@ -192,8 +192,7 @@ nin.ar1ar1 <- mmer(yield ~ gen,
                    na.method.X = "include", na.method.Y = "exclude",
                    rcov = ~ units, data = Nin)
 
-preds.ar1ar1 <- predict(nin.ar1ar1, classify = 'gen')$predictions %>% 
-  rename(emmean = "predicted.value.yield", SE = "standard.errors.yield")
+preds.ar1ar1 <- predict(nin.ar1ar1, classify = 'gen')$pvals 
 ```
 
 ## Splines
