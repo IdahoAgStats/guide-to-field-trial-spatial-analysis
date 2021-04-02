@@ -68,7 +68,7 @@ An empirical variogram is a visual tool for understanding how error terms are re
 
 $$\gamma(h) = \frac{1}{2|N(h)|}\sum_{N(h)}(x_i - x_j)^2$$
 
-Semivariances are binned for distance intervals. The average values for semivariance and distance interval can be fit to correlated error models such a exponential, spherical, Gaussian and Matérn. How to do this is explored further in \@ref(ch:ch2) of this guide. 
+Semivariances are binned for distance intervals. The average values for semivariance and distance interval can be fit to correlated error models such a exponential, spherical, Gaussian and Matérn. How to do this is explored further in \@ref(background) of this guide. 
 
 Three important concepts of an empirical variogram are *nugget*, *sill* and  *range* 
 

@@ -1,8 +1,8 @@
 # Spatial Models {#background}
 
-This section contains some of the background behind why spatial models are used and how they work. Understanding this section is not essential, but it is extremely helpful. This section relies on information introduced in \@ref(ch:ch1), so please make sure you have read that section if you are new to empirical variograms and spatial statistics.  
+This section contains some of the background behind why spatial models are used and how they work. Understanding this section is not essential, but it is extremely helpful. This section relies on information introduced in \@ref(intro), so please make sure you have read that section if you are new to empirical variograms and spatial statistics.  
 
-General linear statistical models are commonly modelled as thus:
+General linear statistical models are commonly modeled as thus:
 
 $$Y_i = \beta_0 + X_i\beta_1 + \epsilon_i$$
 $\beta_1$ is a slope describing the relationship between a continuous variable and the dependent variable, $Y_i$. If $X_i$ is a categorical variable, such as a crop variety, then there will be $p-1$ slopes estimated, where p is the number of unique treatments levels in $X$. 
@@ -10,7 +10,7 @@ $\beta_1$ is a slope describing the relationship between a continuous variable a
 The error terms, $\epsilon_i$ are assumed normally distributed with a mean of zero and a variance of $\sigma^2$ :
 
 $$e_i ~\sim N(0, \sigma^2)$$
-The error terms, or residuals, are assumed to be *identically* and *independently* distributed (abbreviated  "iid"). This implies a constant variance of the error terms and zero covariance between residuals. 
+The error terms, or residuals, are assumed to be *identically* and *independently* distributed (sometimes abbreviated "iid"). This implies a constant variance of the error terms and zero covariance between residuals. 
 
 If N = 3, the expanded model looks like this:  
 
@@ -306,7 +306,7 @@ $$ y = X\beta + \rho W_1y+u \\ u = \lambda W_2 + \nu $$
 
 **On Weights**
 
-Setting weights of neighbors is dealt with in the next chapter\@ref(ch3),
+Setting weights of neighbors is dealt with in the next chapter\@ref(example-analysis),
 
 ## Trend analysis
 

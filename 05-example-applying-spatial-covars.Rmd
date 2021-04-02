@@ -40,7 +40,7 @@ library(spdep)
 xy.rook <- cell2nb(nrow = max(Nin$row), ncol = max(Nin$col), type="rook") 
 ```
 
-The variables "gen" refers to the cultivar or breeding line being trialled, and "rep" is the block, and the dependent variable, "yield" is grain yield. Basic exploratory analysis was conducted in \@ref(ch:ch3). 
+The variables "gen" refers to the cultivar or breeding line being trialed, and "rep" is the block, and the dependent variable, "yield" is grain yield. Basic exploratory analysis was conducted in \@ref(example-analysis). 
 
 ## Correlated errors 
 
@@ -177,7 +177,7 @@ preds.mat <- as.data.frame(emmeans(nin.matern, "gen"))
 
 ### AR1xAR1
 
-The package **Sommer** implements a version of the AR1xAR1 covariance structure. However, it does not estimate the parameter $\rho$. The user must specify the $\rho$ and that value is not optimized in the restricted maximum likelihood estimation. There may be another way to implement the AR1xAR1 spatial model using the package **TMB**. Both SAS and Asreml can implement a mixed model with this covariance structure.
+The package **sommer** implements a version of the AR1xAR1 covariance structure. However, it does not estimate the parameter $\rho$. The user must specify the $\rho$ and that value is not optimized in the restricted maximum likelihood estimation. There may be another way to implement the AR1xAR1 spatial model using the package **TMB**. Both SAS and Asreml can implement a mixed model with this covariance structure.
 
 
 ```{r message=FALSE, warning=FALSE}
@@ -224,3 +224,5 @@ plot(nin.spline)
 ## Spatial regression approaches
 
 At this time, there are not suitable options for running spatial regression of variety trial data. Existing options in **spatialreg**, **spANOVA**, and **spaMM** are challenging to use, lack sufficient options for typical experimental design in variety trials and/or do not provide the desired output. 
+
+

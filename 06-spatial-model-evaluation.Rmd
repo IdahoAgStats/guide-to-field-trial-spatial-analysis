@@ -171,3 +171,5 @@ pairs.panels(preds_df[,-9], smooth = F, density = F, ellipses = F,
 There is no consensus on how to pick the best model. Some studies rely on log likelihood, while others seek to maximize the experimental power. Others have sought to minimize the root mean square error from cross validation.
 
 The evidence suggest that for this data set, using any spatial model is better than running a naïve RCBD model.  
+
+
