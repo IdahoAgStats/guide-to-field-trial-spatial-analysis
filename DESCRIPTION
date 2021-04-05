@@ -8,7 +8,7 @@ Imports:
   bookdown, 
   dplyr, purrr, tidyr, ggplot2, 
   nlme, emmeans, desplot, agridat,
-  sp, gstat, spdep,
+  sp, gstat, spdep, psych,
   sommer, spaMM, SpATS
 Remotes:
   rstudio/bookdown
