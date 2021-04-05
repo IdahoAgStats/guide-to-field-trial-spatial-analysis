@@ -59,7 +59,7 @@ jobs:
         shell: Rscript {0}
         
       - name: Render Book
-        run: Rscript -e 'bookdown::render_book("index.Rmd")'
+        run: Rscript -e 'bookdown::render_book("index.Rmd", "bookdown::gitbook")'
         
       - uses: actions/upload-artifact@v1
         with:
@@ -77,20 +77,14 @@ jobs:
    steps:
    
      - name: Checkout
-       uses: actions/checkout@master
-     - name: Download artifact
-       uses: actions/download-artifact@v1.0.0
-       with:
-         # Artifact name
-         name: _book # optional
-         # Destination path
-         path: _book # optional
+       uses: actions/checkout@v2
          
      - name: Deploy to GitHub Pages
-       uses: Cecilapp/GitHub-Pages-deploy@master
+       uses: Cecilapp/GitHub-Pages-deploy@v3
        env:
-          EMAIL: ${{ secrets.EMAIL }}               # must be a verified email
-          GH_TOKEN: ${{ secrets.GH_PAT }} # https://github.com/settings/tokens
-          BUILD_DIR: _book/                     # "_site/" by default
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }} # https://github.com/settings/tokens
+       with: 
+          email: ${{ secrets.EMAIL }}               # must be a verified email
+          build_dir: _book/                     # "_site/" by default
     
  
