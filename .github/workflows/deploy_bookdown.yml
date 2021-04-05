@@ -1,8 +1,11 @@
 on:
   push:
-     branches:
+      branches:
        - master
-
+       
+  pull_request:
+      branches:
+       - master
   
 
 name: renderbook
@@ -11,18 +14,53 @@ jobs:
   bookdown:
     name: Render-Book
     runs-on: macOS-latest
+    env: 
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}  #Julia: check on this
     steps:
       - uses: actions/checkout@v1
       - uses: r-lib/actions/setup-r@v1
       - uses: r-lib/actions/setup-pandoc@v1
+      
+      - name: Cache R packages
+        uses: actions/cache@v2
+        with:
+          path: ${{ env.R_LIBS_USER }}
+          key: ${{ runner.os }}-${{ steps.get-r-version.outputs.version }}-1-
+
+      - name: Cache bookdown results
+        uses: actions/cache@v2
+        with:
+          path: _bookdown_files
+          key: bookdown-1-${{ hashFiles('**/*Rmd') }}
+          restore-keys: bookdown-1-
+
+      - name: Install pak
+        run: |
+          install.packages("pak", repos = "https://r-lib.github.io/p/pak/dev/")
+        shell: Rscript {0}
+        
+      - name: Install macOS system dependencies
+        if: runner.os == 'macOS'
+        run: |
+          brew install libgit2
+          
+      - name: Install dependencies
+        run: |
+          pak::local_install_dev_deps()
+        shell: Rscript {0}
+
+      
       - name: Install rmarkdown
         run: Rscript -e 'install.packages(c("rmarkdown","bookdown"))'
       - name: Install packages
-        run: Rscript -e 'install.packages(c("ggplot2", "agridat", 
+        run: Rscript -e 'pak::pkg_install(c("ggplot2", "agridat", 
         "dplyr", "tidyr", "desplot", "nlme", "purrr", "gstat", "sp",
-        "emmeans", "spdep", "spaMM", "sommer", "SpATS")'
+        "emmeans", "spdep", "spaMM", "sommer", "SpATS"))'
+        shell: Rscript {0}
+        
       - name: Render Book
         run: Rscript -e 'bookdown::render_book("index.Rmd")'
+        
       - uses: actions/upload-artifact@v1
         with:
           name: _book
@@ -35,7 +73,9 @@ jobs:
   checkout-and-deploy:
    runs-on: ubuntu-latest
    needs: bookdown
+   
    steps:
+   
      - name: Checkout
        uses: actions/checkout@master
      - name: Download artifact
@@ -45,6 +85,7 @@ jobs:
          name: _book # optional
          # Destination path
          path: _book # optional
+         
      - name: Deploy to GitHub Pages
        uses: Cecilapp/GitHub-Pages-deploy@master
        env:
