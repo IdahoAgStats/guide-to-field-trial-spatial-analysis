@@ -3,7 +3,7 @@ Title: How to Integrate Spatial Covariates into Routine Analysis of Planned Fiel
 Version: 0.0.0.9000
 Authors@R: person("Julia", "Piaskowski", role=c("aut", "cre"),
   email = "julia.piask@gmail.com")
-Depends: R (>= 4.0/-)
+Depends: R (>= 4.0.0)
 Imports:
   bookdown, 
   dplyr, purrr, tidyr, ggplot2, 
