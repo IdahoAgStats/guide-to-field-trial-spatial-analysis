@@ -15,7 +15,7 @@ jobs:
     name: Render-Book
     runs-on: macOS-latest
     env: 
-      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}  #Julia: check on this
+      GITHUB_PAT: ${{ secrets.GH_TOKEN }}  #Julia: check on this
     steps:
       - uses: actions/checkout@v1
       - uses: r-lib/actions/setup-r@v1
@@ -39,7 +39,7 @@ jobs:
           install.packages("pak", repos = "https://r-lib.github.io/p/pak/dev/")
         shell: Rscript {0}
         
-      - name: Install macOS system dependencies
+      - name: Install macOS system dependencies #this is copied from "happy git w/R"
         if: runner.os == 'macOS'
         run: |
           brew install libgit2

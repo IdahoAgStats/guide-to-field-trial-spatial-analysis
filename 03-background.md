@@ -1,0 +1,261 @@
+# Spatial Models {#background}
+
+This section contains some of the background behind why spatial models are used and how they work. Understanding this section is not essential, but it is extremely helpful. This section relies on information introduced in \@ref(intro), so please make sure you have read that section if you are new to empirical variograms and spatial statistics.  
+
+General linear statistical models are commonly modeled as thus:
+
+$$Y_i = \beta_0 + X_i\beta_1 + \epsilon_i$$
+$\beta_1$ is a slope describing the relationship between a continuous variable and the dependent variable, $Y_i$. If $X_i$ is a categorical variable, such as a crop variety, then there will be $p-1$ slopes estimated, where p is the number of unique treatments levels in $X$. 
+
+The error terms, $\epsilon_i$ are assumed normally distributed with a mean of zero and a variance of $\sigma^2$ :
+
+$$e_i ~\sim N(0, \sigma^2)$$
+The error terms, or residuals, are assumed to be *identically* and *independently* distributed (sometimes abbreviated "iid"). This implies a constant variance of the error terms and zero covariance between residuals. 
+
+If N = 3, the expanded model looks like this:  
+
+$$\left[ {\begin{array}{ccc} Y_1\\ Y_2\\ Y_3 \end{array} } \right] = \beta_0 + 
+\left[ {\begin{array}{ccc} X_1\\ X_2\\ X_3 \end{array}  } \right] \beta_1 +
+\left[ {\begin{array}{ccc} \epsilon_1\\ \epsilon_2\\ \epsilon_3 \end{array}  } \right] $$
+
+
+
+$$e_i ~\sim N \Bigg( 0, 
+\left[ {\begin{array}{ccc} \sigma^2 & 0 & 0 \\ 0 & \sigma^2 & 0\\ 0 & 0 & \sigma^2\end{array}  } \right] \Bigg) $$
+
+
+If spatial variation is present, the off-diagonals of the variance-covariance matrix are not zero - hence the error terms are not independently distributed. As a result, hypotheses test and parameter estimates from uncorrected linear models will provide erroneous results. 
+
+## Correlated error models
+
+### Distance-based correlation error models
+
+There are mathematical tools for modelling how error terms are correlated with each other based on pairwise physical distance between observations. These models can be used to weight observations. Often, the data are assumed to be *isotropic*, where distance but not direction impacts the spatial error correlation.
+
+There are several methods for estimating the semivariance as a direct function of distance.
+
+#### Exponential
+
+$$ \gamma (h)\left\{ {\begin{array}{cc} 0 & h = 0\\ C_0+C_1 \left [ 1-e^{-(\frac{h}{r})} \right] & h > 0 \end{array} } \right. $$
+where
+
+$$ C_0 = nugget \\ C_1 = partial \: sill \\ r = range$$ 
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.7\linewidth]{03-background_files/figure-latex/Exp-CE-fig-1} 
+
+}
+
+\caption{Exponential Model}(\#fig:Exp-CE-fig)
+\end{figure}
+
+$3r = r_p$ is the "practical range", which is 95% of the true value for $C_1$. 
+
+
+#### Gaussian
+(a squared version of the exponential model)
+
+$$ \gamma (h)\left\{ {\begin{array}{cc} 0 & h = 0\\ C_0+C_1 \left [ 1-e^{-(\frac{h}{r})^2} \right] & h > 0 \end{array} } \right. $$
+where
+
+$$ C_0 = nugget \\ C_1 = partial \: sill \\ r = range$$
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.7\linewidth]{03-background_files/figure-latex/Gau-CE-fig-1} 
+
+}
+
+\caption{Gaussian Model}(\#fig:Gau-CE-fig)
+\end{figure}
+
+$\sqrt 3r = r_p$ is the "practical range", which is 95% of the true value for $C_1$. 
+
+#### Spherical
+
+$$ \gamma (h) = \left\{ {\begin{array}{cc} 0 & h = 0\\ C_0+C_1 \left[ \frac{3h}{2r}-0.5\bigg( \frac{h}{r}\bigg)^3 \right] & 0 <h \leq r \\ 
+C_0 + C_1 & h > r \end{array} } \right. $$
+where
+
+$$ C_0 = nugget \\ C_1 = partial \: sill \\ r = range$$
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.7\linewidth]{03-background_files/figure-latex/Sph-CE-fig-1} 
+
+}
+
+\caption{Spherical Model}(\#fig:Sph-CE-fig)
+\end{figure}
+
+#### Other correlated error distance models 
+
+There are many more models - Matérn, Cauchy, Logistic - that may describe spatial correlation in a data set. 
+
+There are two addition models that have no range or sill, the linear model and power model. If your data fits these, consider doing a trend analysis.
+
+#### Linear
+
+$$ \gamma (h)=\left\{ {\begin{array}{cc} 0 & h = 0\\ C_0+C_1h & h > 0 \end{array} } \right. $$
+where
+
+$$ C_0 = nugget \\ C_1 = slope $$
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.7\linewidth]{03-background_files/figure-latex/linear-CE-fig-1} 
+
+}
+
+\caption{Linear Error Model}(\#fig:linear-CE-fig)
+\end{figure}
+
+There is no sill or range in the linear model, so the variance will continue to increase as a function of distance. 
+
+#### Power
+
+$$ \gamma (h)=\left\{ {\begin{array}{cc} 0 & h = 0\\ C_0+C_1h^\lambda & h > 0 \end{array} } \right. $$
+where
+
+$$ 0 \leq \lambda <\leq 2 \\ C_0 = nugget \\ C_1 = scaling \: factor $$
+\begin{figure}
+
+{\centering \includegraphics[width=0.7\linewidth]{03-background_files/figure-latex/power-CE-fig-1} 
+
+}
+
+\caption{Power Model}(\#fig:power-CE-fig)
+\end{figure}
+
+When $\lambda = 1$, that is equivalent to the linear model. Example above is when $\lambda = 0.5$ (i.e. a square-root transformation) and $C_1 = 1$.  There is also no sill or range in the power model. 
+
+#### Matérn
+
+$$\gamma(h) = c_0 + c_1 \bigg( 1- \frac{1}{2^{\kappa -1}\Gamma(\kappa)}
+\Big( \frac{h}{\alpha} \Big) ^{\kappa} K_\kappa
+\Big( \frac{h}{\alpha} \Big)    \bigg)$$
+
+Where
+
+$$ C_0 = nugget \\ C_1 = partial \: scale \\ 
+\alpha = smoothing \: factor \\
+$$
+
+and $\kappa(\alpha)$ is a modified bessel function: 
+
+$$ K_\kappa(t) = \frac{\Gamma(\alpha)}{2} \big( \frac{t}{2} \big) ^{-\kappa}$$
+
+### Correlated error model for gridded data
+
+Planned field experiments often have the advantage of being arranged in regular grid pattern that can be adequately described using Euclidean space. This simplifies aspects of understanding how error terms are related by distance since the data occur in evenly spaced increments. Furthermore, in many agricultural trials, there may be no interest in spatial interpolation between units. Some of the following models work with irregularly-spaced data, but the models below are simplified forms when the experimental units are arranged in regular grid.
+
+For example, imagine an experiment consisting of 8 plots (plot = the experiment units) arranged in 2 rows, each with 4 ranges with this layout: 
+
+![](03-background_files/figure-latex/plot-grid-fig-1.pdf)<!-- --> 
+
+The statistical model for that experiment:
+
+$$ 
+\left[ {\begin{array} \ Y_1 \\ Y_2 \\ \vdots \\ Y_n \end{array} } \right] = \beta_0 + 
+\left[ {\begin{array} \ X_1 \\ X_2 \\ \vdots \\ X_n \end{array} } \right] \beta_1 +
+\left[ {\begin{array} \ \epsilon_1 \\ \epsilon_2 \\ \vdots \\ \epsilon_n \end{array} } \right]
+$$
+
+
+$X\beta$ refer to independent variable effects. This same model is also often presented in an abbreviated matrix form: 
+
+$$ \mathbf{Y = X\beta + \epsilon}$$
+
+#### First order auto-regressive model (AR1)
+
+This assumes that variance can be modelled as exponential function based on unit distance (e.g. row or range), either in a single direction or anistropic. 
+
+The AR1 structure across 2 rows is modeled as thus: 
+
+$$\mathbf { V_{AR(1)row}}  = \sigma^2
+\left[ {\begin{array}{cc} 
+1 & \rho \\
+\rho & 1 
+\end{array} } \right] \otimes \mathbf{I_4} $$
+
+This covariance model describes the correlation of observations in the *row direction only.* 
+
+And similarly the AR1 structure across 4 ranges is modeled as thus: 
+
+$$ \mathbf {V_{AR(1)range}} = \sigma^2 \mathbf{I_4} \otimes
+\left[ {\begin{array}{cccc} 
+1 & \rho & \rho^2 & \rho^3 \\
+\rho & 1 & \rho & \rho^2  \\
+\rho^2 & \rho & 1 & \rho  \\
+\rho^3 & \rho^2 & \rho & 1
+\end{array} } \right] $$
+
+This covariance model describes the correlation of observations in the *range direction only.* 
+
+In combined AR1xAR1 model, the parameter, $\rho$ may need to estimated separated across the row and column directions depending on the shape of the plots and site-specific field variation. Very rectangular plots are likely to require a separate estimate of the $\rho$ parameter for each direction. 
+
+$$ \mathbf {V_{AR(1)row} \otimes V_{AR(1)range}} = \sigma^2
+\left[ {\begin{array}{cccc | cccc} 
+
+1 & \rho_1 & \rho_1^2 & \rho_1^3 & \rho_2 & \rho_1\rho_2 & \rho_1^2\rho_2 & \rho_1^3\rho_2 \\
+\rho_1 & 1 & \rho_1 & \rho_1^2 & \rho_1\rho_2 & \rho_2 & \rho_1\rho_2 & \rho_1^2\rho_2\\
+\rho_1^2 & \rho_1 & 1 & \rho_1 & \rho_1^2\rho_2 & \rho_1\rho_2 & \rho_2 & \rho_1\rho_2\\
+\rho_1^3 & \rho_1^2 & \rho_1 & 1 & \rho_1^3\rho_2 & \rho_1^2\rho_2 & \rho_1\rho_2 & \rho_2 \\
+\hline
+\rho_2 & \rho_1\rho_2 & \rho_1^2\rho_2 & \rho_1^3\rho_2 & 1 & \rho_1 & \rho_1^2 & \rho_1^3 \\
+\rho_1\rho_2 & \rho_2 & \rho_1\rho_2 & \rho_1^2\rho_2 & \rho_1 & 1 & \rho_1 & \rho_1^2 \\
+\rho_1^2\rho_2 & \rho_1\rho_2 & \rho_2 & \rho_1\rho_2 & \rho_1^2 & \rho_1 & 1 & \rho_1 \\
+\rho_1^3\rho_2 & \rho_1^2\rho_2 & \rho_1\rho_2 & \rho_2 &\rho_1^3 & \rho_1^2 & \rho_1 & 1 \\
+
+\end{array} } \right]
+$$
+
+**Note**: $\rho_1$ and  $\rho_2$ are the parameter estimate for $V_{AR1(1) row}$ and $V_{AR(1)range}$, respectively.
+
+Please note that these error models are for modelling localised variation based on physical proximity. It is assumed that eventually a distance in the experiment can be reached in which 2 observations can be treated independent. 
+If there are spatial trends that extend along the entire scope of an experiment (for instance, due to position on a slope), then an additional trend analysis should be conducted.
+
+## Spatial Regression methods
+
+These approaches look use information from adjacent plots to adjust for spatial auto-correlation. 
+
+### Spatial autoregressive (SAR)
+
+Sometimes called a "lag" model, the SAR model uses correlations with neighboring plots dependent variable to predict Y. The auto-regressive model explicitly models correlations between neighboring points. 
+
+$$\mathbf{Y =  \rho W Y + X\beta + \epsilon} $$
+
+While this may look strange, $\mathbf{W}$ is an $n$ x $n$ matrix weighting the neighbors with a diagonal of zero so the value at $i=j$, that is $Y_{ijk}$ itself, is not used on the right-hand side to predict $Y_{ijk}$ on the left-hand side of the equation. The error terms are assumed iid. 
+
+### Spatial error model (SEM)
+
+This is also refereed to as the "moving average model" and is quite similar to auto-regressive model. SAR models the spatial dependence of the variable of interest. SEM models the spatial dependence of the error terms. 
+
+$$\mathbf {Y= X\beta + u} \\ \mathbf {u = \lambda W + \nu}$$
+
+Where $\mathbf{u}$ incorporates both the normally-distributed iid error and spatially correlated error. Like in SAR, $\mathbf{W}$ is a matrix of spatial weights and $\lambda$ is a parameter describing auto-correlation of the error terms. 
+
+### ARIMA 
+
+The AR1 and MA1 models can be combine into one: 
+
+$$ y = X\beta + \rho W_1y+u \\ u = \lambda W_2 + \nu $$
+
+**On Weights**
+
+Setting weights of neighbors is dealt with in the next chapter\@ref(example-analysis),
+
+## Trend analysis
+
+### Row and column trends
+
+Experiment wide-trends should be modeled with directional trend models. These are comparatively simple models:
+
+$$Y_{ijk} = \beta_0 + X_{i1}\beta_1 +  Row_{j2}\beta_2 + Range_{k3}\beta_3 +\epsilon_{ijk}$$ 
+
+If the assumption of independent, normal, and identical errors are met, then this model will suffice. If spatial variation is still present, additional measures will need to be taken. 
+
+### Splines
+
+There is a rich field of research on using localised splines to model field heterogeneity. These models are complex and hence not described here.  
