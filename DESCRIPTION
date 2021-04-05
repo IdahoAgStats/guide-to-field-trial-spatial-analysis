@@ -7,7 +7,7 @@ Depends: R (>= 4.0.0)
 Imports:
   bookdown, 
   dplyr, purrr, tidyr, ggplot2, 
-  nlme, emmeans, deplot, agridat,
+  nlme, emmeans, desplot, agridat,
   sp, gstat, spdep,
   sommer, spaMM, SpATS
 Remotes:
