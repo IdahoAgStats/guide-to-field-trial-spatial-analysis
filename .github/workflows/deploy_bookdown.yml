@@ -51,7 +51,7 @@ jobs:
 
       
       - name: Install rmarkdown
-        run: Rscript -e 'install.packages(c("rmarkdown","bookdown"))'
+        run: Rscript -e 'install.packages(c("rmarkdown","bookdown", "sessioninfo"))'
       - name: Install packages
         run: Rscript -e 'pak::pkg_install(c("ggplot2", "agridat", "dplyr", "tidyr", "desplot", "nlme", "purrr", "gstat", "sp", "emmeans", "spdep", "spaMM", "sommer", "SpATS", "psych"))'
         
