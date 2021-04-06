@@ -80,11 +80,6 @@ jobs:
    
    steps:
    
-     - name: Configure Git user
-        run: |
-          git config --local user.name "$GITHUB_ACTOR"
-          git config --local user.email "$GITHUB_ACTOR@users.noreply.github.com"
-   
      - name: Checkout
        uses: actions/checkout@v2
          
