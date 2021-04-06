@@ -55,8 +55,15 @@ jobs:
       - name: Install packages
         run: Rscript -e 'pak::pkg_install(c("ggplot2", "agridat", "dplyr", "tidyr", "desplot", "nlme", "purrr", "gstat", "sp", "emmeans", "spdep", "spaMM", "sommer", "SpATS", "psych"))'
         
+      - name: Session info
+        run: |
+          options(width = 100)
+          pkgs <- installed.packages()[, "Package"]
+          sessioninfo::session_info(pkgs, include_base = TRUE)
+        shell: Rscript {0}
+        
       - name: Render Book
-        run: Rscript -e 'bookdown::render_book("index.Rmd", "bookdown::gitbook")'
+        run: Rscript -e 'bookdown::render_book("index.Rmd", "bookdown::gitbook", quiet = TRUE)'
         
       - uses: actions/upload-artifact@v1
         with:
@@ -72,6 +79,11 @@ jobs:
    needs: bookdown
    
    steps:
+   
+     - name: Configure Git user
+        run: |
+          git config --local user.name "$GITHUB_ACTOR"
+          git config --local user.email "$GITHUB_ACTOR@users.noreply.github.com"
    
      - name: Checkout
        uses: actions/checkout@v2
