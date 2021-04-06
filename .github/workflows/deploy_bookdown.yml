@@ -83,5 +83,5 @@ jobs:
        with: 
           email: ${{ secrets.EMAIL }}               # must be a verified email
           build_dir: _book/                     # "_site/" by default
-    
+          branch: master
  
