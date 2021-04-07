@@ -4,7 +4,7 @@ author: "Julia Piaskowski"
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
 documentclass: book
-bibliography: [book.bib, packages.bib]
+bibliography: [book.bib, packages.bib, extra.bib]
 biblio-style: apalike
 link-citations: yes
 description: "This includes instructions for diagnosing spatial variation in agricultural field trials and incorporating spatial variation into analysis of the trial using freely available tools in R."
@@ -13,11 +13,11 @@ description: "This includes instructions for diagnosing spatial variation in agr
 # Preface
 
 ```{r, echo=FALSE,out.width="90%",fig.align='center'}
-knitr::include_graphics("img/stats_help.jpg")
+knitr::include_graphics("img/road-auvers-after-rain-6_2840.jpg")
 ```
 <center>
 
-Image from [Discovering Statstics](https://www.discoveringstatistics.com/2016/04/28/if-youre-not-doing-something-different-youre-not-doing-anything-at-all/)
+Vincent Van Gogh, *A Road in Auvers After the Rain*
 
 </center>
 

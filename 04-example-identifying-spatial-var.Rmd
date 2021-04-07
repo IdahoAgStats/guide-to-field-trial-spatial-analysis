@@ -2,7 +2,7 @@
 
 ## Load data
 
-This tutorial uses the Nebraska Interstate wheat trials, first published by Stroup et al in 1991 and reused extensively in field spatial variation studies. 
+This tutorial uses the Nebraska Interstate wheat trials, first published by Stroup et al in 1994 [@stroup1944] and reused extensively in field spatial variation studies. 
 
 ```{r message=FALSE, warning=FALSE}
 library(agridat); library(dplyr); library(tidyr)
@@ -80,7 +80,7 @@ The function `cell2nb()` is a simplified function for setting neighbors when wor
 
 ```{r message=FALSE, warning=FALSE}
 library(spdep)
-xy.rook <- cell2nb(nrow = max(Nin$row), ncol = max(Nin$col), type="rook", torus = FALSE, legacy = TRUE)  
+xy.rook <- cell2nb(nrow = max(Nin$row), ncol = max(Nin$col), type="rook", torus = FALSE, legacy = FALSE)  
 ```
 
 **Make sure your data sorted by the variables assigned to row and col (in that order), and there is one and only one observation in the data set for each unique row/col combination. Even missing plots need a row.**
@@ -88,8 +88,8 @@ xy.rook <- cell2nb(nrow = max(Nin$row), ncol = max(Nin$col), type="rook", torus 
 *Rook adjacency plot for the NIN data*
 ```{r nin-rook-adj-fg, message=FALSE, warning=FALSE, fig.cap='Rook adjacency plot for the NIN data'}
 library(sf)
-rook_matrix <- matrix(c(Nin$col, Nin$row), ncol = 2)
-plot(xy.rook, coords = st_multipoint(rook_matrix, dim = "XY"), points = TRUE)
+rook_matrix <- st_as_sf(expand.grid(col=1:22, row=1:11), coords=c("col", "row"))
+plot(xy.rook, coords = st_geometry(rook_matrix), points = TRUE)
 ```
 Each observation considers "neighbors" to be those which touch the cell in a row or column orientation, but not diagonal. 
 
