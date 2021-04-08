@@ -14,5 +14,5 @@ rmd_files: [
   "05-example-applying-spatial-covars.Rmd",
   "06-spatial-model-evaluation.Rmd",
   "07-conclusion.Rmd",
-  "08-references.Rmd"
+ 
 ]
