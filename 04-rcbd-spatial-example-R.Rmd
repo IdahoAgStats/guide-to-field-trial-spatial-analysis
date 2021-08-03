@@ -2,7 +2,7 @@
 
 ## Load data
 
-This tutorial uses the Nebraska Interstate wheat trials, first published by Stroup et al in 1994 [@stroup1944] and reused extensively in field spatial variation studies. 
+This tutorial uses the Nebraska Interstate wheat trials, first published by Stroup et al in 1994 [@stroup1994] and reused extensively in field spatial variation studies. 
 
 ```{r message=FALSE, warning=FALSE}
 library(agridat); library(dplyr); library(tidyr)

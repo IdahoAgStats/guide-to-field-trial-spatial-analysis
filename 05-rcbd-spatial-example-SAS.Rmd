@@ -1,16 +1,4 @@
----
-title: "Stroup NIN Analysis"
-author: "Statistical Programs, University of Idaho"
-date: "6/9/2021"
-output: 
-  html_document:
-    toc: true
-    css: C:\Users\bprice\Dropbox\CLASS\sas.default.css
----
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
 
 ```{r include=FALSE}
 require(SASmarkdown)
@@ -20,21 +8,34 @@ saspath <- "C:/Program Files/SASHome/SASFoundation/9.4/sas.exe"
 sasopts <- "-nosplash -ls 200"
 ```
 
-# Section 4 Example Analysis (SAS)
+# RCBD Example: SAS
 
-## 4.1 Read in and Eexplore the Raw Data
+## Read in and Explore the Raw Data
 
-These data are from a winter wheat variety trial in Alliance, Nebraska (Stroup et al. 1994) and are commonly used to demonstrate spatial adjustment in linear modeling. The data represent yields of 56 varieties originally layed out in a randomized complete block design (RCB). The local topography combined with winter kill, however, induced spatial variability that did not correspond to the RCB design (Stroup 2013) which produced biased estimates in a standard unadjusted analysis. <br><br>
+These data are from a winter wheat variety trial in Alliance, Nebraska [@stroup1994] and are commonly used to demonstrate spatial adjustment in linear modeling. The data represent yields of 56 varieties originally layed out in a randomized complete block design (RCBD). The local topography combined with winter kill, however, induced spatial variability that did not correspond to the RCBD design [@stroup2013] which produced biased estimates in a standard unadjusted analysis. <br><br>
 
 The code below reads the data from a CSV file where missing values are denoted as a single period in the data file. These values are not actually missing, but represent blank plots in the original lay out of the study. They are removed in this data step before proceeding to analyses. Also note that row and column indices are multiplied by constants to convert them to the meter dimensions of the plots.<br><br>
 
 The first six observations are displayed. The data contains variables for variety (entry), replication (rep), yield, and column and row identifiers.<br><br> Last, a map of the 4 replications (blocks) from the original experimental design is shown in gray shading.
 
+```{r eval=FALSE, include=FALSE}
+# here's an option for getting the data, it's currently not being shown or run
+library(agridat); data("stroup.nin"); library(dplyr)
+
+Nin.na <- stroup.nin %>% mutate(rep = as.character(rep)) %>% 
+  tidyr::replace_na(list(rep = ".", yield = "."))
+
+#write.csv(Nin.na, "data/Stroup.NIN.wheat.csv") # this will overwrite the existing file
+writexl::write_xlsx(Nin, "data/Stroup.NIN.wheat.xlsx")
+rm(Nin, Nin.na)
+```
+
 
 ```{r code1, engine="sashtml", collectcode=TRUE, engine.path=saspath, include=TRUE, engine.opts=sasopts, comment=""}
-
+# let's see if we can get to work, then we can work on 
 data alliance;
-    infile 'C:\Users\bprice\Dropbox\Spatial\Stroup.NIN.wheat.csv' firstobs=2 delimiter=',';
+    infile 'data\Stroup.NIN.wheat.csv' firstobs=2 delimiter=',';
+    #infile 'C:\Users\bprice\Dropbox\Spatial\Stroup.NIN.wheat.csv' firstobs=2 delimiter=',';
     input entry $	rep $	yield	col	row;
     Row  = 4.3*Row;
     Col = 1.2*Col;
@@ -53,7 +54,7 @@ run;
 
 ```
 
-### 4.1.1 Plots: Produce Heatmap and Trend Plots over the Field.
+### Plots: Produce Heatmap and Trend Plots over the Field.
 
 A first step in assessing spatial variability is to plot the data to visually assess any trends or patterns. This code uses the **sgplot** procedure to examine spatial patterns through a heat map of yields, as well as potential trends across replications, columns, and rows using box plots.
 
@@ -80,8 +81,8 @@ run;
 
 In the heat map, there is a notable region where yield dips in the north west corner of the study area. This area runs across the two top most blocks and is positioned towards their ends, making those blocks non-homogeneous. As Stroup (2013) notes, this is due to a hilly area with low snow cover and high exposure to low winter temperatures. The box plots demonstrate this pattern across blocks, columns, and rows as well. From these initial graphics, it is clear there is discernible spatial variability present.<br><br>
 
-## 4.2 Estimating and Testing spatial correlation
-### 4.2.1 Capture Model Residuals for Spatial Modeling
+## Estimating and Testing Spatial Correlation
+### Capture Model Residuals for Spatial Modeling
 
 The process of modeling spatial variability begins by obtaining the residuals from the original RCB analysis. Here **Proc Mixed** is used to fit the RCB model and output the model residuals to the SAS dataset **residuals**.<br><br>
 
@@ -96,7 +97,7 @@ run;
 ods html;
 ```
 
-### 4.2.2 Examine the Number of Distance Pairs and Maximum Lags between Residuals
+### Examine the Number of Distance Pairs and Maximum Lags between Residuals
 
 Examining and estimating spatial variability typically proceeds in several steps. In SAS, these can all be accomplished using **Proc Variogram**. In this first step, we summarize the potential distances (lags) between row/column positions. The *nhclasses* option sets a value for the number of lag classes or bins to try. Some trial and error here may be necessary to find a good setting, however, this value should be big enough to cover the range of possible distances between data row and column coordinates. Setting this to 40 was found to be a reasonable value here. The *novariogram* option tells SAS to only look at these distances and not compute the empirical semivariance values yet.<br><br>
 
@@ -113,7 +114,7 @@ run;
 
 This output indicates that, with 40 bins, the minimum lag distance is approximately 1.2m and that the maximum lag distances vary from 25 to 43m in rows and columns, respectively. The histogram graphically displays the number of pairs at each lag distance bin. Ideally, we want bins that have at least 30 pairs to improve accuracy in estimation of the empirical semivariance. There is sufficient data here such that setting the maximum lag to 30 results in bins that have much more than 30 pairs and will provide an accurate estimate of semivariance. <br><br>
 
-### 4.2.3 Compute Moran's I and Geary's C.
+### Compute Moran's I and Geary's C.
 
 Two common indices of spatial correlation are Moran's I and Geary's C. Both these measures are essentially weighted correlations between pairs of observations and measure global and local variability, respectively. If no spatial correlation is present, Moran's I has an expected value close to 0.0 while Geary's C will be close to 1.0. The estimates for I and C can be computed and tested against these null values with the **Proc Variogram** code below. <br><br>
 
@@ -141,9 +142,9 @@ proc variogram data=residuals plots(only)=(semivar);
 run;
 ```
 
-### 4.3.2 Fitting a theoretical Variogram Model
+### Fitting an Empirical Variogram Model
 
-In Section 3, several theoretical variogram models were described. We can use **Proc Variogram** to fit and compare any number of these models. In the code below, the Gaussian, Exponential, Power, and Spherical models are fit using the **model** statement.<br><br>
+In Section 3, several variogram models were described. We can use **Proc Variogram** to fit and compare any number of these models. In the code below, the Gaussian, Exponential, Power, and Spherical models are fit using the **model** statement.<br><br>
 
 
 ```{r code4_3_2, engine="sashtml", engine.path=saspath, include=TRUE, engine.opts=sasopts, comment=""}
@@ -157,7 +158,7 @@ run;
 
 The table **Fit Summary** provides statistics on each variogram model fit. The AIC statistic can be used as a guide where smaller values indicate a better fit.  For this data, the Gaussian model is rated as "best", although the Spherical model is practically indistinguishable. Given the numerically lower AIC value, however, the *Variogram* procedure selects the Gaussian model and reports the model parameter estimates in the final table. These parameter estimates will be carried into next step. The pllot shown at the end visually demonstrates each of the estimated model curves over the semivariance values.<br><br>
 
-## 4.4 Using the Estimated variogram in an Adjusted Analysis
+## Using the Estimated variogram in an Adjusted Analysis
 The previous steps have:<br>
 1. Diagnosed the presence and pattern of spatial variability.<br>
 2. Identified and estimated the a model to describe the variability<br>
@@ -166,7 +167,7 @@ The last step is to utilize this information in a statistical analysis as outlin
 
 As an intial step, for comparison purposes, the unadjusted RCB model is run first and the means saved in dataset **NIN_RCBD_means**.<br><br>
 
-### 4.4.1 Run Unadjusted Model
+### Run Unadjusted Model
 
 ```{r code4_4_1, engine="sashtml", collectcode=TRUE, engine.path=saspath, include=TRUE, engine.opts=sasopts, comment=""}
 
@@ -182,7 +183,7 @@ proc mixed data=alliance ;
 run;
 ```
 
-### 4.4.2 Run Adjusted Model using Gaussian Model
+### Run Adjusted Model using Gaussian Model
 
 
 ```{r code4_4_2, engine="sashtml", collectcode=TRUE, engine.path=saspath, include=TRUE, engine.opts=sasopts, comment=""}

@@ -2,13 +2,15 @@ Package: guide-to-field-trial-spatial-analysis
 Title: How to Integrate Spatial Covariates into Routine Analysis of Planned Field Trials
 Version: 0.0.0.9000
 Authors@R: person("Julia", "Piaskowski", role=c("aut", "cre"),
-  email = "julia.piask@gmail.com")
+  email = "julia.piask@gmail.com"),
+  person("William, "Price", role = c("aut", "cre"))
 Depends: R (>= 4.0.0)
 Imports:
   bookdown, 
   dplyr, purrr, tidyr, ggplot2, 
   nlme, emmeans, desplot, agridat,
   sp, gstat, spdep, psych,
-  sommer, spaMM, SpATS
+  sommer, spaMM, SpATS, 
+  SASmarkdown
 Remotes:
   rstudio/bookdown
