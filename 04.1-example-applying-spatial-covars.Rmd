@@ -180,7 +180,7 @@ preds.mat <- as.data.frame(emmeans(nin.matern, "gen"))
 The package **sommer** implements a version of the AR1xAR1 covariance structure. However, it does not estimate the parameter $\rho$. The user must specify the $\rho$ and that value is not optimized in the restricted maximum likelihood estimation. There may be another way to implement the AR1xAR1 spatial model using the package **TMB**. Both SAS and Asreml can implement a mixed model with this covariance structure.
 
 
-```{r message=FALSE, warning=FALSE}
+```{r eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
 library(sommer) 
 
 Nin$colF <- as.factor(Nin$col)
