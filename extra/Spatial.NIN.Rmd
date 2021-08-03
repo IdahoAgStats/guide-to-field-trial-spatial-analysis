@@ -1,0 +1,245 @@
+---
+title: "Stroup NIN Analysis"
+author: "Statistical Programs, University of Idaho"
+date: "6/9/2021"
+output: 
+  html_document:
+    toc: true
+    css: C:\Users\bprice\Dropbox\CLASS\sas.default.css
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r include=FALSE}
+require(SASmarkdown)
+
+saspath <- "C:/Program Files/SASHome/SASFoundation/9.4/sas.exe"
+
+sasopts <- "-nosplash -ls 200"
+```
+
+# Section 4 Example Analysis (SAS)
+
+## 4.1 Read in and Eexplore the Raw Data
+
+These data are from a winter wheat variety trial in Alliance, Nebraska (Stroup et al. 1994) and are commonly used to demonstrate spatial adjustment in linear modeling. The data represent yields of 56 varieties originally layed out in a randomized complete block design (RCB). The local topography combined with winter kill, however, induced spatial variability that did not correspond to the RCB design (Stroup 2013) which produced biased estimates in a standard unadjusted analysis. <br><br>
+
+The code below reads the data from a CSV file where missing values are denoted as a single period in the data file. These values are not actually missing, but represent blank plots in the original lay out of the study. They are removed in this data step before proceeding to analyses. Also note that row and column indices are multiplied by constants to convert them to the meter dimensions of the plots.<br><br>
+
+The first six observations are displayed. The data contains variables for variety (entry), replication (rep), yield, and column and row identifiers.<br><br> Last, a map of the 4 replications (blocks) from the original experimental design is shown in gray shading.
+
+
+```{r code1, engine="sashtml", collectcode=TRUE, engine.path=saspath, include=TRUE, engine.opts=sasopts, comment=""}
+
+data alliance;
+    infile 'C:\Users\bprice\Dropbox\Spatial\Stroup.NIN.wheat.csv' firstobs=2 delimiter=',';
+    input entry $	rep $	yield	col	row;
+    Row  = 4.3*Row;
+    Col = 1.2*Col;
+    if yield=. then delete;
+run;
+
+proc print data=alliance(obs=6);
+title1 ' Alliance Nebraska Wheat Variety Data';
+
+run;
+
+proc sgplot data=alliance;
+	HEATMAPPARM y=row x=col COLORgroup=rep/ outline; 
+title1 'Layout of Blocks';
+run;
+
+```
+
+### 4.1.1 Plots: Produce Heatmap and Trend Plots over the Field.
+
+A first step in assessing spatial variability is to plot the data to visually assess any trends or patterns. This code uses the **sgplot** procedure to examine spatial patterns through a heat map of yields, as well as potential trends across replications, columns, and rows using box plots.
+
+```{r code2, engine="sashtml",  engine.path=saspath, engine.opts=sasopts, include=TRUE, comment=""}
+
+
+proc sgplot data=alliance;
+	HEATMAPPARM y=Row x=Col COLORRESPONSE=yield/ colormodel=(blue yellow green); 
+run;
+
+proc sgplot data=alliance;
+	vbox yield/category=rep FILLATTRS=(color=red) LINEATTRS=(color=black) WHISKERATTRS=(color=black);
+run;
+
+proc sgplot data=alliance;
+	vbox yield/category=Col FILLATTRS=(color=yellow) LINEATTRS=(color=black) WHISKERATTRS=(color=black);
+run;
+
+proc sgplot data=alliance;
+	vbox yield/category=Row FILLATTRS=(color=blue) LINEATTRS=(color=black) WHISKERATTRS=(color=black);
+run;
+
+```
+
+In the heat map, there is a notable region where yield dips in the north west corner of the study area. This area runs across the two top most blocks and is positioned towards their ends, making those blocks non-homogeneous. As Stroup (2013) notes, this is due to a hilly area with low snow cover and high exposure to low winter temperatures. The box plots demonstrate this pattern across blocks, columns, and rows as well. From these initial graphics, it is clear there is discernible spatial variability present.<br><br>
+
+## 4.2 Estimating and Testing spatial correlation
+### 4.2.1 Capture Model Residuals for Spatial Modeling
+
+The process of modeling spatial variability begins by obtaining the residuals from the original RCB analysis. Here **Proc Mixed** is used to fit the RCB model and output the model residuals to the SAS dataset **residuals**.<br><br>
+
+```{r code4_2_1, engine="sashtml", collectcode=TRUE, engine.path=saspath, include=TRUE, engine.opts=sasopts, comment=""}
+
+ods html close;
+proc mixed data=alliance;
+   class Rep Entry;
+   model Yield = Entry / outp=residuals;
+   random Rep;
+run;
+ods html;
+```
+
+### 4.2.2 Examine the Number of Distance Pairs and Maximum Lags between Residuals
+
+Examining and estimating spatial variability typically proceeds in several steps. In SAS, these can all be accomplished using **Proc Variogram**. In this first step, we summarize the potential distances (lags) between row/column positions. The *nhclasses* option sets a value for the number of lag classes or bins to try. Some trial and error here may be necessary to find a good setting, however, this value should be big enough to cover the range of possible distances between data row and column coordinates. Setting this to 40 was found to be a reasonable value here. The *novariogram* option tells SAS to only look at these distances and not compute the empirical semivariance values yet.<br><br>
+
+```{r code4_2_2, engine="sashtml",  engine.path=saspath, engine.opts=sasopts, include=TRUE, comment=""}
+
+/* Examine lag distance & maxlag */
+
+proc variogram data=residuals;
+   compute novariogram nhclasses=40;
+   coordinates xc=row yc=col;
+   var resid;
+run;
+```
+
+This output indicates that, with 40 bins, the minimum lag distance is approximately 1.2m and that the maximum lag distances vary from 25 to 43m in rows and columns, respectively. The histogram graphically displays the number of pairs at each lag distance bin. Ideally, we want bins that have at least 30 pairs to improve accuracy in estimation of the empirical semivariance. There is sufficient data here such that setting the maximum lag to 30 results in bins that have much more than 30 pairs and will provide an accurate estimate of semivariance. <br><br>
+
+### 4.2.3 Compute Moran's I and Geary's C.
+
+Two common indices of spatial correlation are Moran's I and Geary's C. Both these measures are essentially weighted correlations between pairs of observations and measure global and local variability, respectively. If no spatial correlation is present, Moran's I has an expected value close to 0.0 while Geary's C will be close to 1.0. The estimates for I and C can be computed and tested against these null values with the **Proc Variogram** code below. <br><br>
+
+```{r code4_2_3, engine="sashtml",  engine.path=saspath, engine.opts=sasopts, include=TRUE, comment=""}
+
+proc variogram data=residuals plots(only)=moran ;
+   compute lagd=1.2 maxlag=30 novariogram autocorr(assum=nor) ;
+   coordinates xc=row yc=col;
+   var resid;
+run;
+
+```
+Both Moran's I and Geary's C are significant here, indicating the presence of spatial correlation. The accompanying scatter plot of residuals vs lag distance also show a positive correlation where residuals increase in magnitude with increasing distance between points.<br><br>
+
+## 4.3 Estimation and Modeling of Semivariance 
+### 4.3.1 Estimating the Empirical Semivariogram
+
+Using the lagdistance and maximum lag values obtained in the previous steps, we can now estimate an empirical variogram (**compute** statement) as described in Section 2.
+
+```{r code4_3_1, engine="sashtml", engine.path=saspath, include=TRUE, engine.opts=sasopts, comment=""}
+proc variogram data=residuals plots(only)=(semivar);
+   coordinates xc=Col yc=Row;
+   compute lagd=1.2 maxlags=30;
+  var resid;
+run;
+```
+
+### 4.3.2 Fitting a theoretical Variogram Model
+
+In Section 3, several theoretical variogram models were described. We can use **Proc Variogram** to fit and compare any number of these models. In the code below, the Gaussian, Exponential, Power, and Spherical models are fit using the **model** statement.<br><br>
+
+
+```{r code4_3_2, engine="sashtml", engine.path=saspath, include=TRUE, engine.opts=sasopts, comment=""}
+proc variogram data=residuals plots(only)=(fitplot);
+   coordinates xc=Col yc=Row;
+   compute lagd=1.2 maxlags=30;
+   model form=auto(mlist=(gau, exp, pow, sph) nest=1);
+  var resid;
+run;
+```
+
+The table **Fit Summary** provides statistics on each variogram model fit. The AIC statistic can be used as a guide where smaller values indicate a better fit.  For this data, the Gaussian model is rated as "best", although the Spherical model is practically indistinguishable. Given the numerically lower AIC value, however, the *Variogram* procedure selects the Gaussian model and reports the model parameter estimates in the final table. These parameter estimates will be carried into next step. The pllot shown at the end visually demonstrates each of the estimated model curves over the semivariance values.<br><br>
+
+## 4.4 Using the Estimated variogram in an Adjusted Analysis
+The previous steps have:<br>
+1. Diagnosed the presence and pattern of spatial variability.<br>
+2. Identified and estimated the a model to describe the variability<br>
+
+The last step is to utilize this information in a statistical analysis as outlined at the beginning of Section 3. To do this, the linear mixed model procedure **Proc Mixed** will be used to incorporate the spatial variability into the linear model variance-covariance matrix, assuming the variogram model identified above.<br>
+
+As an intial step, for comparison purposes, the unadjusted RCB model is run first and the means saved in dataset **NIN_RCBD_means**.<br><br>
+
+### 4.4.1 Run Unadjusted Model
+
+```{r code4_4_1, engine="sashtml", collectcode=TRUE, engine.path=saspath, include=TRUE, engine.opts=sasopts, comment=""}
+
+/** Fit unadjusted RCBD model **/
+
+proc mixed data=alliance ;
+	class entry rep;
+	model yield = entry ;
+	random rep;
+	lsmeans entry/cl;
+	ods output LSMeans=NIN_RCBD_means;
+	title1 'NIN data: RCBD';
+run;
+```
+
+### 4.4.2 Run Adjusted Model using Gaussian Model
+
+
+```{r code4_4_2, engine="sashtml", collectcode=TRUE, engine.path=saspath, include=TRUE, engine.opts=sasopts, comment=""}
+
+/** Fit Gaussian adjusted model **/
+/** Parms statement order: Range, Sill, Nugget **/
+/** Model option "local" forces nugget into model **/
+
+proc mixed data=alliance maxiter=150;
+	class entry;
+	model yield = entry /ddfm=kr;
+	repeated/subject=intercept type=sp(gau) (Row Col) local;
+	parms (11) (22) (19);
+	lsmeans entry/cl;
+	ods output LSMeans=NIN_Spatial_means;
+	title1 'NIN data: Gaussian Spatial Adjustment';
+run;
+
+```
+
+## Compare the estimated means
+
+```{r code7, engine="sashtml", engine.path=saspath, include=TRUE, engine.opts=sasopts, comment=""}
+
+data NIN_RCBD_means (drop=tvalue probt alpha estimate stderr lower upper df);
+	set NIN_RCBD_means;
+	RCBD_estimate = estimate;
+	RCBD_stderr = stderr;
+run;
+data NIN_Spatial_means (drop=tvalue probt alpha estimate stderr lower upper df);
+	set NIN_Spatial_means;
+	Spatial_estimate = estimate;
+	Spatial_stderr = stderr;
+run;
+
+proc sort data=NIN_RCBD_means;
+	by entry;
+run;
+proc sort data=NIN_Spatial_means;
+	by entry;
+run;
+
+data compare;
+	merge NIN_RCBD_means NIN_Spatial_means;
+	by entry;
+run;
+
+proc rank data=compare out=compare descending;
+	var RCBD_estimate Spatial_estimate;
+	ranks RCBD_Rank Spatial_Rank;
+run;
+
+proc sort data=compare;
+	by  Spatial_rank;
+run;
+
+proc print data=compare;
+	var entry rcbd_estimate Spatial_estimate rcbd_rank spatial_rank;
+run;
+```
