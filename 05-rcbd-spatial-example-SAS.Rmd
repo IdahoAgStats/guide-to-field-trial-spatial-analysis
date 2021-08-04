@@ -18,21 +18,9 @@ The code below reads the data from a CSV file where missing values for yield are
 
 The first six observations are displayed. The data contains variables for variety (gen), replication (rep), yield, and column and row identifiers.<br><br> Last, a map of the 4 replications (blocks) from the original experimental design is shown in gray shading.
 
-```{r eval=FALSE, include=FALSE}
-# here's an option for getting the data, it's currently not being shown or run
-library(agridat); darenvta("stroup.nin"); library(dplyr)
-
-Nin.na <- stroup.nin %>% mutate(rep = as.character(rep)) %>% 
-  tidyr::replace_na(list(rep = ".", yield = "."))
-
-#write.csv(Nin.na, "data/Stroup.NIN.wheat.csv") # this will overwrite the existing file
-writexl::write_xlsx(Nin, "data/Stroup.NIN.wheat.xlsx")
-rm(Nin, Nin.na)
-```
-
 
 ```{r code1, engine="sashtml", collectcode=TRUE, engine.path=saspath, include=TRUE, engine.opts=sasopts, comment=""}
-# let's see if we can get to work, then we can work on 
+
 proc format;
   invalue has_NA
   'NA' = .;

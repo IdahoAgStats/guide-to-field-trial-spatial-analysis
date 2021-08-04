@@ -24,7 +24,7 @@
 <meta name="author" content="Julia Piaskowski" />
 
 
-<meta name="date" content="2021-04-07" />
+<meta name="date" content="2021-08-04" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -33,6 +33,7 @@
   
 <link rel="prev" href="intro.html"/>
 <link rel="next" href="example-analysis.html"/>
+<script src="libs/header-attrs-2.7/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -50,22 +51,21 @@
 
 
 
-<script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
 
 
 <style type="text/css">
-code.sourceCode > span { display: inline-block; line-height: 1.25; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-code.sourceCode > span:empty { height: 1.2em; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; position: relative; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
 pre.sourceCode { margin: 0; }
 @media screen {
 div.sourceCode { overflow: auto; }
 }
 @media print {
-code.sourceCode { white-space: pre-wrap; }
-code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -85,7 +85,7 @@ pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-le
 div.sourceCode
   {   }
 @media screen {
-code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -134,51 +134,64 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><a href="./">Incorporating Spatial Analysis into Agricultural Field Experiments</a></li>
 
 <li class="divider"></li>
-<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Preface</a><ul>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Preface</a>
+<ul>
 <li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#tutorial-goal"><i class="fa fa-check"></i><b>1.1</b> Tutorial goal</a></li>
 <li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#prerequisites"><i class="fa fa-check"></i><b>1.2</b> Prerequisites</a></li>
 <li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#packages-used-in-this-tutorial"><i class="fa fa-check"></i><b>1.3</b> Packages used in this tutorial</a></li>
 <li class="chapter" data-level="1.4" data-path="index.html"><a href="index.html#contributors"><i class="fa fa-check"></i><b>1.4</b> Contributors</a></li>
 <li class="chapter" data-level="1.5" data-path="index.html"><a href="index.html#license"><i class="fa fa-check"></i><b>1.5</b> License</a></li>
 </ul></li>
-<li class="chapter" data-level="2" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>2</b> Introduction</a><ul>
+<li class="chapter" data-level="2" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>2</b> Introduction</a>
+<ul>
 <li class="chapter" data-level="2.1" data-path="intro.html"><a href="intro.html#why-care-about-spatial-variation"><i class="fa fa-check"></i><b>2.1</b> Why care about spatial variation?</a></li>
-<li class="chapter" data-level="2.2" data-path="intro.html"><a href="intro.html#diagnosing-spatial-auto-correlation"><i class="fa fa-check"></i><b>2.2</b> Diagnosing spatial auto-correlation</a><ul>
+<li class="chapter" data-level="2.2" data-path="intro.html"><a href="intro.html#diagnosing-spatial-auto-correlation"><i class="fa fa-check"></i><b>2.2</b> Diagnosing spatial auto-correlation</a>
+<ul>
 <li class="chapter" data-level="2.2.1" data-path="intro.html"><a href="intro.html#morans-i"><i class="fa fa-check"></i><b>2.2.1</b> Moran’s I</a></li>
 <li class="chapter" data-level="2.2.2" data-path="intro.html"><a href="intro.html#empirical-variogram-semivariance"><i class="fa fa-check"></i><b>2.2.2</b> Empirical variogram &amp; semivariance</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="3" data-path="background.html"><a href="background.html"><i class="fa fa-check"></i><b>3</b> Spatial Models</a><ul>
-<li class="chapter" data-level="3.1" data-path="background.html"><a href="background.html#correlated-error-models"><i class="fa fa-check"></i><b>3.1</b> Correlated error models</a><ul>
+<li class="chapter" data-level="3" data-path="background.html"><a href="background.html"><i class="fa fa-check"></i><b>3</b> Spatial Models</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="background.html"><a href="background.html#correlated-error-models"><i class="fa fa-check"></i><b>3.1</b> Correlated error models</a>
+<ul>
 <li class="chapter" data-level="3.1.1" data-path="background.html"><a href="background.html#distance-based-correlation-error-models"><i class="fa fa-check"></i><b>3.1.1</b> Distance-based correlation error models</a></li>
 <li class="chapter" data-level="3.1.2" data-path="background.html"><a href="background.html#correlated-error-model-for-gridded-data"><i class="fa fa-check"></i><b>3.1.2</b> Correlated error model for gridded data</a></li>
 </ul></li>
-<li class="chapter" data-level="3.2" data-path="background.html"><a href="background.html#spatial-regression-methods"><i class="fa fa-check"></i><b>3.2</b> Spatial Regression methods</a><ul>
+<li class="chapter" data-level="3.2" data-path="background.html"><a href="background.html#spatial-regression-methods"><i class="fa fa-check"></i><b>3.2</b> Spatial Regression methods</a>
+<ul>
 <li class="chapter" data-level="3.2.1" data-path="background.html"><a href="background.html#spatial-autoregressive-sar"><i class="fa fa-check"></i><b>3.2.1</b> Spatial autoregressive (SAR)</a></li>
 <li class="chapter" data-level="3.2.2" data-path="background.html"><a href="background.html#spatial-error-model-sem"><i class="fa fa-check"></i><b>3.2.2</b> Spatial error model (SEM)</a></li>
 <li class="chapter" data-level="3.2.3" data-path="background.html"><a href="background.html#arima"><i class="fa fa-check"></i><b>3.2.3</b> ARIMA</a></li>
 </ul></li>
-<li class="chapter" data-level="3.3" data-path="background.html"><a href="background.html#trend-analysis"><i class="fa fa-check"></i><b>3.3</b> Trend analysis</a><ul>
+<li class="chapter" data-level="3.3" data-path="background.html"><a href="background.html#trend-analysis"><i class="fa fa-check"></i><b>3.3</b> Trend analysis</a>
+<ul>
 <li class="chapter" data-level="3.3.1" data-path="background.html"><a href="background.html#row-and-column-trends"><i class="fa fa-check"></i><b>3.3.1</b> Row and column trends</a></li>
 <li class="chapter" data-level="3.3.2" data-path="background.html"><a href="background.html#splines"><i class="fa fa-check"></i><b>3.3.2</b> Splines</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="example-analysis.html"><a href="example-analysis.html"><i class="fa fa-check"></i><b>4</b> Example Analysis</a><ul>
-<li class="chapter" data-level="4.1" data-path="example-analysis.html"><a href="example-analysis.html#load-data"><i class="fa fa-check"></i><b>4.1</b> Load data</a><ul>
+<li class="chapter" data-level="4" data-path="example-analysis.html"><a href="example-analysis.html"><i class="fa fa-check"></i><b>4</b> Example Analysis</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="example-analysis.html"><a href="example-analysis.html#load-data"><i class="fa fa-check"></i><b>4.1</b> Load data</a>
+<ul>
 <li class="chapter" data-level="4.1.1" data-path="example-analysis.html"><a href="example-analysis.html#examine-data"><i class="fa fa-check"></i><b>4.1.1</b> Examine data</a></li>
 </ul></li>
-<li class="chapter" data-level="4.2" data-path="example-analysis.html"><a href="example-analysis.html#test-for-spatial-correlation"><i class="fa fa-check"></i><b>4.2</b> Test for spatial correlation</a><ul>
+<li class="chapter" data-level="4.2" data-path="example-analysis.html"><a href="example-analysis.html#test-for-spatial-correlation"><i class="fa fa-check"></i><b>4.2</b> Test for spatial correlation</a>
+<ul>
 <li class="chapter" data-level="4.2.1" data-path="example-analysis.html"><a href="example-analysis.html#morans-i-1"><i class="fa fa-check"></i><b>4.2.1</b> Moran’s I</a></li>
 <li class="chapter" data-level="4.2.2" data-path="example-analysis.html"><a href="example-analysis.html#note-on-gearys-c"><i class="fa fa-check"></i><b>4.2.2</b> Note on Geary’s C</a></li>
 </ul></li>
-<li class="chapter" data-level="4.3" data-path="example-analysis.html"><a href="example-analysis.html#empirical-variogram-fitting"><i class="fa fa-check"></i><b>4.3</b> Empirical variogram fitting</a><ul>
+<li class="chapter" data-level="4.3" data-path="example-analysis.html"><a href="example-analysis.html#empirical-variogram-fitting"><i class="fa fa-check"></i><b>4.3</b> Empirical variogram fitting</a>
+<ul>
 <li class="chapter" data-level="4.3.1" data-path="example-analysis.html"><a href="example-analysis.html#compare-variograms"><i class="fa fa-check"></i><b>4.3.1</b> Compare variograms</a></li>
 <li class="chapter" data-level="4.3.2" data-path="example-analysis.html"><a href="example-analysis.html#explore-anisotropy"><i class="fa fa-check"></i><b>4.3.2</b> Explore anisotropy</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="example-spatial-model.html"><a href="example-spatial-model.html"><i class="fa fa-check"></i><b>5</b> Applying Spatial Analytical Techniques</a><ul>
+<li class="chapter" data-level="5" data-path="example-spatial-model.html"><a href="example-spatial-model.html"><i class="fa fa-check"></i><b>5</b> Applying Spatial Analytical Techniques</a>
+<ul>
 <li class="chapter" data-level="5.1" data-path="example-spatial-model.html"><a href="example-spatial-model.html#prep-work"><i class="fa fa-check"></i><b>5.1</b> Prep work</a></li>
-<li class="chapter" data-level="5.2" data-path="example-spatial-model.html"><a href="example-spatial-model.html#correlated-errors"><i class="fa fa-check"></i><b>5.2</b> Correlated errors</a><ul>
+<li class="chapter" data-level="5.2" data-path="example-spatial-model.html"><a href="example-spatial-model.html#correlated-errors"><i class="fa fa-check"></i><b>5.2</b> Correlated errors</a>
+<ul>
 <li class="chapter" data-level="5.2.1" data-path="example-spatial-model.html"><a href="example-spatial-model.html#exponential-1"><i class="fa fa-check"></i><b>5.2.1</b> Exponential</a></li>
 <li class="chapter" data-level="5.2.2" data-path="example-spatial-model.html"><a href="example-spatial-model.html#spherical-1"><i class="fa fa-check"></i><b>5.2.2</b> Spherical</a></li>
 <li class="chapter" data-level="5.2.3" data-path="example-spatial-model.html"><a href="example-spatial-model.html#power-1"><i class="fa fa-check"></i><b>5.2.3</b> Power</a></li>
@@ -187,16 +200,32 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="5.3" data-path="example-spatial-model.html"><a href="example-spatial-model.html#splines-1"><i class="fa fa-check"></i><b>5.3</b> Splines</a></li>
 <li class="chapter" data-level="5.4" data-path="example-spatial-model.html"><a href="example-spatial-model.html#spatial-regression-approaches"><i class="fa fa-check"></i><b>5.4</b> Spatial regression approaches</a></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="compare-model.html"><a href="compare-model.html"><i class="fa fa-check"></i><b>6</b> Comparing Spatial Models</a><ul>
-<li class="chapter" data-level="6.1" data-path="compare-model.html"><a href="compare-model.html#spatial-dependence-of-residuals"><i class="fa fa-check"></i><b>6.1</b> Spatial dependence of residuals</a></li>
-<li class="chapter" data-level="6.2" data-path="compare-model.html"><a href="compare-model.html#compare-log-likelihood"><i class="fa fa-check"></i><b>6.2</b> Compare log likelihood</a></li>
-<li class="chapter" data-level="6.3" data-path="compare-model.html"><a href="compare-model.html#compare-changes-in-error"><i class="fa fa-check"></i><b>6.3</b> Compare changes in error</a></li>
-<li class="chapter" data-level="6.4" data-path="compare-model.html"><a href="compare-model.html#experimental-power"><i class="fa fa-check"></i><b>6.4</b> Experimental power</a></li>
-<li class="chapter" data-level="6.5" data-path="compare-model.html"><a href="compare-model.html#standard-error-of-variety-estimates"><i class="fa fa-check"></i><b>6.5</b> Standard error of variety estimates</a></li>
-<li class="chapter" data-level="6.6" data-path="compare-model.html"><a href="compare-model.html#compare-variety-estimates"><i class="fa fa-check"></i><b>6.6</b> Compare variety estimates</a></li>
-<li class="chapter" data-level="6.7" data-path="compare-model.html"><a href="compare-model.html#making-decisions"><i class="fa fa-check"></i><b>6.7</b> Making decisions</a></li>
+<li class="chapter" data-level="6" data-path="rcbd-example-sas.html"><a href="rcbd-example-sas.html"><i class="fa fa-check"></i><b>6</b> RCBD Example: SAS</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="rcbd-example-sas.html"><a href="rcbd-example-sas.html#read-in-and-explore-the-raw-data"><i class="fa fa-check"></i><b>6.1</b> Read in and Explore the Raw Data</a>
+<ul>
+<li class="chapter" data-level="6.1.1" data-path="rcbd-example-sas.html"><a href="rcbd-example-sas.html#plots-produce-heatmap-and-trend-plots-over-the-field."><i class="fa fa-check"></i><b>6.1.1</b> Plots: Produce Heatmap and Trend Plots over the Field.</a></li>
 </ul></li>
-<li class="chapter" data-level="7" data-path="the-end.html"><a href="the-end.html"><i class="fa fa-check"></i><b>7</b> Conclusion</a><ul>
+<li class="chapter" data-level="6.2" data-path="rcbd-example-sas.html"><a href="rcbd-example-sas.html#estimating-and-testing-spatial-correlation"><i class="fa fa-check"></i><b>6.2</b> Estimating and Testing Spatial Correlation</a>
+<ul>
+<li class="chapter" data-level="6.2.1" data-path="rcbd-example-sas.html"><a href="rcbd-example-sas.html#capture-model-residuals-for-spatial-modeling"><i class="fa fa-check"></i><b>6.2.1</b> Capture Model Residuals for Spatial Modeling</a></li>
+<li class="chapter" data-level="6.2.2" data-path="rcbd-example-sas.html"><a href="rcbd-example-sas.html#examine-the-number-of-distance-pairs-and-maximum-lags-between-residuals"><i class="fa fa-check"></i><b>6.2.2</b> Examine the Number of Distance Pairs and Maximum Lags between Residuals</a></li>
+<li class="chapter" data-level="6.2.3" data-path="rcbd-example-sas.html"><a href="rcbd-example-sas.html#compute-morans-i-and-gearys-c."><i class="fa fa-check"></i><b>6.2.3</b> Compute Moran’s I and Geary’s C.</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="rcbd-example-sas.html"><a href="rcbd-example-sas.html#estimation-and-modeling-of-semivariance"><i class="fa fa-check"></i><b>6.3</b> 4.3 Estimation and Modeling of Semivariance</a>
+<ul>
+<li class="chapter" data-level="6.3.1" data-path="rcbd-example-sas.html"><a href="rcbd-example-sas.html#estimating-the-empirical-semivariogram"><i class="fa fa-check"></i><b>6.3.1</b> 4.3.1 Estimating the Empirical Semivariogram</a></li>
+<li class="chapter" data-level="6.3.2" data-path="rcbd-example-sas.html"><a href="rcbd-example-sas.html#fitting-an-empirical-variogram-model"><i class="fa fa-check"></i><b>6.3.2</b> Fitting an Empirical Variogram Model</a></li>
+</ul></li>
+<li class="chapter" data-level="6.4" data-path="rcbd-example-sas.html"><a href="rcbd-example-sas.html#using-the-estimated-variogram-in-an-adjusted-analysis"><i class="fa fa-check"></i><b>6.4</b> Using the Estimated variogram in an Adjusted Analysis</a>
+<ul>
+<li class="chapter" data-level="6.4.1" data-path="rcbd-example-sas.html"><a href="rcbd-example-sas.html#run-unadjusted-model"><i class="fa fa-check"></i><b>6.4.1</b> Run Unadjusted Model</a></li>
+<li class="chapter" data-level="6.4.2" data-path="rcbd-example-sas.html"><a href="rcbd-example-sas.html#run-adjusted-model-using-gaussian-model"><i class="fa fa-check"></i><b>6.4.2</b> Run Adjusted Model using Gaussian Model</a></li>
+</ul></li>
+<li class="chapter" data-level="6.5" data-path="rcbd-example-sas.html"><a href="rcbd-example-sas.html#compare-the-estimated-means"><i class="fa fa-check"></i><b>6.5</b> Compare the estimated means</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="the-end.html"><a href="the-end.html"><i class="fa fa-check"></i><b>7</b> Conclusion</a>
+<ul>
 <li class="chapter" data-level="7.1" data-path="the-end.html"><a href="the-end.html#other-packages"><i class="fa fa-check"></i><b>7.1</b> Other packages</a></li>
 <li class="chapter" data-level="7.2" data-path="the-end.html"><a href="the-end.html#final-recommendations"><i class="fa fa-check"></i><b>7.2</b> Final recommendations</a></li>
 </ul></li>
@@ -220,7 +249,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="background" class="section level1">
+<div id="background" class="section level1" number="3">
 <h1><span class="header-section-number">Section 3</span> Spatial Models</h1>
 <p>This section contains some of the background behind why spatial models are used and how they work. Understanding this section is not essential, but it is extremely helpful. This section relies on information introduced in <a href="intro.html#intro">2</a>, so please make sure you have read that section if you are new to empirical variograms and spatial statistics.</p>
 <p>General linear statistical models are commonly modeled as thus:</p>
@@ -236,13 +265,13 @@ The error terms, or residuals, are assumed to be <em>identically</em> and <em>in
 <p><span class="math display">\[e_i ~\sim N \Bigg( 0, 
 \left[ {\begin{array}{ccc} \sigma^2 &amp; 0 &amp; 0 \\ 0 &amp; \sigma^2 &amp; 0\\ 0 &amp; 0 &amp; \sigma^2\end{array}  } \right] \Bigg) \]</span></p>
 <p>If spatial variation is present, the off-diagonals of the variance-covariance matrix are not zero - hence the error terms are not independently distributed. As a result, hypotheses test and parameter estimates from uncorrected linear models will provide erroneous results.</p>
-<div id="correlated-error-models" class="section level2">
+<div id="correlated-error-models" class="section level2" number="3.1">
 <h2><span class="header-section-number">3.1</span> Correlated error models</h2>
-<div id="distance-based-correlation-error-models" class="section level3">
+<div id="distance-based-correlation-error-models" class="section level3" number="3.1.1">
 <h3><span class="header-section-number">3.1.1</span> Distance-based correlation error models</h3>
 <p>There are mathematical tools for modelling how error terms are correlated with each other based on pairwise physical distance between observations. These models can be used to weight observations. Often, the data are assumed to be <em>isotropic</em>, where distance but not direction impacts the spatial error correlation.</p>
 <p>There are several methods for estimating the semivariance as a direct function of distance.</p>
-<div id="exponential" class="section level4">
+<div id="exponential" class="section level4" number="3.1.1.1">
 <h4><span class="header-section-number">3.1.1.1</span> Exponential</h4>
 <p><span class="math display">\[ \gamma (h)\left\{ {\begin{array}{cc} 0 &amp; h = 0\\ C_0+C_1 \left [ 1-e^{-(\frac{h}{r})} \right] &amp; h &gt; 0 \end{array} } \right. \]</span>
 where</p>
@@ -253,9 +282,9 @@ where</p>
 Figure 3.1: Exponential Model
 </p>
 </div>
-<p><span class="math inline">\(3r = r_p\)</span> is the “practical range”, which is 95% of the true value for <span class="math inline">\(C_1\)</span>.</p>
+<p><span class="math inline">\(3r = r_p\)</span> is the “practical range,” which is 95% of the true value for <span class="math inline">\(C_1\)</span>.</p>
 </div>
-<div id="gaussian" class="section level4">
+<div id="gaussian" class="section level4" number="3.1.1.2">
 <h4><span class="header-section-number">3.1.1.2</span> Gaussian</h4>
 <p>(a squared version of the exponential model)</p>
 <p><span class="math display">\[ \gamma (h)\left\{ {\begin{array}{cc} 0 &amp; h = 0\\ C_0+C_1 \left [ 1-e^{-(\frac{h}{r})^2} \right] &amp; h &gt; 0 \end{array} } \right. \]</span>
@@ -267,9 +296,9 @@ where</p>
 Figure 3.2: Gaussian Model
 </p>
 </div>
-<p><span class="math inline">\(\sqrt 3r = r_p\)</span> is the “practical range”, which is 95% of the true value for <span class="math inline">\(C_1\)</span>.</p>
+<p><span class="math inline">\(\sqrt 3r = r_p\)</span> is the “practical range,” which is 95% of the true value for <span class="math inline">\(C_1\)</span>.</p>
 </div>
-<div id="spherical" class="section level4">
+<div id="spherical" class="section level4" number="3.1.1.3">
 <h4><span class="header-section-number">3.1.1.3</span> Spherical</h4>
 <p><span class="math display">\[ \gamma (h) = \left\{ {\begin{array}{cc} 0 &amp; h = 0\\ C_0+C_1 \left[ \frac{3h}{2r}-0.5\bigg( \frac{h}{r}\bigg)^3 \right] &amp; 0 &lt;h \leq r \\ 
 C_0 + C_1 &amp; h &gt; r \end{array} } \right. \]</span>
@@ -282,12 +311,12 @@ Figure 3.3: Spherical Model
 </p>
 </div>
 </div>
-<div id="other-correlated-error-distance-models" class="section level4">
+<div id="other-correlated-error-distance-models" class="section level4" number="3.1.1.4">
 <h4><span class="header-section-number">3.1.1.4</span> Other correlated error distance models</h4>
 <p>There are many more models - Matérn, Cauchy, Logistic - that may describe spatial correlation in a data set.</p>
 <p>There are two addition models that have no range or sill, the linear model and power model. If your data fits these, consider doing a trend analysis.</p>
 </div>
-<div id="linear" class="section level4">
+<div id="linear" class="section level4" number="3.1.1.5">
 <h4><span class="header-section-number">3.1.1.5</span> Linear</h4>
 <p><span class="math display">\[ \gamma (h)=\left\{ {\begin{array}{cc} 0 &amp; h = 0\\ C_0+C_1h &amp; h &gt; 0 \end{array} } \right. \]</span>
 where</p>
@@ -300,7 +329,7 @@ Figure 3.4: Linear Error Model
 </div>
 <p>There is no sill or range in the linear model, so the variance will continue to increase as a function of distance.</p>
 </div>
-<div id="power" class="section level4">
+<div id="power" class="section level4" number="3.1.1.6">
 <h4><span class="header-section-number">3.1.1.6</span> Power</h4>
 <p><span class="math display">\[ \gamma (h)=\left\{ {\begin{array}{cc} 0 &amp; h = 0\\ C_0+C_1h^\lambda &amp; h &gt; 0 \end{array} } \right. \]</span>
 where</p>
@@ -313,7 +342,7 @@ Figure 3.5: Power Model
 </div>
 <p>When <span class="math inline">\(\lambda = 1\)</span>, that is equivalent to the linear model. Example above is when <span class="math inline">\(\lambda = 0.5\)</span> (i.e. a square-root transformation) and <span class="math inline">\(C_1 = 1\)</span>. There is also no sill or range in the power model.</p>
 </div>
-<div id="matérn" class="section level4">
+<div id="matérn" class="section level4" number="3.1.1.7">
 <h4><span class="header-section-number">3.1.1.7</span> Matérn</h4>
 <p><span class="math display">\[\gamma(h) = c_0 + c_1 \bigg( 1- \frac{1}{2^{\kappa -1}\Gamma(\kappa)}
 \Big( \frac{h}{\alpha} \Big) ^{\kappa} K_\kappa
@@ -326,7 +355,7 @@ Figure 3.5: Power Model
 <p><span class="math display">\[ K_\kappa(t) = \frac{\Gamma(\alpha)}{2} \big( \frac{t}{2} \big) ^{-\kappa}\]</span></p>
 </div>
 </div>
-<div id="correlated-error-model-for-gridded-data" class="section level3">
+<div id="correlated-error-model-for-gridded-data" class="section level3" number="3.1.2">
 <h3><span class="header-section-number">3.1.2</span> Correlated error model for gridded data</h3>
 <p>Planned field experiments often have the advantage of being arranged in regular grid pattern that can be adequately described using Euclidean space. This simplifies aspects of understanding how error terms are related by distance since the data occur in evenly spaced increments. Furthermore, in many agricultural trials, there may be no interest in spatial interpolation between units. Some of the following models work with irregularly-spaced data, but the models below are simplified forms when the experimental units are arranged in regular grid.</p>
 <p>For example, imagine an experiment consisting of 8 plots (plot = the experiment units) arranged in 2 rows, each with 4 ranges with this layout:</p>
@@ -339,7 +368,7 @@ Figure 3.5: Power Model
 \]</span>
 <span class="math inline">\(X\beta\)</span> refer to independent variable effects. This same model is also often presented in an abbreviated matrix form:</p>
 <p><span class="math display">\[ \mathbf{Y = X\beta + \epsilon}\]</span></p>
-<div id="first-order-auto-regressive-model-ar1" class="section level4">
+<div id="first-order-auto-regressive-model-ar1" class="section level4" number="3.1.2.1">
 <h4><span class="header-section-number">3.1.2.1</span> First order auto-regressive model (AR1)</h4>
 <p>This assumes that variance can be modelled as exponential function based on unit distance (e.g. row or range), either in a single direction or anistropic.</p>
 <p>The AR1 structure across 2 rows is modeled as thus:</p>
@@ -367,22 +396,22 @@ If there are spatial trends that extend along the entire scope of an experiment 
 </div>
 </div>
 </div>
-<div id="spatial-regression-methods" class="section level2">
+<div id="spatial-regression-methods" class="section level2" number="3.2">
 <h2><span class="header-section-number">3.2</span> Spatial Regression methods</h2>
 <p>These approaches look use information from adjacent plots to adjust for spatial auto-correlation.</p>
-<div id="spatial-autoregressive-sar" class="section level3">
+<div id="spatial-autoregressive-sar" class="section level3" number="3.2.1">
 <h3><span class="header-section-number">3.2.1</span> Spatial autoregressive (SAR)</h3>
 <p>Sometimes called a “lag” model, the SAR model uses correlations with neighboring plots dependent variable to predict Y. The auto-regressive model explicitly models correlations between neighboring points.</p>
 <p><span class="math display">\[\mathbf{Y =  \rho W Y + X\beta + \epsilon} \]</span></p>
 <p>While this may look strange, <span class="math inline">\(\mathbf{W}\)</span> is an <span class="math inline">\(n\)</span> x <span class="math inline">\(n\)</span> matrix weighting the neighbors with a diagonal of zero so the value at <span class="math inline">\(i=j\)</span>, that is <span class="math inline">\(Y_{ijk}\)</span> itself, is not used on the right-hand side to predict <span class="math inline">\(Y_{ijk}\)</span> on the left-hand side of the equation. The error terms are assumed iid.</p>
 </div>
-<div id="spatial-error-model-sem" class="section level3">
+<div id="spatial-error-model-sem" class="section level3" number="3.2.2">
 <h3><span class="header-section-number">3.2.2</span> Spatial error model (SEM)</h3>
 <p>This is also refereed to as the “moving average model” and is quite similar to auto-regressive model. SAR models the spatial dependence of the variable of interest. SEM models the spatial dependence of the error terms.</p>
 <p><span class="math display">\[\mathbf {Y= X\beta + u} \\ \mathbf {u = \lambda W + \nu}\]</span></p>
 <p>Where <span class="math inline">\(\mathbf{u}\)</span> incorporates both the normally-distributed iid error and spatially correlated error. Like in SAR, <span class="math inline">\(\mathbf{W}\)</span> is a matrix of spatial weights and <span class="math inline">\(\lambda\)</span> is a parameter describing auto-correlation of the error terms.</p>
 </div>
-<div id="arima" class="section level3">
+<div id="arima" class="section level3" number="3.2.3">
 <h3><span class="header-section-number">3.2.3</span> ARIMA</h3>
 <p>The AR1 and MA1 models can be combine into one:</p>
 <p><span class="math display">\[ y = X\beta + \rho W_1y+u \\ u = \lambda W_2 + \nu \]</span></p>
@@ -390,15 +419,15 @@ If there are spatial trends that extend along the entire scope of an experiment 
 <p>Setting weights of neighbors is dealt with in the next chapter<a href="example-analysis.html#example-analysis">4</a>,</p>
 </div>
 </div>
-<div id="trend-analysis" class="section level2">
+<div id="trend-analysis" class="section level2" number="3.3">
 <h2><span class="header-section-number">3.3</span> Trend analysis</h2>
-<div id="row-and-column-trends" class="section level3">
+<div id="row-and-column-trends" class="section level3" number="3.3.1">
 <h3><span class="header-section-number">3.3.1</span> Row and column trends</h3>
 <p>Experiment wide-trends should be modeled with directional trend models. These are comparatively simple models:</p>
 <p><span class="math display">\[Y_{ijk} = \beta_0 + X_{i1}\beta_1 +  Row_{j2}\beta_2 + Range_{k3}\beta_3 +\epsilon_{ijk}\]</span></p>
 <p>If the assumption of independent, normal, and identical errors are met, then this model will suffice. If spatial variation is still present, additional measures will need to be taken.</p>
 </div>
-<div id="splines" class="section level3">
+<div id="splines" class="section level3" number="3.3.2">
 <h3><span class="header-section-number">3.3.2</span> Splines</h3>
 <p>There is a rich field of research on using localised splines to model field heterogeneity. These models are complex and hence not described here.</p>
 
@@ -442,7 +471,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/jpiaskowski/Guide-to-Field-Trial-Spatial-Analysis/edit/master/03-background.Rmd",
+"link": "https://github.com/IdahoAgStats/Guide-to-Field-Trial-Spatial-Analysis/edit/master/03-background.Rmd",
 "text": "Edit"
 },
 "history": {
