@@ -12,9 +12,9 @@ sasopts <- "-nosplash -ls 200"
 
 ## Read in and Explore the Raw Data
 
-These data are from a winter wheat variety trial in Alliance, Nebraska (Stroup et al. 1994) and are commonly used to demonstrate spatial adjustment in linear modeling. The data represent yields of 56 varieties originally layed out in a randomized complete block design (RCB). The local topography combined with winter kill, however, induced spatial variability that did not correspond to the RCB design (Stroup 2013) which produced biased estimates in a standard unadjusted analysis. <br><br>
+These data are from a winter wheat variety trial in Alliance, Nebraska [@stroup1994] and are commonly used to demonstrate spatial adjustment in linear modeling. The data represent yields of 56 varieties originally layed out in a randomized complete block design (RCB). The local topography combined with winter kill, however, induced spatial variability that did not correspond to the RCB design [@stroup2013] which produced biased estimates in a standard unadjusted analysis. <br><br>
 
-The code below reads the data from a CSV file where missing values for yield are denoted as 'NA'. These values are not actually missing, but represent blank plots in the original design of the study. The **Proc Format** section converts these to numeric missing values in SAS (defined as a single period).  They are then removed from the data before proceeding to analyses. Also note that row and column indices are multiplied by constants to convert them to the meter dimensions of the plots.<br><br>
+The code below reads the data from a CSV file where missing values for yield are denoted as 'NA'. These values are not actually missing, but represent blank plots in the original design of the study. The **Proc Format** section converts these to numeric missing values in SAS (defined as a single period).  They are then removed from the data before proceeding to analyses. Also note that row and column indices are multiplied by constants to convert them to the meter dimensions of the plots. This CSV data file can be downloaded [here](.\data\Stroup.NIN.wheat.csv) <br><br>
 
 The first six observations are displayed. The data contains variables for variety (gen), replication (rep), yield, and column and row identifiers.<br><br> Last, a map of the 4 replications (blocks) from the original experimental design is shown in gray shading.
 
@@ -72,7 +72,7 @@ run;
 
 ```
 
-In the heat map, there is a notable region where yield dips in the north west corner of the study area. This area runs across the two top most blocks and is positioned towards their ends, making those blocks non-homogeneous. As Stroup (2013) notes, this is due to a hilly area with low snow cover and high exposure to low winter temperatures. The box plots demonstrate this pattern across blocks, columns, and rows as well. From these initial graphics, it is clear there is discernible spatial patterns and trends present.<br><br>
+In the heat map, there is a notable region where yield dips in the north west corner of the study area. This area runs across the two top most blocks and is positioned towards their ends, making those blocks non-homogeneous. As Stroup [@stroup2013] notes, this is due to a hilly area with low snow cover and high exposure to low winter temperatures. The box plots demonstrate this pattern across blocks, columns, and rows as well. From these initial graphics, it is clear there is discernible spatial patterns and trends present.<br><br>
 
 ## Estimating and Testing Spatial Correlation
 ### Capture Model Residuals for Spatial Modeling
@@ -109,7 +109,7 @@ This output indicates that, with 40 bins, the minimum lag distance is approximat
 
 ### Compute Moran's I and Geary's C.
 
-Two common indices of spatial correlation are Moran's I and Geary's C. Both these measures are essentially weighted correlations between pairs of observations and measure global and local variability, respectively. If no spatial correlation is present, Moran's I has an expected value close to 0.0 while Geary's C will be close to 1.0. The estimates for I and C can be computed and tested against these null values with the **Proc Variogram** code below. <br><br>
+Two common metrics of spatial correlation are Moran's I and Geary's C. Both these measures are essentially weighted correlations between pairs of observations and measure global and local variability, respectively. If no spatial correlation is present, Moran's I has an expected value close to 0.0 while Geary's C will be close to 1.0. The estimates for I and C can be computed and tested against these null values with the **Proc Variogram** code below. <br><br>
 
 ```{r code4_2_3, engine="sashtml",  engine.path=saspath, engine.opts=sasopts, include=TRUE, comment=""}
 
@@ -138,7 +138,7 @@ In the plot, the semi-variance increases as distance between points increases up
 
 ### Fitting an Empirical Variogram Model
 
-In Section 3, several theoretical variogram models were described. We can use **Proc Variogram** to fit and compare any number of these models. In the code below, the Gaussian, Exponential, Power, and Spherical models are fit using the **model** statement. SAS, by default, will carry out a more sophisticated spatial modeling approach, not covered here, that uses combinations of these models. We, however, just want to focus on single model scenarios. Hence, the *nest=1* option is given which restricts the variogram modeling to single models only.<br><br>
+In Section \@ref(background), several theoretical variogram models were described. We can use **Proc Variogram** to fit and compare any number of these models. In the code below, the Gaussian, Exponential, Power, and Spherical models are fit using the **model** statement. SAS, by default, will carry out a more sophisticated spatial modeling approach, not covered here, that uses combinations of these models. We, however, just want to focus on single model scenarios. Hence, the *nest=1* option is given which restricts the variogram modeling to single models only.<br><br>
 
 
 ```{r code4_3_2, engine="sashtml", engine.path=saspath, include=TRUE, engine.opts=sasopts, comment=""}
@@ -157,7 +157,7 @@ The previous steps have:<br>
 1. Diagnosed the presence and pattern of spatial variability.<br>
 2. Identified and estimated the a model to describe the variability<br>
 
-The last step is to utilize this information in a statistical analysis as outlined at the beginning of Section 3. To do this, the linear mixed model procedure **Proc Mixed** will be used to incorporate the spatial variability into the linear model variance-covariance matrix, assuming the variogram model identified above.<br>
+The last step is to utilize this information in a statistical analysis as outlined at the beginning of Section \@ref(background). To do this, the linear mixed model procedure **Proc Mixed** will be used to incorporate the spatial variability into the linear model variance-covariance matrix, assuming the variogram model identified above.<br>
 
 As an intial step, for comparison purposes, the unadjusted RCB model is run first and the means saved in dataset **NIN_RCBD_means**.<br><br>
 
@@ -176,6 +176,9 @@ proc mixed data=alliance ;
 	title1 'NIN data: RCBD';
 run;
 ```
+Of note in this output are the fit statistics. On their own, these various metrics do not have much meaning. They are, however, useful for comparison to other models. So for now, we'll remember that the AIC is 1221.7. Another point would include the large p-value for gen (genotype) suggesting no notable differences among entries. Finally, we note that the standard error of the means is 3.8557.<br>
+
+The next step is to try the spatially adjusted model. This is done by adding a **repeated** statement specifying the spatial model form (Gaussian, *type=sp(gau)*) and the variables related to position in the study (row, col). The *local* option tells SAS to use a nugget parameter in the Gaussian variogram model. The second additional statement is *parms*. This gives SAS a starting place for estimating the Gaussian Range, Sill, and Nugget parameters. The values given here are taken from the **Proc Variogram** output above. While this step can be omitted, it is recommended not to do so because, on its own, **Proc Mixed** can often have trouble narrowing in on reasonable parameter estimates. One reason for the preceding variogram steps is to obtain these parameter values so **Proc Mixed** has a good starting place for estimation. As before, the estimated means (adjusted now) are saved, this time in data set **NIN_Spatial_means**.<br>
 
 ### Run Adjusted Model using Gaussian Model
 
@@ -197,6 +200,10 @@ proc mixed data=alliance maxiter=150;
 run;
 
 ```
+From this output, we see the AIC value is now 1073.1. This is substantially lower than the AIC=1221.7 from the unadjusted model indicating a better model fit. Additionally, the gen effect in the model now has a low p-value (p=0.0024) giving evidence for differences among genotypes where we did not see them previously. Lastly, the standard errors for the means are now lower than those of the unadjusted model indicating an increased precision in mean estimation.<br>
+
+Presence of spatial variability can also bias the mean estimates. In this data, this would result in the means ranking incorrectly relative to one another under the unadjusted model. The steps below combine the saved means from the unadjusted and adjusted data sets so that we can see how the ranking changes.<br><br>
+
 
 ## Compare the estimated means
 
@@ -238,3 +245,10 @@ proc print data=compare;
 	var entry rcbd_estimate Spatial_estimate rcbd_rank spatial_rank;
 run;
 ```
+This comparison shows some clear changes in rank. In his discussion of this data, Stroup [@stroup2013], writes:<br>
+
+> ... BUCKSKIN was a variety known to be a high-yielding benchmark; its mediocre mean yield in the RCB analysis despite being observed in the field outperforming all varieties in the vicinity was one symptom that the RCB analysis was giving nonsense results.
+>
+> --- Stroup (2013)
+
+This high expectation for BUCKSKIN is realized in the adjusted analysis.  Likelwise, other vaieties, such as NE87612, which rank near the bottom in the RCB analysis, rank as number 4 in the adjusted analysis. Of the top 10 varieties identified in the adjusted analysis, only 6 are found in the top 10 of the unadjusted RCB analysis. These types of bias effects on estimation outcomes are why consideration of spatial variability in agicutural trials should not be ignored.<br><br>
