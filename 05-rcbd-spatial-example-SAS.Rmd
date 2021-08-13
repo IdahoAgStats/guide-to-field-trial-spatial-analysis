@@ -16,7 +16,7 @@ These data are from a winter wheat variety trial in Alliance, Nebraska [@stroup1
 
 The code below reads the data from a CSV file where missing values for yield are denoted as 'NA'. These values are not actually missing, but represent blank plots in the original design of the study. The **Proc Format** section converts these to numeric missing values in SAS (defined as a single period).  They are then removed from the data before proceeding to analyses. Also note that row and column indices are multiplied by constants to convert them to the meter dimensions of the plots. This CSV data file can be downloaded [here](.\data\Stroup.NIN.wheat.csv) <br><br>
 
-The first six observations are displayed. The data contains variables for variety (gen), replication (rep), yield, and column and row identifiers.<br><br> Last, a map of the 4 replications (blocks) from the original experimental design is shown in gray shading.
+The first six observations are displayed. The data contains variables for variety (gen), replication (rep), yield, and column and row identifiers.<br><br> Last, a map of the 4 replications (blocks) from the original experimental design is shown.
 
 
 ```{r code1, engine="sashtml", collectcode=TRUE, engine.path=saspath, include=TRUE, engine.opts=sasopts, comment=""}
@@ -39,6 +39,8 @@ proc print data=alliance(obs=6);
 title1 ' Alliance Nebraska Wheat Variety Data';
 
 run;
+ODS html GPATH = ".\img\" ;
+
 
 proc sgplot data=alliance;
 	HEATMAPPARM y=row x=col COLORgroup=rep/ outline; 
@@ -53,6 +55,7 @@ A first step in assessing spatial variability is to plot the data to visually as
 
 ```{r code2, engine="sashtml",  engine.path=saspath, engine.opts=sasopts, include=TRUE, comment=""}
 
+ODS html GPATH = ".\img\" ;
 
 proc sgplot data=alliance;
 	HEATMAPPARM y=Row x=Col COLORRESPONSE=yield/ colormodel=(blue yellow green); 
@@ -97,6 +100,7 @@ Examining and estimating spatial variability typically proceeds in several steps
 ```{r code4_2_2, engine="sashtml",  engine.path=saspath, engine.opts=sasopts, include=TRUE, comment=""}
 
 /* Examine lag distance & maxlag */
+ODS html GPATH = ".\img\" ;
 
 proc variogram data=residuals;
    compute novariogram nhclasses=40;
@@ -112,6 +116,7 @@ This output indicates that, with 40 bins, the minimum lag distance is approximat
 Two common metrics of spatial correlation are Moran's I and Geary's C. Both these measures are essentially weighted correlations between pairs of observations and measure global and local variability, respectively. If no spatial correlation is present, Moran's I has an expected value close to 0.0 while Geary's C will be close to 1.0. The estimates for I and C can be computed and tested against these null values with the **Proc Variogram** code below. <br><br>
 
 ```{r code4_2_3, engine="sashtml",  engine.path=saspath, engine.opts=sasopts, include=TRUE, comment=""}
+ODS html GPATH = ".\img\" ;
 
 proc variogram data=residuals plots(only)=moran ;
    compute lagd=1.2 maxlag=30 novariogram autocorr(assum=nor) ;
@@ -128,6 +133,8 @@ Both Moran's I and Geary's C are significant here, indicating the presence of sp
 Using the lagdistance and maximum lag values obtained in the previous steps, we can now estimate an empirical variogram (**compute** statement) as described in Section 2.
 
 ```{r code4_3_1, engine="sashtml", engine.path=saspath, include=TRUE, engine.opts=sasopts, comment=""}
+ODS html GPATH = ".\img\" ;
+
 proc variogram data=residuals plots(only)=(semivar);
    coordinates xc=Col yc=Row;
    compute lagd=1.2 maxlags=30;
@@ -142,6 +149,8 @@ In Section \@ref(background), several theoretical variogram models were describe
 
 
 ```{r code4_3_2, engine="sashtml", engine.path=saspath, include=TRUE, engine.opts=sasopts, comment=""}
+ODS html GPATH = ".\img\" ;
+
 proc variogram data=residuals plots(only)=(fitplot);
    coordinates xc=Col yc=Row;
    compute lagd=1.2 maxlags=30;
@@ -166,6 +175,7 @@ As an intial step, for comparison purposes, the unadjusted RCB model is run firs
 ```{r code4_4_1, engine="sashtml", collectcode=TRUE, engine.path=saspath, include=TRUE, engine.opts=sasopts, comment=""}
 
 /** Fit unadjusted RCBD model **/
+ODS html GPATH = ".\img\" ;
 
 proc mixed data=alliance ;
 	class entry rep;
@@ -188,6 +198,7 @@ The next step is to try the spatially adjusted model. This is done by adding a *
 /** Fit Gaussian adjusted model **/
 /** Parms statement order: Range, Sill, Nugget **/
 /** Model option "local" forces nugget into model **/
+ODS html GPATH = ".\img\" ;
 
 proc mixed data=alliance maxiter=150;
 	class entry;

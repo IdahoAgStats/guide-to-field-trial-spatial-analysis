@@ -9,8 +9,6 @@ rmd_files: [
   "02-intro.Rmd",
   "03-background.Rmd",
   "04-rcbd-spatial-example-R.Rmd",
-  "04.1-example-applying-spatial-covars.Rmd",
-  "04.2-spatial-model-evaluation.Rmd",
   "05-rcbd-spatial-example-SAS.Rmd",
   "07-conclusion.Rmd",
  
