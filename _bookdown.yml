@@ -8,8 +8,9 @@ rmd_files: [
   "index.Rmd",
   "02-intro.Rmd",
   "03-background.Rmd",
-  "04-rcbd-spatial-example-R.Rmd",
-  "05-rcbd-spatial-example-SAS.Rmd",
-  "07-conclusion.Rmd",
- 
+  "04-spatial-diagnostic-R.Rmd",
+  "05-rcbd-spatial-example-R.Rmd",
+  "06-rcbd-spatial-example-SAS.Rmd",
+  "07-model-extension.Rmd",
+  "08-conclusion.Rmd",
 ]

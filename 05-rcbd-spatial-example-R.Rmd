@@ -1,0 +1,401 @@
+# RCBD Example: R {#rcbd-r}
+
+Here are step-by-step instructions for how to incorporate spatial covariates into analysis of a field experiment that uses a randomised complete block design. Several techniques are explored: 
+
+Load data if it is not already in your R environment: 
+
+```{r message=FALSE, warning=FALSE}
+library(agridat); library(dplyr); library(tidyr)
+library(sp)
+
+data("stroup.nin")
+
+Nin <- stroup.nin %>% mutate(col.width = col * 1.2, 
+                             row.length = row * 4.3) %>% 
+  fill(rep, .direction = "up") %>%  arrange(col, row) 
+
+Nin_na <- filter(Nin, !is.na(yield))
+Nin_spatial <- Nin_na
+coordinates(Nin_spatial) <- ~ col.width + row.length
+```
+
+Once spatial auto-correlation has been identified in field trials, the next step is to employ a modelling technique that will reduce the impact of spatial variation on the final estimates from the analysis.  
+
+## Prep work
+
+The first thing is to run a standard linear model. A common model specification for the randomised complete block design (RCBD) is to include cultivar as a fixed effect and block as a random effect. 
+
+```{r message=FALSE, warning=FALSE}
+library(nlme); library(emmeans)
+
+nin_lme <- lme(yield ~ gen, random = ~1|rep,
+              data = Nin,
+              na.action = na.exclude)
+
+# extract the least squares means for variety
+preds_lme <- as.data.frame(emmeans(nin_lme, "gen"))
+```
+
+```{r eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
+library(spdep)
+xy.rook <- cell2nb(nrow = max(Nin$row), ncol = max(Nin$col), type="rook") 
+```
+
+The variables "gen" refers to the cultivar or breeding line being trialed, and "rep" is the block, and the dependent variable, "yield" is grain yield. Basic exploratory analysis was conducted in \@ref(spatial-r). 
+
+## Correlated errors 
+
+**Gaussian Example**
+
+In order to fit models using correlated error model, we will need to first obtain preliminary estimates of the nugget, sill and range: from fitting an empirical variogram. 
+
+```{r}
+library(gstat)
+max_dist <- 0.6*max(dist(coordinates(Nin_spatial)))
+resid.var1 <- variogram(yield ~ rep + gen, 
+                        cutoff = max_dist,
+                        width = max_dist/10, 
+                        data = Nin_spatial)
+nugget_start <- min(resid.var1$gamma)
+``` 
+
+In the previous section, an isotropic Gaussian function was identified as the best model for describing the decay of error correlations over distance.
+
+```{r}
+nin_vgm <- vgm(model = "Gau", nugget = nugget_start) 
+nin_variofit <- fit.variogram(resid.var1, nin_vgm)
+
+nugget <- nin_variofit$psill[1] 
+range <- nin_variofit$range[2] 
+sill <- sum(nin_variofit$psill) 
+nugget.effect <-  nugget/sill
+```
+
+Create a correlated error structure using the **nlme** package.
+```{r}
+cor.gaus <- corSpatial(value = c(range, nugget.effect), 
+                  form = ~ row.length + col.width, 
+                  nugget = T, fixed = F,
+                  type = "gaussian", 
+                  metric = "euclidean")
+```
+
+Update the linear mixed model with the correlated error structure:
+```{r}
+nin_gaus <- update(nin_lme, corr = cor.gaus)
+```
+
+Extract variety estimates: 
+```{r}
+preds_gaus <- as.data.frame(emmeans(nin_gaus, "gen"))
+```
+
+Other models can be implemented quite similarly:
+
+### Exponential
+
+```{r}
+rm(nin_vgm, nin_variofit, nugget, sill, range, nugget.effect)
+
+nin_vgm <- vgm(model = "Exp", nugget = nugget_start) 
+nin_variofit <- fit.variogram(resid.var1, nin_vgm)
+
+nugget <- nin_variofit$psill[1] 
+range <- nin_variofit$range[2] 
+sill <- sum(nin_variofit$psill) 
+nugget.effect <-  nugget/sill
+
+cor.exp <- corSpatial(value = c(range, nugget.effect), 
+                  form = ~ row.length + col.width, 
+                  nugget = T, fixed = F,
+                  type = "exponential", 
+                  metric = "euclidean")
+
+nin_exp <- update(nin_lme, corr = cor.exp)
+preds_exp <- as.data.frame(emmeans(nin_exp, "gen"))
+```
+
+### Spherical
+
+```{r}
+rm(nin_vgm, nin_variofit, nugget, sill, range, nugget.effect)
+
+nin_vgm <- vgm(model = "Sph", nugget = nugget_start) 
+nin_variofit <- fit.variogram(resid.var1, nin_vgm)
+
+nugget <- nin_variofit$psill[1] 
+range <- nin_variofit$range[2] 
+sill <- sum(nin_variofit$psill) 
+nugget.effect <-  nugget/sill
+
+cor.sph <- corSpatial(value = c(range, nugget.effect), 
+                  form = ~ row.length + col.width, 
+                  nugget = T, fixed = F,
+                  type = "spherical", 
+                  metric = "euclidean")
+
+nin_sph <- update(nin_lme, corr = cor.sph)
+preds_sph <- as.data.frame(emmeans(nin_sph, "gen"))
+```
+
+### Power
+
+```{r}
+cor.pow <- corSpatial(form = ~ row.length + col.width, 
+                  nugget = T, fixed = F,
+                  type = "ratio", 
+                  metric = "euclidean")
+
+nin_pow <- update(nin_lme, corr = cor.pow)
+preds_pow <- as.data.frame(emmeans(nin_pow, "gen"))
+```
+
+In the **nlme** package, there is also an option for a linear model in the `corSpatial()` function. However, if a linear trend is present without a range or sill, it is recommended that a linear trend be fitted to the data instead. 
+
+The package **spaMM** implements additional correlation models such as Matérn, Cauchy and more. 
+
+```{r message=FALSE, warning=FALSE}
+library(spaMM)
+
+rm(nin_vgm, nin_variofit, nugget, sill, range, nugget.effect)
+nin_vgm <- vgm(model = "Mat", nugget = nugget_start) 
+nin_variofit <- fit.variogram(resid.var1, nin_vgm, fit.kappa = TRUE)
+ 
+nugget <- nin_variofit$psill[1] 
+range <- nin_variofit$range[2] 
+sill <- sum(nin_variofit$psill) 
+nugget.effect <-  nugget/sill
+kappa <- nin_variofit$kappa[2]
+
+cor.mat <- corMatern(value = c(1/range, kappa, nugget.effect), 
+                  form = ~ row.length + col.width, 
+                  nugget = T, fixed = F,
+                  metric = "euclidean")
+nin_matern <- update(nin_lme, corr = cor.mat)
+
+preds_mat <- as.data.frame(emmeans(nin_matern, "gen"))
+```
+
+### AR1xAR1
+
+The package **sommer** implements a version of the AR1xAR1 covariance structure. However, it does not estimate the parameter $\rho$. The user must specify the $\rho$ and that value is not optimized in the restricted maximum likelihood estimation. There may be another way to implement the AR1xAR1 spatial model using the package **TMB**. Both SAS and Asreml can implement a mixed model with this covariance structure.
+
+
+```{r eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
+library(sommer) 
+
+Nin$colF <- as.factor(Nin$col)
+Nin$rowF <- as.factor(Nin$row)
+
+nin_ar1ar1 <- mmer(yield ~ gen,
+                     random = ~ rep + 
+                      vs(colF:rowF, Gu = kronecker(AR1(colF, rho=0.5), AR1(rowF, rho = 0.5), make.dimnames = TRUE)),
+                   na.method.X = "include", na.method.Y = "exclude",
+                   rcov = ~ units, data = Nin)
+
+preds_ar1ar1 <- predict(nin_ar1ar1, classify = 'gen')$pvals 
+```
+
+## Splines
+
+The package **SpATS**, "spatial analysis for field trials", implements  B-splines for row and column effects. 
+```{r message=FALSE, warning=FALSE}
+library(SpATS)
+
+# variables specifying row and column as factors are needed
+Nin$colF <- Nin$R <- as.factor(Nin$col)
+Nin$rowF <- Nin$C <- as.factor(Nin$row)
+
+nin_spline <- SpATS(response = "yield", 
+                    spatial = ~ PSANOVA(col, row, nseg = c(10,20),
+                                        degree = 3, pord = 2), 
+                    genotype = "gen",  
+                    random = ~ rep + rowF + colF, 
+                    data = Nin, control = list(tolerance = 1e-03))
+
+preds_spline <- predict(nin_spline, which = "gen") %>% 
+  dplyr::select(gen, emmean = "predicted.values", SE = "standard.errors")
+```
+
+Examine spatial trends: 
+```{r}
+plot(nin_spline)
+```
+
+## Spatial regression approaches
+
+At this time, there are not suitable options for running spatial regression of variety trial data. Existing options in **spatialreg**, **spANOVA**, and **spaMM** are challenging to use, lack sufficient options for typical experimental design in variety trials and/or do not provide the desired output. 
+
+## Model Selection
+
+Now that we've built all these spatials models, how do we pick the right one? 
+
+First, assemble all the model objects into one list. They are generated from different processes, as shown by the `class` attribute of each one. 
+```{r message=FALSE, warning=FALSE}
+library(purrr); library(dplyr)
+all.models <- mget(ls(pattern = "^nin_*"))
+# print out their class
+map(all.models, class)
+```
+
+### Spatial dependence of residuals
+
+It would be helpful to know if these methods were effective in reducing the spatial dependence among the error residuals. 
+
+The function below extracts the residuals from each model and is needed because of wonky handling of NA values by the packages **sommer** and **SpATS**. 
+
+```{r message=FALSE, warning=FALSE}
+L1 <- nrow(Nin)
+non_na <- !is.na(Nin$yield)
+L2 <- sum(non_na)
+
+residuals <- map(all.models, function (x) {
+  
+  resids <- residuals(x)
+  
+  if(is.data.frame(resids)) {
+    colnum = ncol(resids)
+    resids = resids[,colnum]
+  }
+  
+  if(length(resids) == L2) {
+    resids_pl = rep(NA, L1)
+    resids_pl[non_na] = resids
+    resids = resids_pl
+  }
+  
+  return(resids)
+})
+```
+
+Run a global Moran's I test on the extracted residuals:
+
+```{r message=FALSE, warning=FALSE}
+library(spdep)
+
+xy.rook <- cell2nb(nrow = max(Nin$row), ncol = max(Nin$col), type="rook")
+
+Moran.I <- map_df(residuals, function(x) {
+  mi = moran.test(x, nb2listw(xy.rook), na.action = na.exclude)
+  mi.stat <- mi$estimate
+  mi.stat$p.value <- mi$p.value
+  return(mi.stat)
+}) %>% mutate(model = names(all.models)) %>% dplyr::select(c(5, 1:4)) %>% 
+  mutate_at(2:5, round, 4) %>% arrange(p.value)
+
+Moran.I
+```
+
+Only one model, `nin_spline` resulted in an improvement in Moran's I. Nearest neighbor approaches can also improve Moran's I. The significant p-values indicate that auto-correlation is still present in those models. However, that doesn't mean the other models are ineffective. The other models incorporate the spatial auto-correlation directly into the error terms. 
+
+### Compare log likelihood
+
+Since these are not nested models, likelihood ratio tests cannot be performed. Log likelihood can be compared within the models from **nlme** but not across packages since they use different estimation procedures.
+
+```{r}
+nlme.mods <- list(nin_lme, nin_exp, nin_gaus, nin_sph, nin_pow, nin_matern)
+
+names(nlme.mods) <- c(c("lme", "exponential", "gaussian", 
+                        "spherical", "power", "matern"))
+
+lapply(nlme.mods, logLik)
+```
+
+Larger log likelihoods indicate a better fitting model to the data. A rule of thumb when comparing log likelihoods is that differences less than 2 are not considered notable. These results suggest that the Gaussian, spherical, power and Matérn models are substantially equivalent in capturing the variation present in this data set. 
+
+### Experiment-wide error
+
+```{r}
+exp.error <- lapply(nlme.mods, sigma)
+exp.error
+```
+
+The overall experimental error, $\sigma$, increased in the correlated error models because field variation has been re-partitioned to the error when it was (erroneously) absorbed by the other experimental effects. 
+
+As a result, the coefficient of variation is not a good metric for evaluating the quality of spatial models. 
+
+```{r}
+CV = lapply(nlme.mods, function(x) {
+  sigma(x)/mean(fitted(x), na.rm = T) * 100
+})
+CV
+```
+
+### Post-hoc power
+
+Simulation studies indicate that incorporating spatial correlation into field trial analysis can improve the overall power of the experiment (the probability of detecting true differences in treatments). When working with data from a completed experiment, power is a transformed p-value. Performing ANOVA can indicate which approach maximizes power. 
+
+```{r message=FALSE, warning=FALSE}
+anovas <- lapply(nlme.mods, function(x){ 
+  aov <- as.data.frame(anova(x))[2,]
+  })
+
+bind_rows(anovas) %>% mutate(model = c("lme", "exponential", "gaussian", 
+                                            "spherical", "power", "matern")) %>% 
+  arrange(desc(`p-value`)) %>% dplyr::select(c(5, 1:4))
+```
+
+This table indicates changes in the hypothesis test for "gen".  There is a dramatic change in power for this test when incorporating spatial covariance structures. 
+
+### Standard error of treatment means
+
+Retrieve predictions generated in the previous section:
+```{r}
+#(standardise names for downstream merging step)
+#preds_ar1ar1 <- preds_ar1ar1  %>% rename(emmean = "predicted.value", SE = "standard.error") 
+all.preds <- mget(ls(pattern = "^preds_*"))
+```
+
+Extract standard errors and plot: 
+```{r}
+errors <- lapply(all.preds, "[", "SE")
+pred.names <- gsub("preds_", "", names(errors))
+error_df <- bind_cols(errors)
+colnames(error_df) <- pred.names
+```
+
+```{r SE-box-fig, echo=FALSE, fig.cap='Differences in Variety Standard Error', out.width='80%', fig.asp=0.75, fig.align='center'}
+boxplot(error_df, ylab = "standard errors", xlab = "linear model", col = "dodgerblue3")
+```
+
+### Treatment means
+
+Extract estimates:
+```{r}
+preds <- lapply(all.preds, "[", "emmean")
+preds_df <- bind_cols(preds)
+colnames(preds_df) <- pred.names
+preds_df$gen <- preds_exp$gen
+```
+
+Plot changes in ranks: 
+
+```{r gen-ranks-fig, echo=FALSE, fig.align='center', fig.asp=0.75, fig.cap='Differences in Variety Ranks', message=FALSE, warning=FALSE, out.width='85%'}
+library(ggplot2); library(reshape2)
+
+lev <- c("lme", "exp", "gaus", "mat", "pow", "sph", "spline") #, "ar1ar1")
+
+melt(preds_df, id.vars = "gen", variable.name = "model", value.name = "emmeans") %>% 
+  mutate(model = factor(model, levels = lev)) %>% 
+  ggplot(aes(x = model, y = emmeans, group = gen)) +
+  geom_point() +
+  geom_line() +
+  ylab("yield means for gen") + 
+  theme_minimal()
+```
+
+The black lines link the least squares means for a single variety. There is some consistency in the rankings between exponential, Gaussian, power, Matérn, and spherical covariance models. The control RCBD model, "lme", has fundamentally different rankings. The spline and AR1xAR1 ranking are also sightly different from the other models. 
+
+Nevertheless, the following plot indicates considerable consensus in the least squares means from all of the spatial models. The upper diagonal contains Pearson correlations between those values. 
+
+```{r ls-panel-fig, echo=FALSE, fig.align='center', fig.asp=1, fig.cap='Correlations in Variety Means', message=FALSE, warning=FALSE, out.width='90%'}
+library(psych)
+pairs.panels(preds_df[,-9], smooth = F, density = F, ellipses = F, 
+             hist.col = "gold", pch = 1)
+```
+
+## Making decisions
+
+There is no consensus on how to pick the best model. Some studies rely on log likelihood, while others seek to maximize the experimental power. Others have sought to minimize the root mean square error from cross validation.
+
+The evidence suggest that for this data set, using any spatial model is better than running a naïve RCBD model.  

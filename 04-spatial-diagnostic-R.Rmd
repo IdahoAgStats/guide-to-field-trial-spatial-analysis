@@ -1,4 +1,4 @@
-# Example Analysis {#example-analysis}
+# Identifying Spatial Variation: R {#spatial-r}
 
 ## Load data
 
@@ -14,14 +14,13 @@ Nin <- stroup.nin %>% mutate(col.width = col * 1.2,
                           TRUE ~ as.character(gen))) %>% 
   arrange(col, row)
 
-Nin.na <- filter(Nin, !is.na(rep))
+Nin_na <- filter(Nin, !is.na(rep))
 ```
 
 ### Examine data
 
 ```{r}
 head(Nin)
-str(Nin)
 ```
 
 This data set actually has no missing data -- this is a balanced trial. However, there are empty fill plot with no data which creates some issues regarding NA handling. 
@@ -31,9 +30,7 @@ Plot raw yield data as it appeared in the field:
 library(ggplot2); library(desplot)
 ```
 
-
 ```{r Nin-yield-layout-fig, out.width="100%",fig.asp=.7,message=FALSE, warning=FALSE}
-
 ggplot(Nin, aes(x = row, y = col)) +
   geom_tile(aes(fill = yield), col = "white") +
   geom_text(aes(label = name)) +
@@ -47,7 +44,6 @@ ggplot(Nin, aes(x = row, y = col)) +
         axis.title = element_text(size = 14),
         legend.title = element_text(size = 14),
         legend.text = element_text(size = 12))
-
 ```
 
 Black lines delineate the blocks. 
@@ -61,7 +57,7 @@ boxplot(yield ~ col, data = Nin, col = "gold", xlab = "column", ylab = "yield (b
 par(mfrow=c(1,1))
 ```
 
-## Test for spatial correlation
+## Test for spatial autocorrelation
 
 ### Moran's I
 
@@ -74,13 +70,13 @@ nin.lme <- lme(yield ~ gen, random = ~1|rep,
               na.action = na.exclude)
 ```
 
-Next, establish and weight neighbors. In this example, only adjacent neighbors in the rook formation are used and are weighted proportionally according to their representation as neighbors to an individual. That is, if a unit has 4 adjacent neighbors, each neighbor is weighted as 0.25. If there are only two neighbors, each is weighted as 0.5. 
+Next, establish and weight neighbors for each plot. In this example, only adjacent neighbors in the rook formation (see \@ref(background)) are used and are weighted proportionally according to their representation as neighbors to an individual. That is, if a unit has 4 adjacent neighbors, each neighbor is weighted as 0.25. If there are only two neighbors, each is weighted 0.5. 
 
-The function `cell2nb()` is a simplified function for setting neighbors when working with data laid out in a regular grid. 
+The function `cell2nb()` is a function for setting neighbors when working with data laid out in a regular grid. 
 
 ```{r message=FALSE, warning=FALSE}
 library(spdep)
-xy.rook <- cell2nb(nrow = max(Nin$row), ncol = max(Nin$col), type="rook", torus = FALSE, legacy = FALSE)  
+xy_rook <- cell2nb(nrow = max(Nin$row), ncol = max(Nin$col), type="rook", torus = FALSE, legacy = FALSE)  
 ```
 
 **Make sure your data sorted by the variables assigned to row and col (in that order), and there is one and only one observation in the data set for each unique row/col combination. Even missing plots need a row.**
@@ -89,49 +85,48 @@ xy.rook <- cell2nb(nrow = max(Nin$row), ncol = max(Nin$col), type="rook", torus 
 ```{r nin-rook-adj-fg, message=FALSE, warning=FALSE, fig.cap='Rook adjacency plot for the NIN data'}
 library(sf)
 rook_matrix <- st_as_sf(expand.grid(col=1:22, row=1:11), coords=c("col", "row"))
-plot(xy.rook, coords = st_geometry(rook_matrix), points = TRUE)
+plot(xy_rook, coords = st_geometry(rook_matrix), points = TRUE)
 ```
 Each observation considers "neighbors" to be those which touch the cell in a row or column orientation, but not diagonal. 
 
 Conduct Moran's test via standard t-test and using MC sampling. 
 ```{r}
-resid.lme <- residuals(nin.lme)
-names(resid.lme) <- Nin$plot
-moran.test(resid.lme, nb2listw(xy.rook), na.action = na.exclude)
-moran.mc(resid.lme, nb2listw(xy.rook), 999, na.action = na.exclude)
+resid_lme <- residuals(nin.lme)
+names(resid_lme) <- Nin$plot
+moran.test(resid_lme, nb2listw(xy_rook), na.action = na.exclude)
+moran.mc(resid_lme, nb2listw(xy_rook), 999, na.action = na.exclude)
 ```
 
 Plot Spatial dependence of residuals
 
 ```{r resid-cor-fig, message=FALSE, warning=FALSE}
 library(purrr)
-res.nn1 <- map_dbl(xy.rook, function(j) mean(resid.lme[j]))
+res.nn1 <- map_dbl(xy_rook, function(j) mean(resid_lme[j]))
   
-rc <- signif(cor(resid.lme, res.nn1, use = "pairwise.complete.obs"), 2)
+rc <- signif(cor(resid_lme, res.nn1, use = "pairwise.complete.obs"), 2)
 
-plot(x = resid.lme, y = res.nn1, 
+plot(x = resid_lme, y = res.nn1, 
      main = paste0("r = ", rc), xlab = "residual", ylab = "average residual of neighbor (rook)")
-
 ```
 
 ### Note on Geary's C
 
-At this time, the **spdep** function `geary.test()` for Geary's C does not handle missing spatial points. This is area to contribute to! 
+At this time, the **spdep** function `geary.test()` for Geary's C does not handle missing spatial points. It cannot be used it for the NIN data set because it contains empty plots between each block with no data available for those plots. 
  
 ## Empirical variogram fitting
 
-First, create a spatial object by adding spatial coordinates to an ordinary data frame. I like to use the actual size of the plots since they are often exaggerated rectangles (meters in this example).
+First, create a spatial object by adding spatial coordinates to an ordinary data frame. I like to use the actual size of the plots since they are often exaggerated rectangles that have a significantly greater length than width.
 
 ```{r}
-Nin.spatial <- Nin.na
-coordinates(Nin.spatial) <- ~ col.width + row.length
-class(Nin.spatial)
+Nin_spatial <- Nin_na
+coordinates(Nin_spatial) <- ~ col.width + row.length
+class(Nin_spatial)
 ```
 
 Set the maximum distance for calculating the variogram model (which is one-half the maximum distance between two points).
 
 ```{r}
-max_dist = 0.6*max(dist(coordinates(Nin.spatial)))
+max_dist = 0.6*max(dist(coordinates(Nin_spatial)))
 round(max_dist, digits = 2)
 ``` 
 
@@ -139,13 +134,13 @@ Calculate semivariance for an isotropic model and plot the variogram.
 
 ```{r possible-error}
 library(gstat)
-class(Nin.spatial)
-head(Nin.spatial)
-resid.var1 <- gstat::variogram(yield ~ rep + gen, 
+class(Nin_spatial)
+head(Nin_spatial)
+resid_var1 <- gstat::variogram(yield ~ rep + gen, 
                         cutoff = max_dist,
                         width = max_dist/20, # 20 is the number of bins
-                        data = Nin.spatial)
-plot(resid.var1)
+                        data = Nin_spatial)
+plot(resid_var1)
 ```
 
 Test out correlated error models:
@@ -153,23 +148,23 @@ Test out correlated error models:
 First, set the starting nugget values as the minimum of the semi-variance. There is likely more sophisticated methods to establish the starting value for nugget, but I have found that extracting the minimum value of the semivariance to work well as a starting point. 
 
 ```{r}
-nugget_start <- min(resid.var1$gamma)
+nugget_start <- min(resid_var1$gamma)
 ```
 
 Establish models for variogram fitting. 
 ```{r}
-Nin.vgm1 <- vgm(model = "Exp", nugget = nugget_start) # exponential
-Nin.vgm2 <- vgm(model = "Sph", nugget = nugget_start) # spherical
-Nin.vgm3 <- vgm(model = "Gau", nugget = nugget_start) # Gaussian
-Nin.vgm4 <- vgm(model = "Mat", nugget = nugget_start) # Matern
+Nin_vgm1 <- vgm(model = "Exp", nugget = nugget_start) # exponential
+Nin_vgm2 <- vgm(model = "Sph", nugget = nugget_start) # spherical
+Nin_vgm3 <- vgm(model = "Gau", nugget = nugget_start) # Gaussian
+Nin_vgm4 <- vgm(model = "Mat", nugget = nugget_start) # Matern
 ```
 
 Fit the variograms to the data:
 ```{r message=FALSE, warning=FALSE}
-Nin.variofit1 <- fit.variogram(resid.var1, Nin.vgm1)
-Nin.variofit2 <- fit.variogram(resid.var1, Nin.vgm2)
-Nin.variofit3 <- fit.variogram(resid.var1, Nin.vgm3)
-Nin.variofit4 <- fit.variogram(resid.var1, Nin.vgm4, fit.kappa = T)
+Nin_variofit1 <- fit.variogram(resid_var1, Nin_vgm1)
+Nin_variofit2 <- fit.variogram(resid_var1, Nin_vgm2)
+Nin_variofit3 <- fit.variogram(resid_var1, Nin_vgm3)
+Nin_variofit4 <- fit.variogram(resid_var1, Nin_vgm4, fit.kappa = T)
 ```
 
 ### Compare variograms
@@ -178,67 +173,66 @@ Look at the results! (this is fun)
 
 ```{r}
 
-plot(resid.var1, Nin.variofit1, main = "Exponential model")
-plot(resid.var1, Nin.variofit2, main = "Spherical model")
-plot(resid.var1, Nin.variofit3, main = "Gaussian model")
-plot(resid.var1, Nin.variofit4, main = "Matern model")
+plot(resid_var1, Nin_variofit1, main = "Exponential model")
+plot(resid_var1, Nin_variofit2, main = "Spherical model")
+plot(resid_var1, Nin_variofit3, main = "Gaussian model")
+plot(resid_var1, Nin_variofit4, main = "Matern model")
 ```
 
 How to pick the best one mdoel? The attribute "SSError" indicates how well each model was able to predict the binned error terms as a function of distance. However, it's important to look at the model as well to see if the model was able to fit the data.  
 
 ```{r}
-print("Exponential"); attr(Nin.variofit1, "SSErr")
-print("Spherical"); attr(Nin.variofit2, "SSErr")
-print("Gaussian"); attr(Nin.variofit3, "SSErr")
-print("Matern"); attr(Nin.variofit4, "SSErr")
+print("Exponential"); attr(Nin_variofit1, "SSErr")
+print("Spherical"); attr(Nin_variofit2, "SSErr")
+print("Gaussian"); attr(Nin_variofit3, "SSErr")
+print("Matern"); attr(Nin_variofit4, "SSErr")
 ```
 
-`Nin.Variofit3` had the lowest error terms, corresponding to the Gaussian model.
+`Nin_variofit3` had the lowest error terms, corresponding to the Gaussian model.
 
 Results from the empirical variogram:
 
 ```{r}
-Nin.variofit3
+Nin_variofit3
 ```
 
 The variogram parameters can be easily extracted from this table:
 
 ```{r}
-nugget <- Nin.variofit3$psill[1] # "measurement error"
-range <- Nin.variofit3$range[2] # distance to establish independence between data points
-sill <- sum(Nin.variofit3$psill) # maximum semivariance
+nugget <- Nin_variofit3$psill[1] # "measurement error"
+range <- Nin_variofit3$range[2] # distance to establish independence between data points
+sill <- sum(Nin_variofit3$psill) # maximum semivariance
 ```
 
 ### Explore anisotropy
 
 Most field experiments occur on a relatively small scale,where the entire experimental layout is less than 0.25 square miles. As such, isotropic models (where spatial correlation is based on distance but not direction) are often adequate for understanding localised field heterogeneity. However, there are always exceptions where a spatial correlation in a field trail is best describe by an anistropic model.  
 
-
 Reestablish models for variogram fitting: 
 ```{r}
-Nin.vgm1a <- vgm(model = "Exp", anis = c(90, 0.5)) # 90 refers to the angle of the main direction and 0.5 creates a second 90 degree axis of variability to estimate 
-Nin.vgm2a <- vgm(model = "Sph", anis = c(90, 0.5))
-Nin.vgm3a <- vgm(model = "Gau", anis = c(90, 0.5))
-Nin.vgm4a <- vgm(model = "Mat", anis = c(90, 0.5))
+Nin_vgm1a <- vgm(model = "Exp", anis = c(90, 0.5)) # 90 refers to the angle of the main direction and 0.5 creates a second 90 degree axis of variability to estimate 
+Nin_vgm2a <- vgm(model = "Sph", anis = c(90, 0.5))
+Nin_vgm3a <- vgm(model = "Gau", anis = c(90, 0.5))
+Nin_vgm4a <- vgm(model = "Mat", anis = c(90, 0.5))
 ```
 
 Fit the variograms to the data:
 ```{r message=FALSE, warning=FALSE, error=TRUE}
-Nin.variofit1a <- fit.variogram(resid.var1, Nin.vgm1a)
-Nin.variofit2a <- fit.variogram(resid.var1, Nin.vgm2a)
-Nin.variofit3a <- fit.variogram(resid.var1, Nin.vgm3a)
-Nin.variofit4a <- fit.variogram(resid.var1, Nin.vgm4a, fit.kappa = T)
+Nin_variofit1a <- fit.variogram(resid_var1, Nin_vgm1a)
+Nin_variofit2a <- fit.variogram(resid_var1, Nin_vgm2a)
+Nin_variofit3a <- fit.variogram(resid_var1, Nin_vgm3a)
+Nin_variofit4a <- fit.variogram(resid_var1, Nin_vgm4a, fit.kappa = T)
 
-print("Exponential"); attr(Nin.variofit1a, "SSErr")
-print("Spherical"); attr(Nin.variofit2a, "SSErr")
-print("Gaussian"); attr(Nin.variofit3a, "SSErr")
-print("Matern"); attr(Nin.variofit4a, "SSErr")
+print("Exponential"); attr(Nin_variofit1a, "SSErr")
+print("Spherical"); attr(Nin_variofit2a, "SSErr")
+print("Gaussian"); attr(Nin_variofit3a, "SSErr")
+print("Matern"); attr(Nin_variofit4a, "SSErr")
 ```
 
 Error terms are considerably higher than in the isotropic model.
 
 ```{r}
-plot(resid.var1, Nin.variofit1a, main = "Exponential model")
+plot(resid_var1, Nin_variofit1a, main = "Exponential model")
 ```
 
 Hmm, that plot is not very convincing. 
@@ -248,6 +242,3 @@ In this field trial, there is evidence of spatial correlation as a function of d
 **Another reminder on field trends**  
 
 It's important to remember these methods are intended to describe localised spatial correlation. Field-wide spatial gradients, such as position on a slope, should be modelled as a separate trend. 
-
-
-

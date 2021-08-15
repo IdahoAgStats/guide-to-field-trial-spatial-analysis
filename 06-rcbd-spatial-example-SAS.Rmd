@@ -1,10 +1,8 @@
-# RCBD Example: SAS
+# RCBD Example: SAS {#rcbd-sas}
 
 ```{r include=FALSE}
 require(SASmarkdown)
-
 saspath <- "C:/Program Files/SASHome/SASFoundation/9.4/sas.exe"
-
 sasopts <- "-nosplash -ls 200"
 ```
 
@@ -16,16 +14,14 @@ The code below reads the data from a CSV file where missing values for yield are
 
 The first six observations are displayed. The data contains variables for variety (gen), replication (rep), yield, and column and row identifiers.<br><br> Last, a map of the 4 replications (blocks) from the original experimental design is shown.
 
-
 ```{r code1, engine="sashtml", collectcode=TRUE, engine.path=saspath, include=TRUE, engine.opts=sasopts, comment=""}
-
 proc format;
   invalue has_NA
   'NA' = .;
 ;
 
  data alliance;
-    infile '.\data\Stroup.NIN.wheat.csv' firstobs=2 delimiter=',';
+    infile '.\data\Stroup_NIN_wheat.csv' firstobs=2 delimiter=',';
   	informat yield has_NA.;
     input entry $	rep $	yield	col	row;
     Row  = 4.3*Row;
@@ -39,12 +35,10 @@ title1 ' Alliance Nebraska Wheat Variety Data';
 run;
 ODS html GPATH = ".\img\" ;
 
-
 proc sgplot data=alliance;
 	HEATMAPPARM y=row x=col COLORgroup=rep/ outline; 
 title1 'Layout of Blocks';
 run;
-
 ```
 
 ### Plots of Field Trends
@@ -52,7 +46,6 @@ run;
 A first step in assessing spatial variability is to plot the data to visually assess any trends or patterns. This code uses the **sgplot** procedure to examine spatial patterns through a heat map of yields, as well as potential trends across replications, columns, and rows using box plots.
 
 ```{r code2, engine="sashtml",  engine.path=saspath, engine.opts=sasopts, include=TRUE, comment=""}
-
 ODS html GPATH = ".\img\" ;
 
 proc sgplot data=alliance;
@@ -70,7 +63,6 @@ run;
 proc sgplot data=alliance;
 	vbox yield/category=Row FILLATTRS=(color=blue) LINEATTRS=(color=black) WHISKERATTRS=(color=black);
 run;
-
 ```
 
 In the heat map, there is a notable region where yield dips in the north west corner of the study area. This area runs across the two top most blocks and is positioned towards their ends, making those blocks non-homogeneous. As Stroup [@stroup2013] notes, this is due to a hilly area with low snow cover and high exposure to low winter temperatures. The box plots demonstrate this pattern across blocks, columns, and rows as well. From these initial graphics, it is clear there is discernible spatial patterns and trends present.<br><br>
@@ -120,7 +112,6 @@ proc variogram data=residuals plots(only)=moran ;
    coordinates xc=row yc=col;
    var resid;
 run;
-
 ```
 Both Moran's I and Geary's C are significant here, indicating the presence of spatial correlation. The accompanying scatter plot of residuals vs lag distance also show a positive correlation where residuals increase in magnitude with increasing distance between points.<br><br>
 
