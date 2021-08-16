@@ -14,7 +14,7 @@ The code below reads the data from a CSV file where missing values for yield are
 
 The first six observations are displayed. The data contains variables for variety (gen), replication (rep), yield, and column and row identifiers.<br><br> Last, a map of the 4 replications (blocks) from the original experimental design is shown.
 
-```{r code1, engine="sashtml", collectcode=TRUE, engine.path=saspath, include=TRUE, engine.opts=sasopts, comment=""}
+```{r SAS1, engine="sashtml", collectcode=TRUE, engine.path=saspath, include=TRUE, engine.opts=sasopts, comment=""}
 proc format;
   invalue has_NA
   'NA' = .;
@@ -36,6 +36,7 @@ run;
 ODS html GPATH = ".\img\" ;
 
 proc sgplot data=alliance;
+	styleattrs datacolors=(red  blue green yellow) datalinepatterns=(solid dash);
 	HEATMAPPARM y=row x=col COLORgroup=rep/ outline; 
 title1 'Layout of Blocks';
 run;
@@ -45,7 +46,7 @@ run;
 
 A first step in assessing spatial variability is to plot the data to visually assess any trends or patterns. This code uses the **SGPLOT** procedure to examine spatial patterns through a heat map of yields, as well as potential trends across replications, columns, and rows using box plots.
 
-```{r code2, engine="sashtml",  engine.path=saspath, engine.opts=sasopts, include=TRUE, comment=""}
+```{r SAS2, engine="sashtml",  engine.path=saspath, engine.opts=sasopts, include=TRUE, comment=""}
 ODS html GPATH = ".\img\" ;
 
 proc sgplot data=alliance;
@@ -73,7 +74,7 @@ In the heat map, there is a notable region where yield dips in the north west co
 
 The process of modeling spatial variability begins by obtaining the residuals from the original RCB analysis. Here **PROC MIXED** is used to fit the RCB model and output the model residuals to the SAS data set "residuals".<br><br>
 
-```{r code4_2_1, engine="sashtml", collectcode=TRUE, engine.path=saspath, include=TRUE, engine.opts=sasopts, comment=""}
+```{r SAS3, engine="sashtml", collectcode=TRUE, engine.path=saspath, include=TRUE, engine.opts=sasopts, comment=""}
 
 ods html close;
 proc mixed data=alliance;
@@ -86,7 +87,7 @@ ods html;
 
 Examining and estimating spatial variability typically proceeds in several steps. In SAS, these can all be accomplished using **PROC VARIOGRAM**. In this first step, we summarize the potential distances (lags) between row/column positions. The **nhclasses** option sets a value for the number of lag classes or bins to try. Some trial and error here may be necessary to find a good setting, however, this value should be big enough to cover the range of possible distances between data row and column coordinates. Setting this to 40 was found to be a reasonable value here. The **novariogram** option tells SAS to only look at these distances and not compute the empirical semivariance values yet.<br><br>
 
-```{r code4_2_2, engine="sashtml",  engine.path=saspath, engine.opts=sasopts, include=TRUE, comment=""}
+```{r SAS4, engine="sashtml",  engine.path=saspath, engine.opts=sasopts, include=TRUE, comment=""}
 
 /* Examine lag distance & maxlag */
 ODS html GPATH = ".\img\" ;
@@ -104,7 +105,7 @@ This output indicates that, with 40 bins, the minimum lag distance is approximat
 
 Two common metrics of spatial correlation are Moran's I and Geary's C. Both these measures are essentially weighted correlations between pairs of observations and measure global and local variability, respectively. If no spatial correlation is present, Moran's I has an expected value close to 0.0 while Geary's C will be close to 1.0. The estimates for I and C can be computed and tested against these null values with the **PROC VARIOGRAM** code below. <br><br>
 
-```{r code4_2_3, engine="sashtml",  engine.path=saspath, engine.opts=sasopts, include=TRUE, comment=""}
+```{r SAS5, engine="sashtml",  engine.path=saspath, engine.opts=sasopts, include=TRUE, comment=""}
 ODS html GPATH = ".\img\" ;
 
 proc variogram data=residuals plots(only)=moran ;
@@ -121,7 +122,7 @@ Both Moran's I and Geary's C are significant here, indicating the presence of sp
 
 Using the lag bdistance and maximum lag values obtained in the previous steps, we can now estimate an empirical variogram (via the **compute** statement) as described in Section 2.
 
-```{r code4_3_1, engine="sashtml", engine.path=saspath, include=TRUE, engine.opts=sasopts, comment=""}
+```{r SAS6, engine="sashtml", engine.path=saspath, include=TRUE, engine.opts=sasopts, comment=""}
 ODS html GPATH = ".\img\" ;
 
 proc variogram data=residuals plots(only)=(semivar);
@@ -136,7 +137,7 @@ In the plot, the semi-variance increases as distance between points increases up
 
 In Section \@ref(background), several theoretical variogram models were described. We can use **PROC VARIOGRAM** to fit and compare any number of these models. In the code below, the Gaussian, Exponential, Power, and Spherical models are fit using the **model** statement. SAS, by default, will carry out a more sophisticated spatial modeling approach, not covered here, that uses combinations of these models. We, however, just want to focus on single model scenarios. Hence, the **nest=1** option is given which restricts the variogram modeling to single models only.<br><br>
 
-```{r code4_3_2, engine="sashtml", engine.path=saspath, include=TRUE, engine.opts=sasopts, comment=""}
+```{r SAS7, engine="sashtml", engine.path=saspath, include=TRUE, engine.opts=sasopts, comment=""}
 ODS html GPATH = ".\img\" ;
 
 proc variogram data=residuals plots(only)=(fitplot);
@@ -160,7 +161,7 @@ As an intial step, for comparison purposes, the unadjusted RCB model is run firs
 
 ### Unadjusted RCBD Model
 
-```{r code4_4_1, engine="sashtml", collectcode=TRUE, engine.path=saspath, include=TRUE, engine.opts=sasopts, comment=""}
+```{r SAS8, engine="sashtml", collectcode=TRUE, engine.path=saspath, include=TRUE, engine.opts=sasopts, comment=""}
 
 /** Fit unadjusted RCBD model **/
 ODS html GPATH = ".\img\" ;
@@ -181,7 +182,7 @@ The next step is to try a spatially-adjusted model. This is done by adding a **r
 
 ### RCBD Model with Spatial Covariates
 
-```{r code4_4_2, engine="sashtml", collectcode=TRUE, engine.path=saspath, include=TRUE, engine.opts=sasopts, comment=""}
+```{r SAS9, engine="sashtml", collectcode=TRUE, engine.path=saspath, include=TRUE, engine.opts=sasopts, comment=""}
 
 /** Fit Gaussian adjusted model **/
 /** Parms statement order: Range, Sill, Nugget **/
@@ -205,7 +206,7 @@ Presence of spatial variability can also bias the mean estimates. In this data, 
 
 ## Compare Estimated Means
 
-```{r code7, engine="sashtml", engine.path=saspath, include=TRUE, engine.opts=sasopts, comment=""}
+```{r SAS10, engine="sashtml", engine.path=saspath, include=TRUE, engine.opts=sasopts, comment=""}
 
 data NIN_RCBD_means (drop=tvalue probt alpha estimate stderr lower upper df);
 	set NIN_RCBD_means;
