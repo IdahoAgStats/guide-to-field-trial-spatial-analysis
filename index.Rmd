@@ -3,7 +3,7 @@ title: "Incorporating Spatial Analysis into Agricultural Field Experiments."
 author:
   - Julia Piaskowski^[University of Idaho, jpiaskowski@uidaho.edu]
   - William Price^[University of Idaho, bprice@uidaho.edu]
-date: `r format(Sys.Date(), "%B %d, %Y")`
+date: "`r format(Sys.Date(), '%B %d, %Y')`"
 site: bookdown::bookdown_site
 documentclass: book
 bibliography: [book.bib, packages.bib, extra.bib]
@@ -61,7 +61,18 @@ All packages aside from **[inla]((https://www.r-inla.org)** are available on CRA
 
 ## SAS Requirements
 
-In order to run the SAS portion of this tutorial, a valid copy of SAS software and a current SAS license are required. This tutorial was built using SAS 9.4. Although older versions of SAS may also work, we have not evaluated this. Users can also consider downloading and using a free version of [SAS Studio](https://support.sas.com/downloads/package.htm?pid=1924). The SAS scripts in this tutorial have not been tested on SAS Studio. 
+In order to run the SAS portion of this tutorial, a valid copy of SAS Base and Stat products and a current SAS license are required. This tutorial was built using SAS 9.4 (TS1M5). Although older versions of SAS may also work, we have not evaluated this. Users can also consider downloading and using a free version of [SAS Studio](https://support.sas.com/downloads/package.htm?pid=1924). The SAS scripts in this tutorial have not been tested on SAS Studio. 
+
+**SAS procedures used in this tutorial**  
+
+|Procedure |Usage in This Tutorial |
+|------------|---------------|
+|FORMAT, DATA, PRINT | basic data input, manipulation, and display | 
+|SORT, RANK| sort and rank estimated means | 
+|SGPLOT| plotting | 
+|MIXED, GLIMMIX| mixed model analysis | 
+|VARIOGRAM| empirical variogram estimation | 
+
 
 ## Contributors
 
