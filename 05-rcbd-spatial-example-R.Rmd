@@ -201,8 +201,9 @@ nin_spline <- SpATS(response = "yield",
                     spatial = ~ PSANOVA(col, row, nseg = c(10,20),
                                         degree = 3, pord = 2), 
                     genotype = "gen",  
-                    random = ~ rep + rowF + colF, 
-                    data = Nin, control = list(tolerance = 1e-03))
+                    random = ~ rep, # + rowF + colF, 
+                    data = Nin, 
+                    control = list(tolerance = 1e-03, monitoring = 0))
 
 preds_spline <- predict(nin_spline, which = "gen") %>% 
   dplyr::select(gen, emmean = "predicted.values", SE = "standard.errors")
@@ -211,9 +212,10 @@ preds_spline <- predict(nin_spline, which = "gen") %>%
 ## Spatial Autoregression
 
 (also called the Spatial lag model or SAR)
-```{r}
+```{r, message=FALSE, warning=FALSE, include=FALSE}
 library(spANOVA)
 ## get that model in here!!
+
 ```
 
 ## Bayesian AR1xAR1
