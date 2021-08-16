@@ -1,5 +1,44 @@
 # rejected scripts
 
+### Spatial error model (SEM)
+
+This is also refered to as the "moving average model" and is quite similar to auto-regressive model. SAR models the spatial dependence of the variable of interest. SEM models the spatial dependence of the error terms. 
+
+$$\mathbf {Y= X\beta + u} \\ \mathbf {u = \lambda W + \nu}$$
+
+Where $\mathbf{u}$ incorporates both the normally-distributed iid error and spatially correlated error. Like in SAR, $\mathbf{W}$ is a matrix of spatial weights and $\lambda$ is a parameter describing auto-correlation of the error terms. 
+
+### ARIMA 
+
+The AR1 and MA1 models can be combine into one: 
+
+$$ y = X\beta + \rho W_1y+u \\ u = \lambda W_2 + \nu $$
+### AR1xAR1
+
+The package **sommer** implements a version of the AR1xAR1 covariance structure. However, it does not estimate the parameter $\rho$. The user must specify the $\rho$ and that value is not optimized in the restricted maximum likelihood estimation. There may be another way to implement the AR1xAR1 spatial model using the package **TMB**. Both SAS and Asreml can implement a mixed model with this covariance structure.
+
+### ???
+
+The package **spaMM** implements additional correlation models such as Matérn, Cauchy and more. 
+
+
+```{r eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
+library(sommer) 
+
+Nin$colF <- as.factor(Nin$col)
+Nin$rowF <- as.factor(Nin$row)
+
+nin_ar1ar1 <- mmer(yield ~ gen,
+                     random = ~ rep + 
+                      vs(colF:rowF, Gu = kronecker(AR1(colF, rho=0.5), AR1(rowF, rho = 0.5), make.dimnames = TRUE)),
+                   na.method.X = "include", na.method.Y = "exclude",
+                   rcov = ~ units, data = Nin)
+
+preds_ar1ar1 <- predict(nin_ar1ar1, classify = 'gen')$pvals 
+```
+
+
+
 ### Spatial error model
 
 ```{r}

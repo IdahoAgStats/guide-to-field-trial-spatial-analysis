@@ -53,8 +53,9 @@ This tutorial was built using R version 4.1 ("Camp Pontanezen"). Session informa
 |gstat | empirical variogram estimation | 
 |nlme | mixed model analysis | 
 |emmeans| extracts treatments means |
+|spANOVA | spatial lag models for field trials |
 |SpATS | spatial splines for field trials |
-|inla | Bayesian modeling with AR1xAR1 approximation |
+|inla | Bayesian modeling with AR1xAR1 estimation |
 
 All packages aside from **[inla]((https://www.r-inla.org)** are available on CRAN. Download instructions for **inla** can be found [here](https://www.r-inla.org/download-install). 
 

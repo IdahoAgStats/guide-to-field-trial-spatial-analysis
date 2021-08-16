@@ -290,23 +290,9 @@ $$\mathbf{Y =  \rho W Y + X\beta + \epsilon} $$
 
 While this may look strange, $\mathbf{W}$ is an $n$ x $n$ matrix weighting the neighbors with a diagonal of zero so the value at $i=j$, that is $Y_{ijk}$ itself, is not used on the right-hand side to predict $Y_{ijk}$ on the left-hand side of the equation. The error terms are assumed iid. 
 
-### Spatial error model (SEM)
-
-This is also refereed to as the "moving average model" and is quite similar to auto-regressive model. SAR models the spatial dependence of the variable of interest. SEM models the spatial dependence of the error terms. 
-
-$$\mathbf {Y= X\beta + u} \\ \mathbf {u = \lambda W + \nu}$$
-
-Where $\mathbf{u}$ incorporates both the normally-distributed iid error and spatially correlated error. Like in SAR, $\mathbf{W}$ is a matrix of spatial weights and $\lambda$ is a parameter describing auto-correlation of the error terms. 
-
-### ARIMA 
-
-The AR1 and MA1 models can be combine into one: 
-
-$$ y = X\beta + \rho W_1y+u \\ u = \lambda W_2 + \nu $$
-
 **On Weights**
 
-Setting weights of neighbors is dealt with in the next chapter\@ref(example-analysis),
+Setting weights of neighbors is dealt with in the next chapter \@ref(rcbd-r). 
 
 ## Trend analysis
 

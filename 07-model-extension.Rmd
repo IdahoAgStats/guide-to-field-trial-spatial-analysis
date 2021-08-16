@@ -1,5 +1,110 @@
-# Other Models
+# Other Models {#model-extension}
+
+```{r message=FALSE, warning=FALSE}
+library(agridat); library(desplot)
+library(dplyr)
+library(nlme)
+```
+
+Spatial models can easily be extended to fit other experimental designs such as alpha lattice and split plot, and traits with non-Gaussian distribution that are modeled using a generalized linear model. 
+
+## Other Experimental Designs
+
+### 2+ Factorials (RCBD)
+```{r}
+data(chinloy.fractionalfactorial)
+```
+
+### Alpha lattice
+```{r}
+data(burgueno.alpha)
+m0 <- lmer(yield ~ gen + (1|rep/block), data=dat)
+```
+
+### Latin square
+
+Latin is a special example of a lattice experiment where each treatment occurs in each row and in each column. As a result, the row and column effects can be modeled using balanced data. 
+
+The "cochran.latin" data set from the package '**Agridat**': 
+```{r}
+data(cochran.latin)
+head(cochran.latin)
+hist(cochran.latin$diff)
+```
+
+```{r}
+desplot(cochran.latin, diff~col*row,
+        text=operator, cex=1,
+        main="cochran.latin")
+```
+
+```{r}
+cochran.latin <- mutate(cochran.latin,
+                        rowf = as.factor(row), colf = as.factor(col))
+
+cochran.latin_lme1 <- lm(diff ~ operator + colf + rowf,
+                         data = cochran.latin)
+```
 
 
+### Augmented
+```{r}
+lind <- read.csv("data/AB19F5_LIND.csv")
+```
 
+### Split plot
+```{r}
+library(agridat): data(durban.splitplot)
+```
+
+### Split-split plot
+```{r}
+data(archbold.apple)
+m1 <- lmer(yield ~ -1 + trt + (1|rep/mp/sp), archbold.apple)
+```
+
+### Split block
+also, over-dispersed count data
+```{r}
+data(beal.webworms)  
+```
+
+## Traits with non-gaussian distributions
+
+### Count traits: 
+
+Count traits are discrete rather than continuous and often follow a poisson distribution or in the case of over-dispersed data, a negative binomial distribution. 
+
+Here is a data set of wireworms counts after a fumigation treatment. 
+```{r}
+data(cochran.wireworms)
+stem(cochran.wireworms$worms)
+```
+
+There are 5 treatment levels, "K", "M", "N", "O", and "P", and 5 replicates. It is arranged in a latin square experimental design. 
+```{r}
+desplot(cochran.wireworms, worms ~ col*row,
+        text=trt, cex=1,
+        main="cochran wireworms")
+```
+
+### Percent traits 
+(e.g. percent germination, percent infection, percent survival)
+bounded between 0 and 100
+```{r}
+# having a hard time finding a data set
+```
+
+### Ordinal traits 
+(e.g. disease scores)
+
+```{r}
+data(lee.potatoblight)
+```
+
+### Binomial traits
+(e.g. )
+```{r}
+data(gotway.hessianfly)
+```
 

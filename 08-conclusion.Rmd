@@ -1,14 +1,15 @@
 # Conclusion {#the-end}
 
 ## Other packages
-There are many more other packages for exploring and modeling spatial variability in field trials. Some other useful packages available on CRAN:
+There are several other packages for exploring and modeling spatial variability in field trials. 
 
 |package |usage |
 |-------------|-------------|
 | Mcspatial | nonparametric spatial analysis |
 |ngspatial | spatial models with a focus on generalised linear models |
 |spaMM  | correlated error modes and generalised linear models |
-|spANOVA | spatial analysis for field trials |
+| sommer | mixed models, including an AR1xAr1 model, but it does not estimate $/rho$ parameters |
+| spatialreg |    |
 
 ## Final recommendations
 
@@ -16,6 +17,6 @@ Spatial analysis is a big topic, but I think it is worth the effort to learn and
 
 There is no denying that work is needed to develop scripts that automate this process so researchers can routinely incorporate spatial covariance into field trial analysis. Many current R tools are unwieldy to use and have insufficient options to support variety trial analysis.
 
-Until this situation is improved, it is probably wisest to focus on using spatial models that are well-supported at this time. Any of the options implemented in the **nlme** package (or that work with that package) are decent choices with excellent support for extracting least-squares means, running ANOVA, and standard model diagnostics. Furthermore, **nlme** supports generalised linear models. 
+Until this situation is improved, it is probably wisest to focus on using spatial models that are well-supported at this time. Any of the options implemented in the **nlme** package (or that work with that package) are decent choices with excellent support for extracting least-squares means, running ANOVA, and standard model diagnostics. Furthermore, **nlme** supports generalized linear models. 
 
 Investigating spatial correlation in a field trial and controlling for it if necessary is recommended over doing nothing. 
