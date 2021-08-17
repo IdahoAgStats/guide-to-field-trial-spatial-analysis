@@ -51,13 +51,17 @@ This tutorial was built using R version 4.1 ("Camp Pontanezen"). R session infor
 | sp, sf | standard manipulation of spatial objects | 
 |spdep | spatial dependence functions | 
 |gstat | empirical variogram estimation | 
-|nlme | mixed model analysis | 
-|emmeans| extracts treatments means |
-|spANOVA | spatial lag models for field trials |
+|nlme, lme4 | mixed model analysis | 
+|emmeans| extract treatments means |
 |SpATS | spatial splines for field trials |
 |inla | Bayesian modeling with AR1xAR1 estimation |
+|breedR | mixed modelling with AR1xAR1 estimation |
 
-All packages aside from **[inla]((https://www.r-inla.org)** are available on CRAN. Download instructions for **inla** can be found [here](https://www.r-inla.org/download-install). 
+All packages aside from **[inla]((https://www.r-inla.org)** and **breedR** are available on CRAN. Download instructions for **inla** can be found [here](https://www.r-inla.org/download-install). The package **breedR** uses an can be installed directly from GitHub with the following code:
+
+```
+remotes::install_github("famuvie/breedR")
+```
 
 ## SAS Requirements
 
