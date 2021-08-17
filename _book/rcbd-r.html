@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Section 5 RCBD Example: R | Incorporating Spatial Analysis into Agricultural Field Experiments.</title>
+  <meta name="description" content="Instructions for identifying spatial autocorrelation in agricultural field trials and incorporating spatial variation into analysis of trial using R and SAS."" />
+  <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Section 5 RCBD Example: R | Incorporating Spatial Analysis into Agricultural Field Experiments." />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="Instructions for identifying spatial autocorrelation in agricultural field trials and incorporating spatial variation into analysis of trial using R and SAS."" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Section 5 RCBD Example: R | Incorporating Spatial Analysis into Agricultural Field Experiments." />
+  
+  <meta name="twitter:description" content="Instructions for identifying spatial autocorrelation in agricultural field trials and incorporating spatial variation into analysis of trial using R and SAS."" />
+  
+
+<meta name="author" content="Julia Piaskowski" />
+<meta name="author" content="William Price" />
+
+
+<meta name="date" content="2021-08-17" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="spatial-r.html"/>
+<link rel="next" href="rcbd-sas.html"/>
+<script src="libs/header-attrs-2.7/header-attrs.js"></script>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Incorporating Spatial Analysis into Agricultural Field Experiments</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Preface</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#tutorial-goal"><i class="fa fa-check"></i><b>1.1</b> Tutorial goal</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#prerequisites"><i class="fa fa-check"></i><b>1.2</b> Prerequisites</a></li>
+<li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#r-requirements"><i class="fa fa-check"></i><b>1.3</b> R Requirements</a></li>
+<li class="chapter" data-level="1.4" data-path="index.html"><a href="index.html#sas-requirements"><i class="fa fa-check"></i><b>1.4</b> SAS Requirements</a></li>
+<li class="chapter" data-level="1.5" data-path="index.html"><a href="index.html#contributors"><i class="fa fa-check"></i><b>1.5</b> Contributors</a></li>
+<li class="chapter" data-level="1.6" data-path="index.html"><a href="index.html#license"><i class="fa fa-check"></i><b>1.6</b> License</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>2</b> Introduction</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="intro.html"><a href="intro.html#why-care-about-spatial-variation"><i class="fa fa-check"></i><b>2.1</b> Why care about spatial variation?</a></li>
+<li class="chapter" data-level="2.2" data-path="intro.html"><a href="intro.html#diagnosing-spatial-auto-correlation"><i class="fa fa-check"></i><b>2.2</b> Diagnosing spatial auto-correlation</a>
+<ul>
+<li class="chapter" data-level="2.2.1" data-path="intro.html"><a href="intro.html#morans-i"><i class="fa fa-check"></i><b>2.2.1</b> Moran’s I</a></li>
+<li class="chapter" data-level="2.2.2" data-path="intro.html"><a href="intro.html#empirical-variogram-semivariance"><i class="fa fa-check"></i><b>2.2.2</b> Empirical variogram &amp; semivariance</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="background.html"><a href="background.html"><i class="fa fa-check"></i><b>3</b> Spatial Models</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="background.html"><a href="background.html#correlated-error-models"><i class="fa fa-check"></i><b>3.1</b> Correlated error models</a>
+<ul>
+<li class="chapter" data-level="3.1.1" data-path="background.html"><a href="background.html#distance-based-correlation-error-models"><i class="fa fa-check"></i><b>3.1.1</b> Distance-based correlation error models</a></li>
+<li class="chapter" data-level="3.1.2" data-path="background.html"><a href="background.html#correlated-error-model-for-gridded-data"><i class="fa fa-check"></i><b>3.1.2</b> Correlated error model for gridded data</a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="background.html"><a href="background.html#spatial-regression-methods"><i class="fa fa-check"></i><b>3.2</b> Spatial Regression methods</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="background.html"><a href="background.html#spatial-autoregressive-sar"><i class="fa fa-check"></i><b>3.2.1</b> Spatial autoregressive (SAR)</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="background.html"><a href="background.html#trend-analysis"><i class="fa fa-check"></i><b>3.3</b> Trend analysis</a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="background.html"><a href="background.html#row-and-column-trends"><i class="fa fa-check"></i><b>3.3.1</b> Row and column trends</a></li>
+<li class="chapter" data-level="3.3.2" data-path="background.html"><a href="background.html#splines"><i class="fa fa-check"></i><b>3.3.2</b> Splines</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="spatial-r.html"><a href="spatial-r.html"><i class="fa fa-check"></i><b>4</b> Identifying Spatial Variation: R</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="spatial-r.html"><a href="spatial-r.html#load-data"><i class="fa fa-check"></i><b>4.1</b> Load data</a>
+<ul>
+<li class="chapter" data-level="4.1.1" data-path="spatial-r.html"><a href="spatial-r.html#examine-data"><i class="fa fa-check"></i><b>4.1.1</b> Examine data</a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="spatial-r.html"><a href="spatial-r.html#test-for-spatial-autocorrelation"><i class="fa fa-check"></i><b>4.2</b> Test for spatial autocorrelation</a>
+<ul>
+<li class="chapter" data-level="4.2.1" data-path="spatial-r.html"><a href="spatial-r.html#morans-i-1"><i class="fa fa-check"></i><b>4.2.1</b> Moran’s I</a></li>
+<li class="chapter" data-level="4.2.2" data-path="spatial-r.html"><a href="spatial-r.html#note-on-gearys-c"><i class="fa fa-check"></i><b>4.2.2</b> Note on Geary’s C</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="spatial-r.html"><a href="spatial-r.html#empirical-variogram-fitting"><i class="fa fa-check"></i><b>4.3</b> Empirical variogram fitting</a>
+<ul>
+<li class="chapter" data-level="4.3.1" data-path="spatial-r.html"><a href="spatial-r.html#compare-variograms"><i class="fa fa-check"></i><b>4.3.1</b> Compare variograms</a></li>
+<li class="chapter" data-level="4.3.2" data-path="spatial-r.html"><a href="spatial-r.html#explore-anisotropy"><i class="fa fa-check"></i><b>4.3.2</b> Explore anisotropy</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="rcbd-r.html"><a href="rcbd-r.html"><i class="fa fa-check"></i><b>5</b> RCBD Example: R</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="rcbd-r.html"><a href="rcbd-r.html#prep-work"><i class="fa fa-check"></i><b>5.1</b> Prep work</a></li>
+<li class="chapter" data-level="5.2" data-path="rcbd-r.html"><a href="rcbd-r.html#correlated-errors"><i class="fa fa-check"></i><b>5.2</b> Correlated errors</a>
+<ul>
+<li class="chapter" data-level="5.2.1" data-path="rcbd-r.html"><a href="rcbd-r.html#exponential-1"><i class="fa fa-check"></i><b>5.2.1</b> Exponential</a></li>
+<li class="chapter" data-level="5.2.2" data-path="rcbd-r.html"><a href="rcbd-r.html#spherical-1"><i class="fa fa-check"></i><b>5.2.2</b> Spherical</a></li>
+<li class="chapter" data-level="5.2.3" data-path="rcbd-r.html"><a href="rcbd-r.html#power-1"><i class="fa fa-check"></i><b>5.2.3</b> Power</a></li>
+<li class="chapter" data-level="5.2.4" data-path="rcbd-r.html"><a href="rcbd-r.html#matérn-1"><i class="fa fa-check"></i><b>5.2.4</b> Matérn</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="rcbd-r.html"><a href="rcbd-r.html#rowcolumn-trends"><i class="fa fa-check"></i><b>5.3</b> Row/Column Trends:</a></li>
+<li class="chapter" data-level="5.4" data-path="rcbd-r.html"><a href="rcbd-r.html#splines-1"><i class="fa fa-check"></i><b>5.4</b> Splines</a></li>
+<li class="chapter" data-level="5.5" data-path="rcbd-r.html"><a href="rcbd-r.html#bayesian-ar1xar1"><i class="fa fa-check"></i><b>5.5</b> Bayesian AR1xAR1</a></li>
+<li class="chapter" data-level="5.6" data-path="rcbd-r.html"><a href="rcbd-r.html#model-selection"><i class="fa fa-check"></i><b>5.6</b> Model Selection</a>
+<ul>
+<li class="chapter" data-level="5.6.1" data-path="rcbd-r.html"><a href="rcbd-r.html#spatial-dependence-of-residuals"><i class="fa fa-check"></i><b>5.6.1</b> Spatial dependence of residuals</a></li>
+<li class="chapter" data-level="5.6.2" data-path="rcbd-r.html"><a href="rcbd-r.html#compare-model-fit"><i class="fa fa-check"></i><b>5.6.2</b> Compare Model Fit</a></li>
+<li class="chapter" data-level="5.6.3" data-path="rcbd-r.html"><a href="rcbd-r.html#experiment-wide-error"><i class="fa fa-check"></i><b>5.6.3</b> Experiment-wide error</a></li>
+<li class="chapter" data-level="5.6.4" data-path="rcbd-r.html"><a href="rcbd-r.html#post-hoc-power"><i class="fa fa-check"></i><b>5.6.4</b> Post-hoc power</a></li>
+<li class="chapter" data-level="5.6.5" data-path="rcbd-r.html"><a href="rcbd-r.html#standard-error-of-treatment-means"><i class="fa fa-check"></i><b>5.6.5</b> Standard error of treatment means</a></li>
+<li class="chapter" data-level="5.6.6" data-path="rcbd-r.html"><a href="rcbd-r.html#treatment-means"><i class="fa fa-check"></i><b>5.6.6</b> Treatment means</a></li>
+</ul></li>
+<li class="chapter" data-level="5.7" data-path="rcbd-r.html"><a href="rcbd-r.html#making-decisions"><i class="fa fa-check"></i><b>5.7</b> Making decisions</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="rcbd-sas.html"><a href="rcbd-sas.html"><i class="fa fa-check"></i><b>6</b> RCBD Example: SAS</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="rcbd-sas.html"><a href="rcbd-sas.html#load-and-explore-data"><i class="fa fa-check"></i><b>6.1</b> Load and Explore Data</a>
+<ul>
+<li class="chapter" data-level="6.1.1" data-path="rcbd-sas.html"><a href="rcbd-sas.html#plots-of-field-trends"><i class="fa fa-check"></i><b>6.1.1</b> Plots of Field Trends</a></li>
+</ul></li>
+<li class="chapter" data-level="6.2" data-path="rcbd-sas.html"><a href="rcbd-sas.html#estimating-and-testing-spatial-correlation"><i class="fa fa-check"></i><b>6.2</b> Estimating and Testing Spatial Correlation</a>
+<ul>
+<li class="chapter" data-level="6.2.1" data-path="rcbd-sas.html"><a href="rcbd-sas.html#examine-the-number-of-distance-pairs-and-maximum-lags-between-residuals"><i class="fa fa-check"></i><b>6.2.1</b> Examine the Number of Distance Pairs and Maximum Lags between Residuals</a></li>
+<li class="chapter" data-level="6.2.2" data-path="rcbd-sas.html"><a href="rcbd-sas.html#compute-morans-i-and-gearys-c."><i class="fa fa-check"></i><b>6.2.2</b> Compute Moran’s I and Geary’s C.</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="rcbd-sas.html"><a href="rcbd-sas.html#estimation-and-modeling-of-semivariance"><i class="fa fa-check"></i><b>6.3</b> 4.3 Estimation and Modeling of Semivariance</a>
+<ul>
+<li class="chapter" data-level="6.3.1" data-path="rcbd-sas.html"><a href="rcbd-sas.html#estimating-empirical-semivariance"><i class="fa fa-check"></i><b>6.3.1</b> 4.3.1 Estimating Empirical Semivariance</a></li>
+<li class="chapter" data-level="6.3.2" data-path="rcbd-sas.html"><a href="rcbd-sas.html#fitting-an-empirical-variogram-model"><i class="fa fa-check"></i><b>6.3.2</b> Fitting an Empirical Variogram Model</a></li>
+</ul></li>
+<li class="chapter" data-level="6.4" data-path="rcbd-sas.html"><a href="rcbd-sas.html#using-the-estimated-variogram-in-an-adjusted-analysis"><i class="fa fa-check"></i><b>6.4</b> Using the Estimated variogram in an Adjusted Analysis</a>
+<ul>
+<li class="chapter" data-level="6.4.1" data-path="rcbd-sas.html"><a href="rcbd-sas.html#unadjusted-rcbd-model"><i class="fa fa-check"></i><b>6.4.1</b> Unadjusted RCBD Model</a></li>
+<li class="chapter" data-level="6.4.2" data-path="rcbd-sas.html"><a href="rcbd-sas.html#rcbd-model-with-spatial-covariates"><i class="fa fa-check"></i><b>6.4.2</b> RCBD Model with Spatial Covariates</a></li>
+</ul></li>
+<li class="chapter" data-level="6.5" data-path="rcbd-sas.html"><a href="rcbd-sas.html#compare-estimated-means"><i class="fa fa-check"></i><b>6.5</b> Compare Estimated Means</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="model-extension.html"><a href="model-extension.html"><i class="fa fa-check"></i><b>7</b> Other Models</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="model-extension.html"><a href="model-extension.html#other-experimental-designs"><i class="fa fa-check"></i><b>7.1</b> Other Experimental Designs</a>
+<ul>
+<li class="chapter" data-level="7.1.1" data-path="model-extension.html"><a href="model-extension.html#factorials-rcbd"><i class="fa fa-check"></i><b>7.1.1</b> 2+ Factorials (RCBD)</a></li>
+<li class="chapter" data-level="7.1.2" data-path="model-extension.html"><a href="model-extension.html#alpha-lattice"><i class="fa fa-check"></i><b>7.1.2</b> Alpha lattice</a></li>
+<li class="chapter" data-level="7.1.3" data-path="model-extension.html"><a href="model-extension.html#latin-square"><i class="fa fa-check"></i><b>7.1.3</b> Latin square</a></li>
+<li class="chapter" data-level="7.1.4" data-path="model-extension.html"><a href="model-extension.html#augmented"><i class="fa fa-check"></i><b>7.1.4</b> Augmented</a></li>
+<li class="chapter" data-level="7.1.5" data-path="model-extension.html"><a href="model-extension.html#split-plot"><i class="fa fa-check"></i><b>7.1.5</b> Split plot</a></li>
+<li class="chapter" data-level="7.1.6" data-path="model-extension.html"><a href="model-extension.html#split-split-plot"><i class="fa fa-check"></i><b>7.1.6</b> Split-split plot</a></li>
+<li class="chapter" data-level="7.1.7" data-path="model-extension.html"><a href="model-extension.html#split-block"><i class="fa fa-check"></i><b>7.1.7</b> Split block</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="model-extension.html"><a href="model-extension.html#traits-with-non-gaussian-distributions"><i class="fa fa-check"></i><b>7.2</b> Traits with non-gaussian distributions</a>
+<ul>
+<li class="chapter" data-level="7.2.1" data-path="model-extension.html"><a href="model-extension.html#count-traits"><i class="fa fa-check"></i><b>7.2.1</b> Count traits:</a></li>
+<li class="chapter" data-level="7.2.2" data-path="model-extension.html"><a href="model-extension.html#percent-traits"><i class="fa fa-check"></i><b>7.2.2</b> Percent traits</a></li>
+<li class="chapter" data-level="7.2.3" data-path="model-extension.html"><a href="model-extension.html#ordinal-traits"><i class="fa fa-check"></i><b>7.2.3</b> Ordinal traits</a></li>
+<li class="chapter" data-level="7.2.4" data-path="model-extension.html"><a href="model-extension.html#binomial-traits"><i class="fa fa-check"></i><b>7.2.4</b> Binomial traits</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="the-end.html"><a href="the-end.html"><i class="fa fa-check"></i><b>8</b> Conclusion</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="the-end.html"><a href="the-end.html#other-packages"><i class="fa fa-check"></i><b>8.1</b> Other packages</a></li>
+<li class="chapter" data-level="8.2" data-path="the-end.html"><a href="the-end.html#final-recommendations"><i class="fa fa-check"></i><b>8.2</b> Final recommendations</a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Incorporating Spatial Analysis into Agricultural Field Experiments.</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="rcbd-r" class="section level1" number="5">
+<h1><span class="header-section-number">Section 5</span> RCBD Example: R</h1>
+<p>Here are step-by-step instructions for how to incorporate spatial covariates into analysis of a field experiment that uses a randomized complete block design. Several techniques are explored:</p>
+<p>Load data if it is not already in your R environment:</p>
+<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb62-1"><a href="rcbd-r.html#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(agridat); <span class="fu">library</span>(dplyr); <span class="fu">library</span>(tidyr); <span class="fu">library</span>(purrr);</span>
+<span id="cb62-2"><a href="rcbd-r.html#cb62-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sp)</span>
+<span id="cb62-3"><a href="rcbd-r.html#cb62-3" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;stroup.nin&quot;</span>)</span>
+<span id="cb62-4"><a href="rcbd-r.html#cb62-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-5"><a href="rcbd-r.html#cb62-5" aria-hidden="true" tabindex="-1"></a>Nin <span class="ot">&lt;-</span> stroup.nin <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">col.width =</span> col <span class="sc">*</span> <span class="fl">1.2</span>, </span>
+<span id="cb62-6"><a href="rcbd-r.html#cb62-6" aria-hidden="true" tabindex="-1"></a>                             <span class="at">row.length =</span> row <span class="sc">*</span> <span class="fl">4.3</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb62-7"><a href="rcbd-r.html#cb62-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fill</span>(rep, <span class="at">.direction =</span> <span class="st">&quot;up&quot;</span>) <span class="sc">%&gt;%</span>  <span class="fu">arrange</span>(col, row) </span>
+<span id="cb62-8"><a href="rcbd-r.html#cb62-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-9"><a href="rcbd-r.html#cb62-9" aria-hidden="true" tabindex="-1"></a>Nin_na <span class="ot">&lt;-</span> <span class="fu">filter</span>(Nin, <span class="sc">!</span><span class="fu">is.na</span>(yield))</span>
+<span id="cb62-10"><a href="rcbd-r.html#cb62-10" aria-hidden="true" tabindex="-1"></a>Nin_spatial <span class="ot">&lt;-</span> Nin_na</span>
+<span id="cb62-11"><a href="rcbd-r.html#cb62-11" aria-hidden="true" tabindex="-1"></a><span class="fu">coordinates</span>(Nin_spatial) <span class="ot">&lt;-</span> <span class="er">~</span> col.width <span class="sc">+</span> row.length</span></code></pre></div>
+<p>Once spatial auto-correlation has been identified in field trials, the next step is to employ a modeling technique that will reduce the impact of spatial variation on the final estimates from the analysis.</p>
+<div id="prep-work" class="section level2" number="5.1">
+<h2><span class="header-section-number">5.1</span> Prep work</h2>
+<p>The first thing is to run a standard linear model. A common model specification for the randomized complete block design (RCBD) is to include cultivar as a fixed effect and block as a random effect.</p>
+<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb63-1"><a href="rcbd-r.html#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(nlme); <span class="fu">library</span>(emmeans)</span>
+<span id="cb63-2"><a href="rcbd-r.html#cb63-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-3"><a href="rcbd-r.html#cb63-3" aria-hidden="true" tabindex="-1"></a>nin_lme <span class="ot">&lt;-</span> <span class="fu">lme</span>(yield <span class="sc">~</span> gen, <span class="at">random =</span> <span class="sc">~</span><span class="dv">1</span><span class="sc">|</span>rep,</span>
+<span id="cb63-4"><a href="rcbd-r.html#cb63-4" aria-hidden="true" tabindex="-1"></a>              <span class="at">data =</span> Nin,</span>
+<span id="cb63-5"><a href="rcbd-r.html#cb63-5" aria-hidden="true" tabindex="-1"></a>              <span class="at">na.action =</span> na.exclude)</span>
+<span id="cb63-6"><a href="rcbd-r.html#cb63-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-7"><a href="rcbd-r.html#cb63-7" aria-hidden="true" tabindex="-1"></a><span class="co"># extract the least squares means for variety</span></span>
+<span id="cb63-8"><a href="rcbd-r.html#cb63-8" aria-hidden="true" tabindex="-1"></a>preds_lme <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">emmeans</span>(nin_lme, <span class="st">&quot;gen&quot;</span>))</span></code></pre></div>
+<p>The variables “gen” refers to the cultivar or breeding line being trialed, and “rep” is the block, and the dependent variable, “yield” is grain yield. Basic exploratory analysis of this data set was conducted in <a href="spatial-r.html#spatial-r">4</a>.</p>
+</div>
+<div id="correlated-errors" class="section level2" number="5.2">
+<h2><span class="header-section-number">5.2</span> Correlated errors</h2>
+<p><strong>Gaussian Example</strong></p>
+<p>In order to fit models using correlated error model, we will need to first obtain preliminary estimates of the nugget, sill and range: from fitting an empirical variogram.</p>
+<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb64-1"><a href="rcbd-r.html#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gstat)</span>
+<span id="cb64-2"><a href="rcbd-r.html#cb64-2" aria-hidden="true" tabindex="-1"></a>max_dist <span class="ot">&lt;-</span> <span class="fl">0.6</span><span class="sc">*</span><span class="fu">max</span>(<span class="fu">dist</span>(<span class="fu">coordinates</span>(Nin_spatial)))</span>
+<span id="cb64-3"><a href="rcbd-r.html#cb64-3" aria-hidden="true" tabindex="-1"></a>resid.var1 <span class="ot">&lt;-</span> <span class="fu">variogram</span>(yield <span class="sc">~</span> rep <span class="sc">+</span> gen, </span>
+<span id="cb64-4"><a href="rcbd-r.html#cb64-4" aria-hidden="true" tabindex="-1"></a>                        <span class="at">cutoff =</span> max_dist,</span>
+<span id="cb64-5"><a href="rcbd-r.html#cb64-5" aria-hidden="true" tabindex="-1"></a>                        <span class="at">width =</span> max_dist<span class="sc">/</span><span class="dv">10</span>, </span>
+<span id="cb64-6"><a href="rcbd-r.html#cb64-6" aria-hidden="true" tabindex="-1"></a>                        <span class="at">data =</span> Nin_spatial)</span>
+<span id="cb64-7"><a href="rcbd-r.html#cb64-7" aria-hidden="true" tabindex="-1"></a>nugget_start <span class="ot">&lt;-</span> <span class="fu">min</span>(resid.var1<span class="sc">$</span>gamma)</span></code></pre></div>
+<p>In the previous section, an isotropic Gaussian function was identified as the best model for describing the decay of error correlations over distance.</p>
+<div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb65-1"><a href="rcbd-r.html#cb65-1" aria-hidden="true" tabindex="-1"></a>nin_vgm <span class="ot">&lt;-</span> <span class="fu">vgm</span>(<span class="at">model =</span> <span class="st">&quot;Gau&quot;</span>, <span class="at">nugget =</span> nugget_start) </span>
+<span id="cb65-2"><a href="rcbd-r.html#cb65-2" aria-hidden="true" tabindex="-1"></a>nin_variofit <span class="ot">&lt;-</span> <span class="fu">fit.variogram</span>(resid.var1, nin_vgm)</span>
+<span id="cb65-3"><a href="rcbd-r.html#cb65-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb65-4"><a href="rcbd-r.html#cb65-4" aria-hidden="true" tabindex="-1"></a>nugget <span class="ot">&lt;-</span> nin_variofit<span class="sc">$</span>psill[<span class="dv">1</span>] </span>
+<span id="cb65-5"><a href="rcbd-r.html#cb65-5" aria-hidden="true" tabindex="-1"></a>range <span class="ot">&lt;-</span> nin_variofit<span class="sc">$</span>range[<span class="dv">2</span>] </span>
+<span id="cb65-6"><a href="rcbd-r.html#cb65-6" aria-hidden="true" tabindex="-1"></a>sill <span class="ot">&lt;-</span> <span class="fu">sum</span>(nin_variofit<span class="sc">$</span>psill) </span>
+<span id="cb65-7"><a href="rcbd-r.html#cb65-7" aria-hidden="true" tabindex="-1"></a>nugget.effect <span class="ot">&lt;-</span>  nugget<span class="sc">/</span>sill</span></code></pre></div>
+<p>Create a correlated error structure using the <strong>nlme</strong> package.</p>
+<div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb66-1"><a href="rcbd-r.html#cb66-1" aria-hidden="true" tabindex="-1"></a>cor.gaus <span class="ot">&lt;-</span> <span class="fu">corSpatial</span>(<span class="at">value =</span> <span class="fu">c</span>(range, nugget.effect), </span>
+<span id="cb66-2"><a href="rcbd-r.html#cb66-2" aria-hidden="true" tabindex="-1"></a>                  <span class="at">form =</span> <span class="sc">~</span> row.length <span class="sc">+</span> col.width, </span>
+<span id="cb66-3"><a href="rcbd-r.html#cb66-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">nugget =</span> T, <span class="at">fixed =</span> F,</span>
+<span id="cb66-4"><a href="rcbd-r.html#cb66-4" aria-hidden="true" tabindex="-1"></a>                  <span class="at">type =</span> <span class="st">&quot;gaussian&quot;</span>, </span>
+<span id="cb66-5"><a href="rcbd-r.html#cb66-5" aria-hidden="true" tabindex="-1"></a>                  <span class="at">metric =</span> <span class="st">&quot;euclidean&quot;</span>)</span></code></pre></div>
+<p>Update the linear mixed model with the correlated error structure:</p>
+<div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb67-1"><a href="rcbd-r.html#cb67-1" aria-hidden="true" tabindex="-1"></a>nin_gaus <span class="ot">&lt;-</span> <span class="fu">update</span>(nin_lme, <span class="at">corr =</span> cor.gaus)</span></code></pre></div>
+<p>Extract variety estimates:</p>
+<div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb68-1"><a href="rcbd-r.html#cb68-1" aria-hidden="true" tabindex="-1"></a>preds_gaus <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">emmeans</span>(nin_gaus, <span class="st">&quot;gen&quot;</span>))</span></code></pre></div>
+<p>Other models can be implemented following this template.</p>
+<div id="exponential-1" class="section level3" number="5.2.1">
+<h3><span class="header-section-number">5.2.1</span> Exponential</h3>
+<div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb69-1"><a href="rcbd-r.html#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(nin_vgm, nin_variofit, nugget, sill, range, nugget.effect)</span>
+<span id="cb69-2"><a href="rcbd-r.html#cb69-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb69-3"><a href="rcbd-r.html#cb69-3" aria-hidden="true" tabindex="-1"></a>nin_vgm <span class="ot">&lt;-</span> <span class="fu">vgm</span>(<span class="at">model =</span> <span class="st">&quot;Exp&quot;</span>, <span class="at">nugget =</span> nugget_start) </span>
+<span id="cb69-4"><a href="rcbd-r.html#cb69-4" aria-hidden="true" tabindex="-1"></a>nin_variofit <span class="ot">&lt;-</span> <span class="fu">fit.variogram</span>(resid.var1, nin_vgm)</span>
+<span id="cb69-5"><a href="rcbd-r.html#cb69-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb69-6"><a href="rcbd-r.html#cb69-6" aria-hidden="true" tabindex="-1"></a>nugget <span class="ot">&lt;-</span> nin_variofit<span class="sc">$</span>psill[<span class="dv">1</span>] </span>
+<span id="cb69-7"><a href="rcbd-r.html#cb69-7" aria-hidden="true" tabindex="-1"></a>range <span class="ot">&lt;-</span> nin_variofit<span class="sc">$</span>range[<span class="dv">2</span>] </span>
+<span id="cb69-8"><a href="rcbd-r.html#cb69-8" aria-hidden="true" tabindex="-1"></a>sill <span class="ot">&lt;-</span> <span class="fu">sum</span>(nin_variofit<span class="sc">$</span>psill) </span>
+<span id="cb69-9"><a href="rcbd-r.html#cb69-9" aria-hidden="true" tabindex="-1"></a>nugget.effect <span class="ot">&lt;-</span>  nugget<span class="sc">/</span>sill</span>
+<span id="cb69-10"><a href="rcbd-r.html#cb69-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb69-11"><a href="rcbd-r.html#cb69-11" aria-hidden="true" tabindex="-1"></a>cor.exp <span class="ot">&lt;-</span> <span class="fu">corSpatial</span>(<span class="at">value =</span> <span class="fu">c</span>(range, nugget.effect), </span>
+<span id="cb69-12"><a href="rcbd-r.html#cb69-12" aria-hidden="true" tabindex="-1"></a>                  <span class="at">form =</span> <span class="sc">~</span> row.length <span class="sc">+</span> col.width, </span>
+<span id="cb69-13"><a href="rcbd-r.html#cb69-13" aria-hidden="true" tabindex="-1"></a>                  <span class="at">nugget =</span> T, <span class="at">fixed =</span> F,</span>
+<span id="cb69-14"><a href="rcbd-r.html#cb69-14" aria-hidden="true" tabindex="-1"></a>                  <span class="at">type =</span> <span class="st">&quot;exponential&quot;</span>, </span>
+<span id="cb69-15"><a href="rcbd-r.html#cb69-15" aria-hidden="true" tabindex="-1"></a>                  <span class="at">metric =</span> <span class="st">&quot;euclidean&quot;</span>)</span>
+<span id="cb69-16"><a href="rcbd-r.html#cb69-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb69-17"><a href="rcbd-r.html#cb69-17" aria-hidden="true" tabindex="-1"></a>nin_exp <span class="ot">&lt;-</span> <span class="fu">update</span>(nin_lme, <span class="at">corr =</span> cor.exp)</span>
+<span id="cb69-18"><a href="rcbd-r.html#cb69-18" aria-hidden="true" tabindex="-1"></a>preds_exp <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">emmeans</span>(nin_exp, <span class="st">&quot;gen&quot;</span>))</span></code></pre></div>
+</div>
+<div id="spherical-1" class="section level3" number="5.2.2">
+<h3><span class="header-section-number">5.2.2</span> Spherical</h3>
+<div class="sourceCode" id="cb70"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb70-1"><a href="rcbd-r.html#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(nin_vgm, nin_variofit, nugget, sill, range, nugget.effect)</span>
+<span id="cb70-2"><a href="rcbd-r.html#cb70-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-3"><a href="rcbd-r.html#cb70-3" aria-hidden="true" tabindex="-1"></a>nin_vgm <span class="ot">&lt;-</span> <span class="fu">vgm</span>(<span class="at">model =</span> <span class="st">&quot;Sph&quot;</span>, <span class="at">nugget =</span> nugget_start) </span>
+<span id="cb70-4"><a href="rcbd-r.html#cb70-4" aria-hidden="true" tabindex="-1"></a>nin_variofit <span class="ot">&lt;-</span> <span class="fu">fit.variogram</span>(resid.var1, nin_vgm)</span>
+<span id="cb70-5"><a href="rcbd-r.html#cb70-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-6"><a href="rcbd-r.html#cb70-6" aria-hidden="true" tabindex="-1"></a>nugget <span class="ot">&lt;-</span> nin_variofit<span class="sc">$</span>psill[<span class="dv">1</span>] </span>
+<span id="cb70-7"><a href="rcbd-r.html#cb70-7" aria-hidden="true" tabindex="-1"></a>range <span class="ot">&lt;-</span> nin_variofit<span class="sc">$</span>range[<span class="dv">2</span>] </span>
+<span id="cb70-8"><a href="rcbd-r.html#cb70-8" aria-hidden="true" tabindex="-1"></a>sill <span class="ot">&lt;-</span> <span class="fu">sum</span>(nin_variofit<span class="sc">$</span>psill) </span>
+<span id="cb70-9"><a href="rcbd-r.html#cb70-9" aria-hidden="true" tabindex="-1"></a>nugget.effect <span class="ot">&lt;-</span>  nugget<span class="sc">/</span>sill</span>
+<span id="cb70-10"><a href="rcbd-r.html#cb70-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-11"><a href="rcbd-r.html#cb70-11" aria-hidden="true" tabindex="-1"></a>cor.sph <span class="ot">&lt;-</span> <span class="fu">corSpatial</span>(<span class="at">value =</span> <span class="fu">c</span>(range, nugget.effect), </span>
+<span id="cb70-12"><a href="rcbd-r.html#cb70-12" aria-hidden="true" tabindex="-1"></a>                  <span class="at">form =</span> <span class="sc">~</span> row.length <span class="sc">+</span> col.width, </span>
+<span id="cb70-13"><a href="rcbd-r.html#cb70-13" aria-hidden="true" tabindex="-1"></a>                  <span class="at">nugget =</span> T, <span class="at">fixed =</span> F,</span>
+<span id="cb70-14"><a href="rcbd-r.html#cb70-14" aria-hidden="true" tabindex="-1"></a>                  <span class="at">type =</span> <span class="st">&quot;spherical&quot;</span>, </span>
+<span id="cb70-15"><a href="rcbd-r.html#cb70-15" aria-hidden="true" tabindex="-1"></a>                  <span class="at">metric =</span> <span class="st">&quot;euclidean&quot;</span>)</span>
+<span id="cb70-16"><a href="rcbd-r.html#cb70-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-17"><a href="rcbd-r.html#cb70-17" aria-hidden="true" tabindex="-1"></a>nin_sph <span class="ot">&lt;-</span> <span class="fu">update</span>(nin_lme, <span class="at">corr =</span> cor.sph)</span>
+<span id="cb70-18"><a href="rcbd-r.html#cb70-18" aria-hidden="true" tabindex="-1"></a>preds_sph <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">emmeans</span>(nin_sph, <span class="st">&quot;gen&quot;</span>))</span></code></pre></div>
+</div>
+<div id="power-1" class="section level3" number="5.2.3">
+<h3><span class="header-section-number">5.2.3</span> Power</h3>
+<div class="sourceCode" id="cb71"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb71-1"><a href="rcbd-r.html#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(nin_vgm, nin_variofit, nugget, sill, range, nugget.effect)</span>
+<span id="cb71-2"><a href="rcbd-r.html#cb71-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb71-3"><a href="rcbd-r.html#cb71-3" aria-hidden="true" tabindex="-1"></a>cor.pow <span class="ot">&lt;-</span> <span class="fu">corSpatial</span>(<span class="at">form =</span> <span class="sc">~</span> row.length <span class="sc">+</span> col.width, </span>
+<span id="cb71-4"><a href="rcbd-r.html#cb71-4" aria-hidden="true" tabindex="-1"></a>                  <span class="at">nugget =</span> T, <span class="at">fixed =</span> F,</span>
+<span id="cb71-5"><a href="rcbd-r.html#cb71-5" aria-hidden="true" tabindex="-1"></a>                  <span class="at">type =</span> <span class="st">&quot;ratio&quot;</span>, </span>
+<span id="cb71-6"><a href="rcbd-r.html#cb71-6" aria-hidden="true" tabindex="-1"></a>                  <span class="at">metric =</span> <span class="st">&quot;euclidean&quot;</span>)</span>
+<span id="cb71-7"><a href="rcbd-r.html#cb71-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb71-8"><a href="rcbd-r.html#cb71-8" aria-hidden="true" tabindex="-1"></a>nin_pow <span class="ot">&lt;-</span> <span class="fu">update</span>(nin_lme, <span class="at">corr =</span> cor.pow)</span>
+<span id="cb71-9"><a href="rcbd-r.html#cb71-9" aria-hidden="true" tabindex="-1"></a>preds_pow <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">emmeans</span>(nin_pow, <span class="st">&quot;gen&quot;</span>))</span></code></pre></div>
+</div>
+<div id="matérn-1" class="section level3" number="5.2.4">
+<h3><span class="header-section-number">5.2.4</span> Matérn</h3>
+<p>A Matern error function is not available in <strong>nlme</strong>, but the packge <strong>spaMM</strong> has written an extension implementing the Matérn, Cauchy and other covariance structures. The Matérn is demonstrated below.</p>
+<div class="sourceCode" id="cb72"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb72-1"><a href="rcbd-r.html#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(nin_vgm, nin_variofit, nugget, sill, range, nugget.effect)</span>
+<span id="cb72-2"><a href="rcbd-r.html#cb72-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-3"><a href="rcbd-r.html#cb72-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(spaMM) <span class="co"># required for running `corMatern()`</span></span>
+<span id="cb72-4"><a href="rcbd-r.html#cb72-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-5"><a href="rcbd-r.html#cb72-5" aria-hidden="true" tabindex="-1"></a>nin_vgm <span class="ot">&lt;-</span> <span class="fu">vgm</span>(<span class="at">model =</span> <span class="st">&quot;Mat&quot;</span>, <span class="at">nugget =</span> nugget_start) </span>
+<span id="cb72-6"><a href="rcbd-r.html#cb72-6" aria-hidden="true" tabindex="-1"></a>nin_variofit <span class="ot">&lt;-</span> <span class="fu">fit.variogram</span>(resid.var1, nin_vgm, <span class="at">fit.kappa =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb72-7"><a href="rcbd-r.html#cb72-7" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb72-8"><a href="rcbd-r.html#cb72-8" aria-hidden="true" tabindex="-1"></a>nugget <span class="ot">&lt;-</span> nin_variofit<span class="sc">$</span>psill[<span class="dv">1</span>] </span>
+<span id="cb72-9"><a href="rcbd-r.html#cb72-9" aria-hidden="true" tabindex="-1"></a>range <span class="ot">&lt;-</span> nin_variofit<span class="sc">$</span>range[<span class="dv">2</span>] </span>
+<span id="cb72-10"><a href="rcbd-r.html#cb72-10" aria-hidden="true" tabindex="-1"></a>sill <span class="ot">&lt;-</span> <span class="fu">sum</span>(nin_variofit<span class="sc">$</span>psill) </span>
+<span id="cb72-11"><a href="rcbd-r.html#cb72-11" aria-hidden="true" tabindex="-1"></a>nugget.effect <span class="ot">&lt;-</span>  nugget<span class="sc">/</span>sill</span>
+<span id="cb72-12"><a href="rcbd-r.html#cb72-12" aria-hidden="true" tabindex="-1"></a>kappa <span class="ot">&lt;-</span> nin_variofit<span class="sc">$</span>kappa[<span class="dv">2</span>]</span>
+<span id="cb72-13"><a href="rcbd-r.html#cb72-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-14"><a href="rcbd-r.html#cb72-14" aria-hidden="true" tabindex="-1"></a><span class="co"># from spAMM documentation: &quot;Warning: the range parameter used in corSpatial objects is the inverse of the scale parameter used in MaternCorr and thus they have opposite meaning despite both being denoted ρ elsewhere in this package or in nlme literature&quot; - so range is expressed as an inverse</span></span>
+<span id="cb72-15"><a href="rcbd-r.html#cb72-15" aria-hidden="true" tabindex="-1"></a>cor.mat <span class="ot">&lt;-</span> <span class="fu">corMatern</span>(<span class="at">value =</span> <span class="fu">c</span>(<span class="dv">1</span><span class="sc">/</span>range, kappa, nugget.effect), </span>
+<span id="cb72-16"><a href="rcbd-r.html#cb72-16" aria-hidden="true" tabindex="-1"></a>                  <span class="at">form =</span> <span class="sc">~</span> row.length <span class="sc">+</span> col.width, </span>
+<span id="cb72-17"><a href="rcbd-r.html#cb72-17" aria-hidden="true" tabindex="-1"></a>                  <span class="at">nugget =</span> T, <span class="at">fixed =</span> F,</span>
+<span id="cb72-18"><a href="rcbd-r.html#cb72-18" aria-hidden="true" tabindex="-1"></a>                  <span class="at">metric =</span> <span class="st">&quot;euclidean&quot;</span>)</span>
+<span id="cb72-19"><a href="rcbd-r.html#cb72-19" aria-hidden="true" tabindex="-1"></a>nin_matern <span class="ot">&lt;-</span> <span class="fu">update</span>(nin_lme, <span class="at">corr =</span> cor.mat)</span>
+<span id="cb72-20"><a href="rcbd-r.html#cb72-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-21"><a href="rcbd-r.html#cb72-21" aria-hidden="true" tabindex="-1"></a>preds_mat <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">emmeans</span>(nin_matern, <span class="st">&quot;gen&quot;</span>))</span></code></pre></div>
+<p>In the <strong>nlme</strong> package, there is also an option for a linear model in the <code>corSpatial()</code> function. However, if a linear trend is present without a range or sill, it is recommended that a linear trend be fitted to the data instead.</p>
+</div>
+</div>
+<div id="rowcolumn-trends" class="section level2" number="5.3">
+<h2><span class="header-section-number">5.3</span> Row/Column Trends:</h2>
+<p>The package <strong>lme4</strong> is used since it can handle multiple random effects while <strong>nlme</strong> cannot do this without nesting the effects. I prefer <strong>nlme</strong> for linear modeling in this tutorial because of its built-in functionality for including spatial variation.</p>
+<div class="sourceCode" id="cb73"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb73-1"><a href="rcbd-r.html#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lme4)</span></code></pre></div>
+<pre><code>## Loading required package: Matrix</code></pre>
+<pre><code>## 
+## Attaching package: &#39;Matrix&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:tidyr&#39;:
+## 
+##     expand, pack, unpack</code></pre>
+<pre><code>## 
+## Attaching package: &#39;lme4&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:nlme&#39;:
+## 
+##     lmList</code></pre>
+<div class="sourceCode" id="cb79"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb79-1"><a href="rcbd-r.html#cb79-1" aria-hidden="true" tabindex="-1"></a><span class="co"># variables specifying row and column as factors are needed</span></span>
+<span id="cb79-2"><a href="rcbd-r.html#cb79-2" aria-hidden="true" tabindex="-1"></a>Nin<span class="sc">$</span>colF <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(Nin<span class="sc">$</span>col)</span>
+<span id="cb79-3"><a href="rcbd-r.html#cb79-3" aria-hidden="true" tabindex="-1"></a>Nin<span class="sc">$</span>rowF <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(Nin<span class="sc">$</span>row)</span>
+<span id="cb79-4"><a href="rcbd-r.html#cb79-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb79-5"><a href="rcbd-r.html#cb79-5" aria-hidden="true" tabindex="-1"></a>nin_trend <span class="ot">&lt;-</span> <span class="fu">lmer</span>(yield <span class="sc">~</span> gen <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>rep) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>colF) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>rowF),</span>
+<span id="cb79-6"><a href="rcbd-r.html#cb79-6" aria-hidden="true" tabindex="-1"></a>              <span class="at">data =</span> Nin,</span>
+<span id="cb79-7"><a href="rcbd-r.html#cb79-7" aria-hidden="true" tabindex="-1"></a>              <span class="at">na.action =</span> na.exclude)</span>
+<span id="cb79-8"><a href="rcbd-r.html#cb79-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb79-9"><a href="rcbd-r.html#cb79-9" aria-hidden="true" tabindex="-1"></a><span class="co"># extract the least squares means for variety</span></span>
+<span id="cb79-10"><a href="rcbd-r.html#cb79-10" aria-hidden="true" tabindex="-1"></a>preds_trend <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">emmeans</span>(nin_trend, <span class="st">&quot;gen&quot;</span>))</span></code></pre></div>
+</div>
+<div id="splines-1" class="section level2" number="5.4">
+<h2><span class="header-section-number">5.4</span> Splines</h2>
+<p>The package <strong>SpATS</strong>, “spatial analysis for field trials,” implements B-splines for row and column effects.</p>
+<div class="sourceCode" id="cb80"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb80-1"><a href="rcbd-r.html#cb80-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(SpATS)</span>
+<span id="cb80-2"><a href="rcbd-r.html#cb80-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb80-3"><a href="rcbd-r.html#cb80-3" aria-hidden="true" tabindex="-1"></a>nin_spline <span class="ot">&lt;-</span> <span class="fu">SpATS</span>(<span class="at">response =</span> <span class="st">&quot;yield&quot;</span>, </span>
+<span id="cb80-4"><a href="rcbd-r.html#cb80-4" aria-hidden="true" tabindex="-1"></a>                    <span class="at">spatial =</span> <span class="sc">~</span> <span class="fu">PSANOVA</span>(col, row, <span class="at">nseg =</span> <span class="fu">c</span>(<span class="dv">10</span>,<span class="dv">20</span>),</span>
+<span id="cb80-5"><a href="rcbd-r.html#cb80-5" aria-hidden="true" tabindex="-1"></a>                                        <span class="at">degree =</span> <span class="dv">3</span>, <span class="at">pord =</span> <span class="dv">2</span>), </span>
+<span id="cb80-6"><a href="rcbd-r.html#cb80-6" aria-hidden="true" tabindex="-1"></a>                    <span class="at">genotype =</span> <span class="st">&quot;gen&quot;</span>,  </span>
+<span id="cb80-7"><a href="rcbd-r.html#cb80-7" aria-hidden="true" tabindex="-1"></a>                    <span class="at">random =</span> <span class="sc">~</span> rep, <span class="co"># + rowF + colF, </span></span>
+<span id="cb80-8"><a href="rcbd-r.html#cb80-8" aria-hidden="true" tabindex="-1"></a>                    <span class="at">data =</span> Nin, </span>
+<span id="cb80-9"><a href="rcbd-r.html#cb80-9" aria-hidden="true" tabindex="-1"></a>                    <span class="at">control =</span> <span class="fu">list</span>(<span class="at">tolerance =</span> <span class="fl">1e-03</span>, <span class="at">monitoring =</span> <span class="dv">0</span>))</span>
+<span id="cb80-10"><a href="rcbd-r.html#cb80-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb80-11"><a href="rcbd-r.html#cb80-11" aria-hidden="true" tabindex="-1"></a>preds_spline <span class="ot">&lt;-</span> <span class="fu">predict</span>(nin_spline, <span class="at">which =</span> <span class="st">&quot;gen&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb80-12"><a href="rcbd-r.html#cb80-12" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(gen, <span class="at">emmean =</span> <span class="st">&quot;predicted.values&quot;</span>, <span class="at">SE =</span> <span class="st">&quot;standard.errors&quot;</span>)</span></code></pre></div>
+</div>
+<div id="bayesian-ar1xar1" class="section level2" number="5.5">
+<h2><span class="header-section-number">5.5</span> Bayesian AR1xAR1</h2>
+<div class="sourceCode" id="cb81"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb81-1"><a href="rcbd-r.html#cb81-1" aria-hidden="true" tabindex="-1"></a><span class="do">## library(INLA) </span></span>
+<span id="cb81-2"><a href="rcbd-r.html#cb81-2" aria-hidden="true" tabindex="-1"></a><span class="do">## also need to add model info...</span></span></code></pre></div>
+</div>
+<div id="model-selection" class="section level2" number="5.6">
+<h2><span class="header-section-number">5.6</span> Model Selection</h2>
+<p>Now that we have built these spatial models, how do we pick the right one? Unfortunately, there is no one model that works best in all circumstances. In addition, there is no single way for choosing the best model! Some appraoches include:</p>
+<ol style="list-style-type: decimal">
+<li>comparing model fitness (e.g. AIC, BIC, log likelihood)</li>
+<li>comparing posthoc power (that is, the p-values for the treatments)</li>
+<li>comparing standard error of the estimates</li>
+</ol>
+<p>In order to make comparisons, the code below assembles all the model objects into one list. They are generated from different processes, as shown by the <code>class</code> attribute of each one, so this takes some data conditioning.</p>
+<div class="sourceCode" id="cb82"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb82-1"><a href="rcbd-r.html#cb82-1" aria-hidden="true" tabindex="-1"></a>all.models <span class="ot">&lt;-</span> <span class="fu">mget</span>(<span class="fu">ls</span>(<span class="at">pattern =</span> <span class="st">&quot;^nin_*&quot;</span>))</span>
+<span id="cb82-2"><a href="rcbd-r.html#cb82-2" aria-hidden="true" tabindex="-1"></a><span class="co"># print out their class</span></span>
+<span id="cb82-3"><a href="rcbd-r.html#cb82-3" aria-hidden="true" tabindex="-1"></a><span class="fu">map</span>(all.models, class)</span></code></pre></div>
+<pre><code>## $nin.lme
+## [1] &quot;lme&quot;
+## 
+## $nin_exp
+## [1] &quot;lme&quot;
+## 
+## $nin_gaus
+## [1] &quot;lme&quot;
+## 
+## $nin_lme
+## [1] &quot;lme&quot;
+## 
+## $nin_matern
+## [1] &quot;lme&quot;
+## 
+## $nin_pow
+## [1] &quot;lme&quot;
+## 
+## $nin_sph
+## [1] &quot;lme&quot;
+## 
+## $nin_spline
+## [1] &quot;SpATS&quot;
+## 
+## $nin_trend
+## [1] &quot;lmerMod&quot;
+## attr(,&quot;package&quot;)
+## [1] &quot;lme4&quot;</code></pre>
+<div id="spatial-dependence-of-residuals" class="section level3" number="5.6.1">
+<h3><span class="header-section-number">5.6.1</span> Spatial dependence of residuals</h3>
+<p>It would be helpful to know if these methods were effective in reducing the spatial dependence among the error residuals.</p>
+<p>The function below extracts the residuals from each model and is needed because of different handling of missing values by the package <strong>SpATS</strong>.</p>
+<div class="sourceCode" id="cb84"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb84-1"><a href="rcbd-r.html#cb84-1" aria-hidden="true" tabindex="-1"></a>L1 <span class="ot">&lt;-</span> <span class="fu">nrow</span>(Nin)</span>
+<span id="cb84-2"><a href="rcbd-r.html#cb84-2" aria-hidden="true" tabindex="-1"></a>non_na <span class="ot">&lt;-</span> <span class="sc">!</span><span class="fu">is.na</span>(Nin<span class="sc">$</span>yield)</span>
+<span id="cb84-3"><a href="rcbd-r.html#cb84-3" aria-hidden="true" tabindex="-1"></a>L2 <span class="ot">&lt;-</span> <span class="fu">sum</span>(non_na)</span>
+<span id="cb84-4"><a href="rcbd-r.html#cb84-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb84-5"><a href="rcbd-r.html#cb84-5" aria-hidden="true" tabindex="-1"></a>residuals <span class="ot">&lt;-</span> <span class="fu">map</span>(all.models, <span class="cf">function</span> (x) {</span>
+<span id="cb84-6"><a href="rcbd-r.html#cb84-6" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb84-7"><a href="rcbd-r.html#cb84-7" aria-hidden="true" tabindex="-1"></a>  resids <span class="ot">&lt;-</span> <span class="fu">residuals</span>(x)</span>
+<span id="cb84-8"><a href="rcbd-r.html#cb84-8" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb84-9"><a href="rcbd-r.html#cb84-9" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="fu">is.data.frame</span>(resids)) {</span>
+<span id="cb84-10"><a href="rcbd-r.html#cb84-10" aria-hidden="true" tabindex="-1"></a>    colnum <span class="ot">=</span> <span class="fu">ncol</span>(resids)</span>
+<span id="cb84-11"><a href="rcbd-r.html#cb84-11" aria-hidden="true" tabindex="-1"></a>    resids <span class="ot">=</span> resids[,colnum]</span>
+<span id="cb84-12"><a href="rcbd-r.html#cb84-12" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb84-13"><a href="rcbd-r.html#cb84-13" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb84-14"><a href="rcbd-r.html#cb84-14" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="fu">length</span>(resids) <span class="sc">==</span> L2) {</span>
+<span id="cb84-15"><a href="rcbd-r.html#cb84-15" aria-hidden="true" tabindex="-1"></a>    resids_pl <span class="ot">=</span> <span class="fu">rep</span>(<span class="cn">NA</span>, L1)</span>
+<span id="cb84-16"><a href="rcbd-r.html#cb84-16" aria-hidden="true" tabindex="-1"></a>    resids_pl[non_na] <span class="ot">=</span> resids</span>
+<span id="cb84-17"><a href="rcbd-r.html#cb84-17" aria-hidden="true" tabindex="-1"></a>    resids <span class="ot">=</span> resids_pl</span>
+<span id="cb84-18"><a href="rcbd-r.html#cb84-18" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb84-19"><a href="rcbd-r.html#cb84-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(resids)</span>
+<span id="cb84-20"><a href="rcbd-r.html#cb84-20" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb84-21"><a href="rcbd-r.html#cb84-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb84-22"><a href="rcbd-r.html#cb84-22" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(residuals) <span class="ot">&lt;-</span> <span class="fu">names</span>(all.models)</span></code></pre></div>
+<p>Run a Moran’s I test on the extracted residuals:</p>
+<div class="sourceCode" id="cb85"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb85-1"><a href="rcbd-r.html#cb85-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(spdep)</span>
+<span id="cb85-2"><a href="rcbd-r.html#cb85-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb85-3"><a href="rcbd-r.html#cb85-3" aria-hidden="true" tabindex="-1"></a>xy.rook <span class="ot">&lt;-</span> <span class="fu">cell2nb</span>(<span class="at">nrow =</span> <span class="fu">max</span>(Nin<span class="sc">$</span>row), <span class="at">ncol =</span> <span class="fu">max</span>(Nin<span class="sc">$</span>col), <span class="at">type=</span><span class="st">&quot;rook&quot;</span>)</span>
+<span id="cb85-4"><a href="rcbd-r.html#cb85-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb85-5"><a href="rcbd-r.html#cb85-5" aria-hidden="true" tabindex="-1"></a>Moran.I <span class="ot">&lt;-</span> <span class="fu">map_df</span>(residuals, <span class="cf">function</span>(x) {</span>
+<span id="cb85-6"><a href="rcbd-r.html#cb85-6" aria-hidden="true" tabindex="-1"></a>  mi <span class="ot">=</span> <span class="fu">moran.test</span>(x, <span class="fu">nb2listw</span>(xy.rook), <span class="at">na.action =</span> na.exclude)</span>
+<span id="cb85-7"><a href="rcbd-r.html#cb85-7" aria-hidden="true" tabindex="-1"></a>  mi.stat <span class="ot">&lt;-</span> mi<span class="sc">$</span>estimate</span>
+<span id="cb85-8"><a href="rcbd-r.html#cb85-8" aria-hidden="true" tabindex="-1"></a>  mi.stat<span class="sc">$</span>p.value <span class="ot">&lt;-</span> mi<span class="sc">$</span>p.value</span>
+<span id="cb85-9"><a href="rcbd-r.html#cb85-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(mi.stat)</span>
+<span id="cb85-10"><a href="rcbd-r.html#cb85-10" aria-hidden="true" tabindex="-1"></a>}) <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">model =</span> <span class="fu">names</span>(all.models)) <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="fu">c</span>(<span class="dv">5</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb85-11"><a href="rcbd-r.html#cb85-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate_at</span>(<span class="dv">2</span><span class="sc">:</span><span class="dv">5</span>, round, <span class="dv">4</span>) <span class="sc">%&gt;%</span> <span class="fu">arrange</span>(p.value)</span>
+<span id="cb85-12"><a href="rcbd-r.html#cb85-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb85-13"><a href="rcbd-r.html#cb85-13" aria-hidden="true" tabindex="-1"></a>Moran.I</span></code></pre></div>
+<pre><code>## # A tibble: 9 x 5
+##   model      `Moran I statistic` Expectation Variance p.value
+##   &lt;chr&gt;                    &lt;dbl&gt;       &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;
+## 1 nin.lme                 0.402      -0.0045   0.0025  0     
+## 2 nin_exp                 0.756      -0.0045   0.0025  0     
+## 3 nin_gaus                0.760      -0.0045   0.0025  0     
+## 4 nin_lme                 0.402      -0.0045   0.0025  0     
+## 5 nin_matern              0.760      -0.0045   0.0025  0     
+## 6 nin_pow                 0.760      -0.0045   0.0025  0     
+## 7 nin_sph                 0.757      -0.0045   0.0025  0     
+## 8 nin_trend               0.132      -0.0045   0.0025  0.0032
+## 9 nin_spline             -0.0514     -0.0045   0.0025  0.826</code></pre>
+<p>Only one model, <code>nin_spline</code> resulted in an improvement in Moran’s I. Nearest neighbor approaches can also improve Moran’s I. The significant p-values indicate that auto-correlation is still present in those models. However, that doesn’t mean the other models are ineffective. The other models incorporate the spatial auto-correlation directly into the error terms.</p>
+</div>
+<div id="compare-model-fit" class="section level3" number="5.6.2">
+<h3><span class="header-section-number">5.6.2</span> Compare Model Fit</h3>
+<p><em>log likelihood, AIC, BIC</em></p>
+<p>Since these are not nested models, likelihood ratio tests cannot be performed. Log likelihood can be compared within the models from <strong>nlme</strong> but not across packages since they use different estimation procedures.</p>
+<div class="sourceCode" id="cb87"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb87-1"><a href="rcbd-r.html#cb87-1" aria-hidden="true" tabindex="-1"></a>nlme_mods <span class="ot">&lt;-</span> <span class="fu">list</span>(nin_lme, nin_exp, nin_gaus, nin_sph, nin_pow, nin_matern, nin_trend)</span>
+<span id="cb87-2"><a href="rcbd-r.html#cb87-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-3"><a href="rcbd-r.html#cb87-3" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(nlme_mods) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">c</span>(<span class="st">&quot;LMM&quot;</span>, <span class="st">&quot;exponential&quot;</span>, <span class="st">&quot;gaussian&quot;</span>, </span>
+<span id="cb87-4"><a href="rcbd-r.html#cb87-4" aria-hidden="true" tabindex="-1"></a>                        <span class="st">&quot;spherical&quot;</span>, <span class="st">&quot;power&quot;</span>, <span class="st">&quot;matern&quot;</span>, <span class="st">&quot;row-col_trend&quot;</span>))</span>
+<span id="cb87-5"><a href="rcbd-r.html#cb87-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-6"><a href="rcbd-r.html#cb87-6" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(<span class="at">loglikihood =</span> <span class="fu">sapply</span>(nlme_mods, logLik),</span>
+<span id="cb87-7"><a href="rcbd-r.html#cb87-7" aria-hidden="true" tabindex="-1"></a>           <span class="at">AIC =</span> <span class="fu">sapply</span>(nlme_mods, AIC),</span>
+<span id="cb87-8"><a href="rcbd-r.html#cb87-8" aria-hidden="true" tabindex="-1"></a>           <span class="at">BIC =</span> <span class="fu">sapply</span>(nlme_mods, AIC, <span class="at">k =</span> <span class="fu">log</span>(<span class="fu">nrow</span>(Nin_na))))</span></code></pre></div>
+<pre><code>##               loglikihood      AIC      BIC
+## LMM             -608.8508 1333.702 1531.577
+## exponential     -543.0149 1206.030 1410.729
+## gaussian        -540.3401 1200.680 1405.379
+## spherical       -541.7560 1203.512 1408.211
+## power           -540.8889 1201.778 1406.477
+## matern          -540.3386 1202.677 1410.788
+## row-col_trend   -577.6523 1275.305 1480.003</code></pre>
+<p>Larger log likelihoods indicate a better fitting model to the data. A rule of thumb when comparing log likelihoods is that differences less than 2 are not considered notable. These results suggest that the Gaussian, spherical, power and Matérn models are substantially equivalent in capturing the variation present in this data set.</p>
+</div>
+<div id="experiment-wide-error" class="section level3" number="5.6.3">
+<h3><span class="header-section-number">5.6.3</span> Experiment-wide error</h3>
+<div class="sourceCode" id="cb89"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb89-1"><a href="rcbd-r.html#cb89-1" aria-hidden="true" tabindex="-1"></a>exp_error <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">sapply</span>(nlme_mods, sigma))</span>
+<span id="cb89-2"><a href="rcbd-r.html#cb89-2" aria-hidden="true" tabindex="-1"></a>exp_error</span></code></pre></div>
+<pre><code>##               sapply(nlme_mods, sigma)
+## LMM                           7.041475
+## exponential                   8.967355
+## gaussian                      8.035251
+## spherical                     7.946038
+## power                         8.934250
+## matern                        8.061689
+## row-col_trend                 4.754971</code></pre>
+<p>The overall experimental error, <span class="math inline">\(\sigma\)</span>, increased slightly in the correlated error models because field variation has been re-partitioned to the error when it was (erroneously) absorbed by the other experimental effects.</p>
+<p>As a result, the coefficient of variation is not a good metric for evaluating the quality of spatial models.</p>
+<div class="sourceCode" id="cb91"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb91-1"><a href="rcbd-r.html#cb91-1" aria-hidden="true" tabindex="-1"></a>CV <span class="ot">=</span> <span class="fu">sapply</span>(nlme_mods, <span class="cf">function</span>(x) {</span>
+<span id="cb91-2"><a href="rcbd-r.html#cb91-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sigma</span>(x)<span class="sc">/</span><span class="fu">mean</span>(<span class="fu">fitted</span>(x), <span class="at">na.rm =</span> T) <span class="sc">*</span> <span class="dv">100</span></span>
+<span id="cb91-3"><a href="rcbd-r.html#cb91-3" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb91-4"><a href="rcbd-r.html#cb91-4" aria-hidden="true" tabindex="-1"></a><span class="fu">as.data.frame</span>(CV)</span></code></pre></div>
+<pre><code>##                     CV
+## LMM           27.58441
+## exponential   35.99247
+## gaussian      30.68459
+## spherical     31.74386
+## power         34.86841
+## matern        30.81737
+## row-col_trend 18.62722</code></pre>
+</div>
+<div id="post-hoc-power" class="section level3" number="5.6.4">
+<h3><span class="header-section-number">5.6.4</span> Post-hoc power</h3>
+<p>Simulation studies indicate that incorporating spatial correlation into field trial analysis can improve the overall power of the experiment (the probability of detecting true differences in treatments). When working with data from a completed experiment, power is a transformed p-value. Performing ANOVA can indicate which approach maximizes power.</p>
+<div class="sourceCode" id="cb93"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb93-1"><a href="rcbd-r.html#cb93-1" aria-hidden="true" tabindex="-1"></a>anovas <span class="ot">&lt;-</span> <span class="fu">lapply</span>(nlme_mods, <span class="cf">function</span>(x){ </span>
+<span id="cb93-2"><a href="rcbd-r.html#cb93-2" aria-hidden="true" tabindex="-1"></a>  aov <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">anova</span>(x))[<span class="dv">2</span>,]</span>
+<span id="cb93-3"><a href="rcbd-r.html#cb93-3" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb93-4"><a href="rcbd-r.html#cb93-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb93-5"><a href="rcbd-r.html#cb93-5" aria-hidden="true" tabindex="-1"></a><span class="fu">bind_rows</span>(anovas) <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">model =</span> <span class="fu">c</span>(<span class="st">&quot;LMM&quot;</span>, <span class="st">&quot;exponential&quot;</span>, <span class="st">&quot;gaussian&quot;</span>, </span>
+<span id="cb93-6"><a href="rcbd-r.html#cb93-6" aria-hidden="true" tabindex="-1"></a>                             <span class="st">&quot;spherical&quot;</span>, <span class="st">&quot;power&quot;</span>, <span class="st">&quot;matern&quot;</span>, <span class="st">&quot;row/column trend&quot;</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb93-7"><a href="rcbd-r.html#cb93-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(<span class="st">`</span><span class="at">p-value</span><span class="st">`</span>)) <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="fu">c</span>(model, <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>)) <span class="sc">%&gt;%</span> tibble<span class="sc">::</span><span class="fu">remove_rownames</span>()</span></code></pre></div>
+<pre><code>##              model numDF denDF   F-value     p-value
+## 1              LMM    55   165 0.8754898 0.711852150
+## 2         gaussian    55   165 1.7815059 0.002816775
+## 3           matern    55   165 1.7816169 0.002814131
+## 4            power    55   165 1.7878697 0.002669019
+## 5      exponential    55   165 1.8348864 0.001786539
+## 6        spherical    55   165 1.8370929 0.001752952
+## 7 row/column trend    NA    NA        NA          NA</code></pre>
+<p>This table indicates changes in the hypothesis test for “gen.” There is a dramatic change in power for this test when incorporating spatial covariance structures.</p>
+</div>
+<div id="standard-error-of-treatment-means" class="section level3" number="5.6.5">
+<h3><span class="header-section-number">5.6.5</span> Standard error of treatment means</h3>
+<p>Retrieve predictions generated in the previous section:</p>
+<div class="sourceCode" id="cb95"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb95-1"><a href="rcbd-r.html#cb95-1" aria-hidden="true" tabindex="-1"></a><span class="co">#(standardise names for downstream merging step)</span></span>
+<span id="cb95-2"><a href="rcbd-r.html#cb95-2" aria-hidden="true" tabindex="-1"></a><span class="co">#preds_ar1ar1 &lt;- preds_ar1ar1  %&gt;% rename(emmean = &quot;predicted.value&quot;, SE = &quot;standard.error&quot;) </span></span>
+<span id="cb95-3"><a href="rcbd-r.html#cb95-3" aria-hidden="true" tabindex="-1"></a>all.preds <span class="ot">&lt;-</span> <span class="fu">mget</span>(<span class="fu">ls</span>(<span class="at">pattern =</span> <span class="st">&quot;^preds_*&quot;</span>))</span></code></pre></div>
+<p>Extract standard errors and plot:</p>
+<div class="sourceCode" id="cb96"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb96-1"><a href="rcbd-r.html#cb96-1" aria-hidden="true" tabindex="-1"></a>errors <span class="ot">&lt;-</span> <span class="fu">lapply</span>(all.preds, <span class="st">&quot;[&quot;</span>, <span class="st">&quot;SE&quot;</span>)</span>
+<span id="cb96-2"><a href="rcbd-r.html#cb96-2" aria-hidden="true" tabindex="-1"></a>pred.names <span class="ot">&lt;-</span> <span class="fu">gsub</span>(<span class="st">&quot;preds_&quot;</span>, <span class="st">&quot;&quot;</span>, <span class="fu">names</span>(errors))</span>
+<span id="cb96-3"><a href="rcbd-r.html#cb96-3" aria-hidden="true" tabindex="-1"></a>error_df <span class="ot">&lt;-</span> <span class="fu">bind_cols</span>(errors)</span>
+<span id="cb96-4"><a href="rcbd-r.html#cb96-4" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(error_df) <span class="ot">&lt;-</span> pred.names</span></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:SE-box-fig"></span>
+<img src="Field-Trial-Spatial-Analysis-Guide_files/figure-html/SE-box-fig-1.png" alt="Differences in Variety Standard Error" width="80%" />
+<p class="caption">
+Figure 5.1: Differences in Variety Standard Error
+</p>
+</div>
+</div>
+<div id="treatment-means" class="section level3" number="5.6.6">
+<h3><span class="header-section-number">5.6.6</span> Treatment means</h3>
+<p>Extract estimates:</p>
+<div class="sourceCode" id="cb97"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb97-1"><a href="rcbd-r.html#cb97-1" aria-hidden="true" tabindex="-1"></a>preds <span class="ot">&lt;-</span> <span class="fu">lapply</span>(all.preds, <span class="st">&quot;[&quot;</span>, <span class="st">&quot;emmean&quot;</span>)</span>
+<span id="cb97-2"><a href="rcbd-r.html#cb97-2" aria-hidden="true" tabindex="-1"></a>preds_df <span class="ot">&lt;-</span> <span class="fu">bind_cols</span>(preds)</span>
+<span id="cb97-3"><a href="rcbd-r.html#cb97-3" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(preds_df) <span class="ot">&lt;-</span> pred.names</span>
+<span id="cb97-4"><a href="rcbd-r.html#cb97-4" aria-hidden="true" tabindex="-1"></a>preds_df<span class="sc">$</span>gen <span class="ot">&lt;-</span> preds_exp<span class="sc">$</span>gen</span></code></pre></div>
+<p>Plot changes in ranks:</p>
+<div class="figure" style="text-align: center"><span id="fig:gen-ranks-fig"></span>
+<img src="Field-Trial-Spatial-Analysis-Guide_files/figure-html/gen-ranks-fig-1.png" alt="Differences in Variety Ranks" width="85%" />
+<p class="caption">
+Figure 5.2: Differences in Variety Ranks
+</p>
+</div>
+<p>The black lines link the least squares means for a single variety. There is some consistency in the rankings between exponential, Gaussian, power, Matérn, and spherical covariance models. The control RCBD model, “lme,” has fundamentally different rankings. The spline and AR1xAR1 ranking are also sightly different from the other models.</p>
+<p>Nevertheless, the following plot indicates considerable consensus in the least squares means from all of the spatial models. The upper diagonal contains Pearson correlations between those values.</p>
+<div class="figure" style="text-align: center"><span id="fig:ls-panel-fig"></span>
+<img src="Field-Trial-Spatial-Analysis-Guide_files/figure-html/ls-panel-fig-1.png" alt="Correlations in Variety Means" width="90%" />
+<p class="caption">
+Figure 5.3: Correlations in Variety Means
+</p>
+</div>
+</div>
+</div>
+<div id="making-decisions" class="section level2" number="5.7">
+<h2><span class="header-section-number">5.7</span> Making decisions</h2>
+<p>There is no consensus on how to pick the best model. Some studies rely on log likelihood, while others seek to maximize the experimental power. Others have sought to minimize the root mean square error from cross validation.</p>
+<p>The evidence suggest that for this data set, using any spatial model is better than running a naïve RCBD model.</p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="spatial-r.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="rcbd-sas.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": true,
+"facebook": false,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/IdahoAgStats/Guide-to-Field-Trial-Spatial-Analysis/edit/master/05-rcbd-spatial-example-R.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "section",
+"scroll_highlight": true
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
