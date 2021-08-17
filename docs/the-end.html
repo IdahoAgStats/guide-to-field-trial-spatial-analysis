@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Section 8 Conclusion | Incorporating Spatial Analysis into Agricultural Field Experiments.</title>
+  <meta name="description" content="Instructions for identifying spatial autocorrelation in agricultural field trials and incorporating spatial variation into analysis of trial using R and SAS."" />
+  <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Section 8 Conclusion | Incorporating Spatial Analysis into Agricultural Field Experiments." />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="Instructions for identifying spatial autocorrelation in agricultural field trials and incorporating spatial variation into analysis of trial using R and SAS."" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Section 8 Conclusion | Incorporating Spatial Analysis into Agricultural Field Experiments." />
+  
+  <meta name="twitter:description" content="Instructions for identifying spatial autocorrelation in agricultural field trials and incorporating spatial variation into analysis of trial using R and SAS."" />
+  
+
+<meta name="author" content="Julia Piaskowski" />
+<meta name="author" content="William Price" />
+
+
+<meta name="date" content="2021-08-17" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="model-extension.html"/>
+
+<script src="libs/header-attrs-2.7/header-attrs.js"></script>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Incorporating Spatial Analysis into Agricultural Field Experiments</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Preface</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#tutorial-goal"><i class="fa fa-check"></i><b>1.1</b> Tutorial goal</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#prerequisites"><i class="fa fa-check"></i><b>1.2</b> Prerequisites</a></li>
+<li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#r-requirements"><i class="fa fa-check"></i><b>1.3</b> R Requirements</a></li>
+<li class="chapter" data-level="1.4" data-path="index.html"><a href="index.html#sas-requirements"><i class="fa fa-check"></i><b>1.4</b> SAS Requirements</a></li>
+<li class="chapter" data-level="1.5" data-path="index.html"><a href="index.html#contributors"><i class="fa fa-check"></i><b>1.5</b> Contributors</a></li>
+<li class="chapter" data-level="1.6" data-path="index.html"><a href="index.html#license"><i class="fa fa-check"></i><b>1.6</b> License</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>2</b> Introduction</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="intro.html"><a href="intro.html#why-care-about-spatial-variation"><i class="fa fa-check"></i><b>2.1</b> Why care about spatial variation?</a></li>
+<li class="chapter" data-level="2.2" data-path="intro.html"><a href="intro.html#diagnosing-spatial-auto-correlation"><i class="fa fa-check"></i><b>2.2</b> Diagnosing spatial auto-correlation</a>
+<ul>
+<li class="chapter" data-level="2.2.1" data-path="intro.html"><a href="intro.html#morans-i"><i class="fa fa-check"></i><b>2.2.1</b> Moran’s I</a></li>
+<li class="chapter" data-level="2.2.2" data-path="intro.html"><a href="intro.html#empirical-variogram-semivariance"><i class="fa fa-check"></i><b>2.2.2</b> Empirical variogram &amp; semivariance</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="background.html"><a href="background.html"><i class="fa fa-check"></i><b>3</b> Spatial Models</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="background.html"><a href="background.html#correlated-error-models"><i class="fa fa-check"></i><b>3.1</b> Correlated error models</a>
+<ul>
+<li class="chapter" data-level="3.1.1" data-path="background.html"><a href="background.html#distance-based-correlation-error-models"><i class="fa fa-check"></i><b>3.1.1</b> Distance-based correlation error models</a></li>
+<li class="chapter" data-level="3.1.2" data-path="background.html"><a href="background.html#correlated-error-model-for-gridded-data"><i class="fa fa-check"></i><b>3.1.2</b> Correlated error model for gridded data</a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="background.html"><a href="background.html#spatial-regression-methods"><i class="fa fa-check"></i><b>3.2</b> Spatial Regression methods</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="background.html"><a href="background.html#spatial-autoregressive-sar"><i class="fa fa-check"></i><b>3.2.1</b> Spatial autoregressive (SAR)</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="background.html"><a href="background.html#trend-analysis"><i class="fa fa-check"></i><b>3.3</b> Trend analysis</a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="background.html"><a href="background.html#row-and-column-trends"><i class="fa fa-check"></i><b>3.3.1</b> Row and column trends</a></li>
+<li class="chapter" data-level="3.3.2" data-path="background.html"><a href="background.html#splines"><i class="fa fa-check"></i><b>3.3.2</b> Splines</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="spatial-r.html"><a href="spatial-r.html"><i class="fa fa-check"></i><b>4</b> Identifying Spatial Variation: R</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="spatial-r.html"><a href="spatial-r.html#load-data"><i class="fa fa-check"></i><b>4.1</b> Load data</a>
+<ul>
+<li class="chapter" data-level="4.1.1" data-path="spatial-r.html"><a href="spatial-r.html#examine-data"><i class="fa fa-check"></i><b>4.1.1</b> Examine data</a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="spatial-r.html"><a href="spatial-r.html#test-for-spatial-autocorrelation"><i class="fa fa-check"></i><b>4.2</b> Test for spatial autocorrelation</a>
+<ul>
+<li class="chapter" data-level="4.2.1" data-path="spatial-r.html"><a href="spatial-r.html#morans-i-1"><i class="fa fa-check"></i><b>4.2.1</b> Moran’s I</a></li>
+<li class="chapter" data-level="4.2.2" data-path="spatial-r.html"><a href="spatial-r.html#note-on-gearys-c"><i class="fa fa-check"></i><b>4.2.2</b> Note on Geary’s C</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="spatial-r.html"><a href="spatial-r.html#empirical-variogram-fitting"><i class="fa fa-check"></i><b>4.3</b> Empirical variogram fitting</a>
+<ul>
+<li class="chapter" data-level="4.3.1" data-path="spatial-r.html"><a href="spatial-r.html#compare-variograms"><i class="fa fa-check"></i><b>4.3.1</b> Compare variograms</a></li>
+<li class="chapter" data-level="4.3.2" data-path="spatial-r.html"><a href="spatial-r.html#explore-anisotropy"><i class="fa fa-check"></i><b>4.3.2</b> Explore anisotropy</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="rcbd-r.html"><a href="rcbd-r.html"><i class="fa fa-check"></i><b>5</b> RCBD Example: R</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="rcbd-r.html"><a href="rcbd-r.html#prep-work"><i class="fa fa-check"></i><b>5.1</b> Prep work</a></li>
+<li class="chapter" data-level="5.2" data-path="rcbd-r.html"><a href="rcbd-r.html#correlated-errors"><i class="fa fa-check"></i><b>5.2</b> Correlated errors</a>
+<ul>
+<li class="chapter" data-level="5.2.1" data-path="rcbd-r.html"><a href="rcbd-r.html#exponential-1"><i class="fa fa-check"></i><b>5.2.1</b> Exponential</a></li>
+<li class="chapter" data-level="5.2.2" data-path="rcbd-r.html"><a href="rcbd-r.html#spherical-1"><i class="fa fa-check"></i><b>5.2.2</b> Spherical</a></li>
+<li class="chapter" data-level="5.2.3" data-path="rcbd-r.html"><a href="rcbd-r.html#power-1"><i class="fa fa-check"></i><b>5.2.3</b> Power</a></li>
+<li class="chapter" data-level="5.2.4" data-path="rcbd-r.html"><a href="rcbd-r.html#matérn-1"><i class="fa fa-check"></i><b>5.2.4</b> Matérn</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="rcbd-r.html"><a href="rcbd-r.html#rowcolumn-trends"><i class="fa fa-check"></i><b>5.3</b> Row/Column Trends:</a></li>
+<li class="chapter" data-level="5.4" data-path="rcbd-r.html"><a href="rcbd-r.html#splines-1"><i class="fa fa-check"></i><b>5.4</b> Splines</a></li>
+<li class="chapter" data-level="5.5" data-path="rcbd-r.html"><a href="rcbd-r.html#bayesian-ar1xar1"><i class="fa fa-check"></i><b>5.5</b> Bayesian AR1xAR1</a></li>
+<li class="chapter" data-level="5.6" data-path="rcbd-r.html"><a href="rcbd-r.html#model-selection"><i class="fa fa-check"></i><b>5.6</b> Model Selection</a>
+<ul>
+<li class="chapter" data-level="5.6.1" data-path="rcbd-r.html"><a href="rcbd-r.html#spatial-dependence-of-residuals"><i class="fa fa-check"></i><b>5.6.1</b> Spatial dependence of residuals</a></li>
+<li class="chapter" data-level="5.6.2" data-path="rcbd-r.html"><a href="rcbd-r.html#compare-model-fit"><i class="fa fa-check"></i><b>5.6.2</b> Compare Model Fit</a></li>
+<li class="chapter" data-level="5.6.3" data-path="rcbd-r.html"><a href="rcbd-r.html#experiment-wide-error"><i class="fa fa-check"></i><b>5.6.3</b> Experiment-wide error</a></li>
+<li class="chapter" data-level="5.6.4" data-path="rcbd-r.html"><a href="rcbd-r.html#post-hoc-power"><i class="fa fa-check"></i><b>5.6.4</b> Post-hoc power</a></li>
+<li class="chapter" data-level="5.6.5" data-path="rcbd-r.html"><a href="rcbd-r.html#standard-error-of-treatment-means"><i class="fa fa-check"></i><b>5.6.5</b> Standard error of treatment means</a></li>
+<li class="chapter" data-level="5.6.6" data-path="rcbd-r.html"><a href="rcbd-r.html#treatment-means"><i class="fa fa-check"></i><b>5.6.6</b> Treatment means</a></li>
+</ul></li>
+<li class="chapter" data-level="5.7" data-path="rcbd-r.html"><a href="rcbd-r.html#making-decisions"><i class="fa fa-check"></i><b>5.7</b> Making decisions</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="rcbd-sas.html"><a href="rcbd-sas.html"><i class="fa fa-check"></i><b>6</b> RCBD Example: SAS</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="rcbd-sas.html"><a href="rcbd-sas.html#load-and-explore-data"><i class="fa fa-check"></i><b>6.1</b> Load and Explore Data</a>
+<ul>
+<li class="chapter" data-level="6.1.1" data-path="rcbd-sas.html"><a href="rcbd-sas.html#plots-of-field-trends"><i class="fa fa-check"></i><b>6.1.1</b> Plots of Field Trends</a></li>
+</ul></li>
+<li class="chapter" data-level="6.2" data-path="rcbd-sas.html"><a href="rcbd-sas.html#estimating-and-testing-spatial-correlation"><i class="fa fa-check"></i><b>6.2</b> Estimating and Testing Spatial Correlation</a>
+<ul>
+<li class="chapter" data-level="6.2.1" data-path="rcbd-sas.html"><a href="rcbd-sas.html#examine-the-number-of-distance-pairs-and-maximum-lags-between-residuals"><i class="fa fa-check"></i><b>6.2.1</b> Examine the Number of Distance Pairs and Maximum Lags between Residuals</a></li>
+<li class="chapter" data-level="6.2.2" data-path="rcbd-sas.html"><a href="rcbd-sas.html#compute-morans-i-and-gearys-c."><i class="fa fa-check"></i><b>6.2.2</b> Compute Moran’s I and Geary’s C.</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="rcbd-sas.html"><a href="rcbd-sas.html#estimation-and-modeling-of-semivariance"><i class="fa fa-check"></i><b>6.3</b> 4.3 Estimation and Modeling of Semivariance</a>
+<ul>
+<li class="chapter" data-level="6.3.1" data-path="rcbd-sas.html"><a href="rcbd-sas.html#estimating-empirical-semivariance"><i class="fa fa-check"></i><b>6.3.1</b> 4.3.1 Estimating Empirical Semivariance</a></li>
+<li class="chapter" data-level="6.3.2" data-path="rcbd-sas.html"><a href="rcbd-sas.html#fitting-an-empirical-variogram-model"><i class="fa fa-check"></i><b>6.3.2</b> Fitting an Empirical Variogram Model</a></li>
+</ul></li>
+<li class="chapter" data-level="6.4" data-path="rcbd-sas.html"><a href="rcbd-sas.html#using-the-estimated-variogram-in-an-adjusted-analysis"><i class="fa fa-check"></i><b>6.4</b> Using the Estimated variogram in an Adjusted Analysis</a>
+<ul>
+<li class="chapter" data-level="6.4.1" data-path="rcbd-sas.html"><a href="rcbd-sas.html#unadjusted-rcbd-model"><i class="fa fa-check"></i><b>6.4.1</b> Unadjusted RCBD Model</a></li>
+<li class="chapter" data-level="6.4.2" data-path="rcbd-sas.html"><a href="rcbd-sas.html#rcbd-model-with-spatial-covariates"><i class="fa fa-check"></i><b>6.4.2</b> RCBD Model with Spatial Covariates</a></li>
+</ul></li>
+<li class="chapter" data-level="6.5" data-path="rcbd-sas.html"><a href="rcbd-sas.html#compare-estimated-means"><i class="fa fa-check"></i><b>6.5</b> Compare Estimated Means</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="model-extension.html"><a href="model-extension.html"><i class="fa fa-check"></i><b>7</b> Other Models</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="model-extension.html"><a href="model-extension.html#other-experimental-designs"><i class="fa fa-check"></i><b>7.1</b> Other Experimental Designs</a>
+<ul>
+<li class="chapter" data-level="7.1.1" data-path="model-extension.html"><a href="model-extension.html#factorials-rcbd"><i class="fa fa-check"></i><b>7.1.1</b> 2+ Factorials (RCBD)</a></li>
+<li class="chapter" data-level="7.1.2" data-path="model-extension.html"><a href="model-extension.html#alpha-lattice"><i class="fa fa-check"></i><b>7.1.2</b> Alpha lattice</a></li>
+<li class="chapter" data-level="7.1.3" data-path="model-extension.html"><a href="model-extension.html#latin-square"><i class="fa fa-check"></i><b>7.1.3</b> Latin square</a></li>
+<li class="chapter" data-level="7.1.4" data-path="model-extension.html"><a href="model-extension.html#augmented"><i class="fa fa-check"></i><b>7.1.4</b> Augmented</a></li>
+<li class="chapter" data-level="7.1.5" data-path="model-extension.html"><a href="model-extension.html#split-plot"><i class="fa fa-check"></i><b>7.1.5</b> Split plot</a></li>
+<li class="chapter" data-level="7.1.6" data-path="model-extension.html"><a href="model-extension.html#split-split-plot"><i class="fa fa-check"></i><b>7.1.6</b> Split-split plot</a></li>
+<li class="chapter" data-level="7.1.7" data-path="model-extension.html"><a href="model-extension.html#split-block"><i class="fa fa-check"></i><b>7.1.7</b> Split block</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="model-extension.html"><a href="model-extension.html#traits-with-non-gaussian-distributions"><i class="fa fa-check"></i><b>7.2</b> Traits with non-gaussian distributions</a>
+<ul>
+<li class="chapter" data-level="7.2.1" data-path="model-extension.html"><a href="model-extension.html#count-traits"><i class="fa fa-check"></i><b>7.2.1</b> Count traits:</a></li>
+<li class="chapter" data-level="7.2.2" data-path="model-extension.html"><a href="model-extension.html#percent-traits"><i class="fa fa-check"></i><b>7.2.2</b> Percent traits</a></li>
+<li class="chapter" data-level="7.2.3" data-path="model-extension.html"><a href="model-extension.html#ordinal-traits"><i class="fa fa-check"></i><b>7.2.3</b> Ordinal traits</a></li>
+<li class="chapter" data-level="7.2.4" data-path="model-extension.html"><a href="model-extension.html#binomial-traits"><i class="fa fa-check"></i><b>7.2.4</b> Binomial traits</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="the-end.html"><a href="the-end.html"><i class="fa fa-check"></i><b>8</b> Conclusion</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="the-end.html"><a href="the-end.html#other-packages"><i class="fa fa-check"></i><b>8.1</b> Other packages</a></li>
+<li class="chapter" data-level="8.2" data-path="the-end.html"><a href="the-end.html#final-recommendations"><i class="fa fa-check"></i><b>8.2</b> Final recommendations</a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Incorporating Spatial Analysis into Agricultural Field Experiments.</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="the-end" class="section level1" number="8">
+<h1><span class="header-section-number">Section 8</span> Conclusion</h1>
+<div id="other-packages" class="section level2" number="8.1">
+<h2><span class="header-section-number">8.1</span> Other packages</h2>
+<p>There are several other packages for exploring and modeling spatial variability in field trials.</p>
+<table>
+<colgroup>
+<col width="50%" />
+<col width="50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>package</th>
+<th>usage</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Mcspatial</td>
+<td>nonparametric spatial analysis</td>
+</tr>
+<tr class="even">
+<td>ngspatial</td>
+<td>spatial models with a focus on generalised linear models</td>
+</tr>
+<tr class="odd">
+<td>spaMM</td>
+<td>correlated error modes and generalised linear models</td>
+</tr>
+<tr class="even">
+<td>sommer</td>
+<td>mixed models, including an AR1xAr1 model, but it does not estimate <span class="math inline">\(/rho\)</span> parameters</td>
+</tr>
+<tr class="odd">
+<td>spatialreg</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>The package <strong>sommer</strong> implements a version of the AR1xAR1 covariance structure. However, it does not estimate the parameter <span class="math inline">\(\rho\)</span>. The user must specify the <span class="math inline">\(\rho\)</span> and that value is not optimized in the restricted maximum likelihood estimation. There may be another way to implement the AR1xAR1 spatial model using the package <strong>TMB</strong>. Both SAS and Asreml can implement a mixed model with this covariance structure.</p>
+<p>A <a href="https://raw.githubusercontent.com/f-rousset/spaMM-ref/master/vignettePlus/MixedModels_useR2021.pdf">spAMM tutorial</a> is available for exploring this package more.</p>
+</div>
+<div id="final-recommendations" class="section level2" number="8.2">
+<h2><span class="header-section-number">8.2</span> Final recommendations</h2>
+<p>Spatial analysis is a big topic, but I think it is worth the effort to learn and implement in analysis of field trials. This guide provides some minimal recipes for how to incorporate spatial information into field trial statistical analysis.</p>
+<p>There is no denying that work is needed to develop scripts that automate this process so researchers can routinely incorporate spatial covariance into field trial analysis. Many current R tools are unwieldy to use and have insufficient options to support variety trial analysis.</p>
+<p>Until this situation is improved, it is probably wisest to focus on using spatial models that are well-supported at this time. Any of the options implemented in the <strong>nlme</strong> package (or that work with that package) are decent choices with excellent support for extracting least-squares means, running ANOVA, and standard model diagnostics. Furthermore, <strong>nlme</strong> supports generalized linear models.</p>
+<p>Investigating spatial correlation in a field trial and controlling for it if necessary is recommended over doing nothing.</p>
+<div class="sourceCode" id="cb127"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb127-1"><a href="the-end.html#cb127-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code></pre></div>
+<pre><code>## R version 4.0.5 (2021-03-31)
+## Platform: x86_64-w64-mingw32/x64 (64-bit)
+## Running under: Windows 10 x64 (build 19042)
+## 
+## Matrix products: default
+## 
+## locale:
+## [1] LC_COLLATE=English_United States.1252 
+## [2] LC_CTYPE=English_United States.1252   
+## [3] LC_MONETARY=English_United States.1252
+## [4] LC_NUMERIC=C                          
+## [5] LC_TIME=English_United States.1252    
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices datasets  utils     methods   base     
+## 
+## other attached packages:
+##  [1] SASmarkdown_0.4.3 psych_2.1.3       reshape2_1.4.4    SpATS_1.0-12     
+##  [5] lme4_1.1-26       Matrix_1.3-2      spaMM_3.7.2       emmeans_1.5.5-1  
+##  [9] gstat_2.0-7       purrr_0.3.4       spdep_1.1-5       sf_0.9-8         
+## [13] spData_0.3.8      sp_1.4-5          nlme_3.1-152      desplot_1.8      
+## [17] tidyr_1.1.3       dplyr_1.0.5       agridat_1.18      ggplot2_3.3.3    
+## 
+## loaded via a namespace (and not attached):
+##  [1] TH.data_1.0-10      minqa_1.2.4         colorspace_2.0-0   
+##  [4] deldir_0.2-10       ellipsis_0.3.1      class_7.3-18       
+##  [7] estimability_1.3    proxy_0.4-25        farver_2.1.0       
+## [10] fansi_0.4.2         mvtnorm_1.1-1       codetools_0.2-18   
+## [13] splines_4.0.5       mnormt_2.0.2        knitr_1.31         
+## [16] spam_2.6-0          jsonlite_1.7.2      nloptr_1.2.2.2     
+## [19] pbkrtest_0.5.1      broom_0.7.5         compiler_4.0.5     
+## [22] backports_1.2.1     assertthat_0.2.1    cli_2.3.1          
+## [25] htmltools_0.5.1.1   tools_4.0.5         dotCall64_1.0-1    
+## [28] coda_0.19-4         gtable_0.3.0        glue_1.4.2         
+## [31] gmodels_2.18.1      Rcpp_1.0.7          slam_0.1-48        
+## [34] jquerylib_0.1.3     raster_3.4-5        vctrs_0.3.7        
+## [37] gdata_2.18.0        xfun_0.22           stringr_1.4.0      
+## [40] lifecycle_1.0.0     renv_0.13.2         gtools_3.8.2       
+## [43] statmod_1.4.35      ROI_1.0-0           LearnBayes_2.15.1  
+## [46] MASS_7.3-53.1       zoo_1.8-9           scales_1.1.1       
+## [49] parallel_4.0.5      sandwich_3.0-0      expm_0.999-6       
+## [52] yaml_2.2.1          pbapply_1.4-3       sass_0.3.1         
+## [55] stringi_1.5.3       highr_0.8           e1071_1.7-6        
+## [58] boot_1.3-27         intervals_0.15.2    rlang_0.4.10       
+## [61] pkgconfig_2.0.3     evaluate_0.14       lattice_0.20-41    
+## [64] labeling_0.4.2      tidyselect_1.1.0    plyr_1.8.6         
+## [67] magrittr_2.0.1      bookdown_0.21       R6_2.5.0           
+## [70] generics_0.1.0      multcomp_1.4-16     DBI_1.1.1          
+## [73] pillar_1.5.1        withr_2.4.1         units_0.7-1        
+## [76] xts_0.12.1          survival_3.2-10     tibble_3.1.0       
+## [79] spacetime_1.2-4     crayon_1.4.1        KernSmooth_2.23-18 
+## [82] utf8_1.2.1          tmvnsim_1.0-2       rmarkdown_2.7      
+## [85] grid_4.0.5          data.table_1.14.0   FNN_1.1.3          
+## [88] digest_0.6.27       classInt_0.4-3      xtable_1.8-4       
+## [91] numDeriv_2016.8-1.1 munsell_0.5.0       registry_0.5-1     
+## [94] bslib_0.2.4</code></pre>
+
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-stroup2013" class="csl-entry">
+Stroup, Walter W. 2013. <em>Generalized Linear Mixed Models: Modern Concepts, Methods and Applications</em>. Boca Raton, FL: Chapman &amp; Hall/CRC Press.
+</div>
+<div id="ref-stroup1994" class="csl-entry">
+Stroup, Walter W., Stephen B. Baenziger, and Dieter K. Mulitze. 1994. <span>“Removing Spatial Variation from Wheat Yield Trials: A Comparison of Methods.”</span> <em>Crop Science</em> 34: 62–66.
+</div>
+</div>
+</div>
+</div>
+
+
+
+
+
+
+
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="model-extension.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": true,
+"facebook": false,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/IdahoAgStats/Guide-to-Field-Trial-Spatial-Analysis/edit/master/08-conclusion.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "section",
+"scroll_highlight": true
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
