@@ -5,26 +5,27 @@
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Incorporating Spatial Analysis into Agricultural Field Experiments.</title>
-  <meta name="description" content="This includes instructions for diagnosing spatial variation in agricultural field trials and incorporating spatial variation into analysis of the trial using freely available tools in R." />
+  <meta name="description" content="Instructions for identifying spatial autocorrelation in agricultural field trials and incorporating spatial variation into analysis of trial using R and SAS."" />
   <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Incorporating Spatial Analysis into Agricultural Field Experiments." />
   <meta property="og:type" content="book" />
   
   
-  <meta property="og:description" content="This includes instructions for diagnosing spatial variation in agricultural field trials and incorporating spatial variation into analysis of the trial using freely available tools in R." />
+  <meta property="og:description" content="Instructions for identifying spatial autocorrelation in agricultural field trials and incorporating spatial variation into analysis of trial using R and SAS."" />
   
 
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Incorporating Spatial Analysis into Agricultural Field Experiments." />
   
-  <meta name="twitter:description" content="This includes instructions for diagnosing spatial variation in agricultural field trials and incorporating spatial variation into analysis of the trial using freely available tools in R." />
+  <meta name="twitter:description" content="Instructions for identifying spatial autocorrelation in agricultural field trials and incorporating spatial variation into analysis of trial using R and SAS."" />
   
 
 <meta name="author" content="Julia Piaskowski" />
+<meta name="author" content="William Price" />
 
 
-<meta name="date" content="2021-08-13" />
+<meta name="date" content="2021-08-17" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -138,9 +139,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#tutorial-goal"><i class="fa fa-check"></i><b>1.1</b> Tutorial goal</a></li>
 <li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#prerequisites"><i class="fa fa-check"></i><b>1.2</b> Prerequisites</a></li>
-<li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#packages-used-in-this-tutorial"><i class="fa fa-check"></i><b>1.3</b> Packages used in this tutorial</a></li>
-<li class="chapter" data-level="1.4" data-path="index.html"><a href="index.html#contributors"><i class="fa fa-check"></i><b>1.4</b> Contributors</a></li>
-<li class="chapter" data-level="1.5" data-path="index.html"><a href="index.html#license"><i class="fa fa-check"></i><b>1.5</b> License</a></li>
+<li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#r-requirements"><i class="fa fa-check"></i><b>1.3</b> R Requirements</a></li>
+<li class="chapter" data-level="1.4" data-path="index.html"><a href="index.html#sas-requirements"><i class="fa fa-check"></i><b>1.4</b> SAS Requirements</a></li>
+<li class="chapter" data-level="1.5" data-path="index.html"><a href="index.html#contributors"><i class="fa fa-check"></i><b>1.5</b> Contributors</a></li>
+<li class="chapter" data-level="1.6" data-path="index.html"><a href="index.html#license"><i class="fa fa-check"></i><b>1.6</b> License</a></li>
 </ul></li>
 <li class="chapter" data-level="2" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>2</b> Introduction</a>
 <ul>
@@ -161,8 +163,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.2" data-path="background.html"><a href="background.html#spatial-regression-methods"><i class="fa fa-check"></i><b>3.2</b> Spatial Regression methods</a>
 <ul>
 <li class="chapter" data-level="3.2.1" data-path="background.html"><a href="background.html#spatial-autoregressive-sar"><i class="fa fa-check"></i><b>3.2.1</b> Spatial autoregressive (SAR)</a></li>
-<li class="chapter" data-level="3.2.2" data-path="background.html"><a href="background.html#spatial-error-model-sem"><i class="fa fa-check"></i><b>3.2.2</b> Spatial error model (SEM)</a></li>
-<li class="chapter" data-level="3.2.3" data-path="background.html"><a href="background.html#arima"><i class="fa fa-check"></i><b>3.2.3</b> ARIMA</a></li>
 </ul></li>
 <li class="chapter" data-level="3.3" data-path="background.html"><a href="background.html#trend-analysis"><i class="fa fa-check"></i><b>3.3</b> Trend analysis</a>
 <ul>
@@ -170,51 +170,94 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.3.2" data-path="background.html"><a href="background.html#splines"><i class="fa fa-check"></i><b>3.3.2</b> Splines</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="example-analysis.html"><a href="example-analysis.html"><i class="fa fa-check"></i><b>4</b> Example Analysis</a>
+<li class="chapter" data-level="4" data-path="spatial-r.html"><a href="spatial-r.html"><i class="fa fa-check"></i><b>4</b> Identifying Spatial Variation: R</a>
 <ul>
-<li class="chapter" data-level="4.1" data-path="example-analysis.html"><a href="example-analysis.html#load-data"><i class="fa fa-check"></i><b>4.1</b> Load data</a>
+<li class="chapter" data-level="4.1" data-path="spatial-r.html"><a href="spatial-r.html#load-data"><i class="fa fa-check"></i><b>4.1</b> Load data</a>
 <ul>
-<li class="chapter" data-level="4.1.1" data-path="example-analysis.html"><a href="example-analysis.html#examine-data"><i class="fa fa-check"></i><b>4.1.1</b> Examine data</a></li>
+<li class="chapter" data-level="4.1.1" data-path="spatial-r.html"><a href="spatial-r.html#examine-data"><i class="fa fa-check"></i><b>4.1.1</b> Examine data</a></li>
 </ul></li>
-<li class="chapter" data-level="4.2" data-path="example-analysis.html"><a href="example-analysis.html#test-for-spatial-correlation"><i class="fa fa-check"></i><b>4.2</b> Test for spatial correlation</a>
+<li class="chapter" data-level="4.2" data-path="spatial-r.html"><a href="spatial-r.html#test-for-spatial-autocorrelation"><i class="fa fa-check"></i><b>4.2</b> Test for spatial autocorrelation</a>
 <ul>
-<li class="chapter" data-level="4.2.1" data-path="example-analysis.html"><a href="example-analysis.html#morans-i-1"><i class="fa fa-check"></i><b>4.2.1</b> Moran’s I</a></li>
-<li class="chapter" data-level="4.2.2" data-path="example-analysis.html"><a href="example-analysis.html#note-on-gearys-c"><i class="fa fa-check"></i><b>4.2.2</b> Note on Geary’s C</a></li>
+<li class="chapter" data-level="4.2.1" data-path="spatial-r.html"><a href="spatial-r.html#morans-i-1"><i class="fa fa-check"></i><b>4.2.1</b> Moran’s I</a></li>
+<li class="chapter" data-level="4.2.2" data-path="spatial-r.html"><a href="spatial-r.html#note-on-gearys-c"><i class="fa fa-check"></i><b>4.2.2</b> Note on Geary’s C</a></li>
 </ul></li>
-<li class="chapter" data-level="4.3" data-path="example-analysis.html"><a href="example-analysis.html#empirical-variogram-fitting"><i class="fa fa-check"></i><b>4.3</b> Empirical variogram fitting</a>
+<li class="chapter" data-level="4.3" data-path="spatial-r.html"><a href="spatial-r.html#empirical-variogram-fitting"><i class="fa fa-check"></i><b>4.3</b> Empirical variogram fitting</a>
 <ul>
-<li class="chapter" data-level="4.3.1" data-path="example-analysis.html"><a href="example-analysis.html#compare-variograms"><i class="fa fa-check"></i><b>4.3.1</b> Compare variograms</a></li>
-<li class="chapter" data-level="4.3.2" data-path="example-analysis.html"><a href="example-analysis.html#explore-anisotropy"><i class="fa fa-check"></i><b>4.3.2</b> Explore anisotropy</a></li>
+<li class="chapter" data-level="4.3.1" data-path="spatial-r.html"><a href="spatial-r.html#compare-variograms"><i class="fa fa-check"></i><b>4.3.1</b> Compare variograms</a></li>
+<li class="chapter" data-level="4.3.2" data-path="spatial-r.html"><a href="spatial-r.html#explore-anisotropy"><i class="fa fa-check"></i><b>4.3.2</b> Explore anisotropy</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="rcbd-example-sas.html"><a href="rcbd-example-sas.html"><i class="fa fa-check"></i><b>5</b> RCBD Example: SAS</a>
+<li class="chapter" data-level="5" data-path="rcbd-r.html"><a href="rcbd-r.html"><i class="fa fa-check"></i><b>5</b> RCBD Example: R</a>
 <ul>
-<li class="chapter" data-level="5.1" data-path="rcbd-example-sas.html"><a href="rcbd-example-sas.html#read-in-and-explore-the-raw-data"><i class="fa fa-check"></i><b>5.1</b> Read in and Explore the Raw Data</a>
+<li class="chapter" data-level="5.1" data-path="rcbd-r.html"><a href="rcbd-r.html#prep-work"><i class="fa fa-check"></i><b>5.1</b> Prep work</a></li>
+<li class="chapter" data-level="5.2" data-path="rcbd-r.html"><a href="rcbd-r.html#correlated-errors"><i class="fa fa-check"></i><b>5.2</b> Correlated errors</a>
 <ul>
-<li class="chapter" data-level="5.1.1" data-path="rcbd-example-sas.html"><a href="rcbd-example-sas.html#plots-produce-heatmap-and-trend-plots-over-the-field."><i class="fa fa-check"></i><b>5.1.1</b> Plots: Produce Heatmap and Trend Plots over the Field.</a></li>
+<li class="chapter" data-level="5.2.1" data-path="rcbd-r.html"><a href="rcbd-r.html#exponential-1"><i class="fa fa-check"></i><b>5.2.1</b> Exponential</a></li>
+<li class="chapter" data-level="5.2.2" data-path="rcbd-r.html"><a href="rcbd-r.html#spherical-1"><i class="fa fa-check"></i><b>5.2.2</b> Spherical</a></li>
+<li class="chapter" data-level="5.2.3" data-path="rcbd-r.html"><a href="rcbd-r.html#power-1"><i class="fa fa-check"></i><b>5.2.3</b> Power</a></li>
+<li class="chapter" data-level="5.2.4" data-path="rcbd-r.html"><a href="rcbd-r.html#matérn-1"><i class="fa fa-check"></i><b>5.2.4</b> Matérn</a></li>
 </ul></li>
-<li class="chapter" data-level="5.2" data-path="rcbd-example-sas.html"><a href="rcbd-example-sas.html#estimating-and-testing-spatial-correlation"><i class="fa fa-check"></i><b>5.2</b> Estimating and Testing Spatial Correlation</a>
+<li class="chapter" data-level="5.3" data-path="rcbd-r.html"><a href="rcbd-r.html#rowcolumn-trends"><i class="fa fa-check"></i><b>5.3</b> Row/Column Trends:</a></li>
+<li class="chapter" data-level="5.4" data-path="rcbd-r.html"><a href="rcbd-r.html#splines-1"><i class="fa fa-check"></i><b>5.4</b> Splines</a></li>
+<li class="chapter" data-level="5.5" data-path="rcbd-r.html"><a href="rcbd-r.html#bayesian-ar1xar1"><i class="fa fa-check"></i><b>5.5</b> Bayesian AR1xAR1</a></li>
+<li class="chapter" data-level="5.6" data-path="rcbd-r.html"><a href="rcbd-r.html#model-selection"><i class="fa fa-check"></i><b>5.6</b> Model Selection</a>
 <ul>
-<li class="chapter" data-level="5.2.1" data-path="rcbd-example-sas.html"><a href="rcbd-example-sas.html#capture-model-residuals-for-spatial-modeling"><i class="fa fa-check"></i><b>5.2.1</b> Capture Model Residuals for Spatial Modeling</a></li>
-<li class="chapter" data-level="5.2.2" data-path="rcbd-example-sas.html"><a href="rcbd-example-sas.html#examine-the-number-of-distance-pairs-and-maximum-lags-between-residuals"><i class="fa fa-check"></i><b>5.2.2</b> Examine the Number of Distance Pairs and Maximum Lags between Residuals</a></li>
-<li class="chapter" data-level="5.2.3" data-path="rcbd-example-sas.html"><a href="rcbd-example-sas.html#compute-morans-i-and-gearys-c."><i class="fa fa-check"></i><b>5.2.3</b> Compute Moran’s I and Geary’s C.</a></li>
+<li class="chapter" data-level="5.6.1" data-path="rcbd-r.html"><a href="rcbd-r.html#spatial-dependence-of-residuals"><i class="fa fa-check"></i><b>5.6.1</b> Spatial dependence of residuals</a></li>
+<li class="chapter" data-level="5.6.2" data-path="rcbd-r.html"><a href="rcbd-r.html#compare-model-fit"><i class="fa fa-check"></i><b>5.6.2</b> Compare Model Fit</a></li>
+<li class="chapter" data-level="5.6.3" data-path="rcbd-r.html"><a href="rcbd-r.html#experiment-wide-error"><i class="fa fa-check"></i><b>5.6.3</b> Experiment-wide error</a></li>
+<li class="chapter" data-level="5.6.4" data-path="rcbd-r.html"><a href="rcbd-r.html#post-hoc-power"><i class="fa fa-check"></i><b>5.6.4</b> Post-hoc power</a></li>
+<li class="chapter" data-level="5.6.5" data-path="rcbd-r.html"><a href="rcbd-r.html#standard-error-of-treatment-means"><i class="fa fa-check"></i><b>5.6.5</b> Standard error of treatment means</a></li>
+<li class="chapter" data-level="5.6.6" data-path="rcbd-r.html"><a href="rcbd-r.html#treatment-means"><i class="fa fa-check"></i><b>5.6.6</b> Treatment means</a></li>
 </ul></li>
-<li class="chapter" data-level="5.3" data-path="rcbd-example-sas.html"><a href="rcbd-example-sas.html#estimation-and-modeling-of-semivariance"><i class="fa fa-check"></i><b>5.3</b> 4.3 Estimation and Modeling of Semivariance</a>
+<li class="chapter" data-level="5.7" data-path="rcbd-r.html"><a href="rcbd-r.html#making-decisions"><i class="fa fa-check"></i><b>5.7</b> Making decisions</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="rcbd-sas.html"><a href="rcbd-sas.html"><i class="fa fa-check"></i><b>6</b> RCBD Example: SAS</a>
 <ul>
-<li class="chapter" data-level="5.3.1" data-path="rcbd-example-sas.html"><a href="rcbd-example-sas.html#estimating-the-empirical-semivariogram"><i class="fa fa-check"></i><b>5.3.1</b> 4.3.1 Estimating the Empirical Semivariogram</a></li>
-<li class="chapter" data-level="5.3.2" data-path="rcbd-example-sas.html"><a href="rcbd-example-sas.html#fitting-an-empirical-variogram-model"><i class="fa fa-check"></i><b>5.3.2</b> Fitting an Empirical Variogram Model</a></li>
-</ul></li>
-<li class="chapter" data-level="5.4" data-path="rcbd-example-sas.html"><a href="rcbd-example-sas.html#using-the-estimated-variogram-in-an-adjusted-analysis"><i class="fa fa-check"></i><b>5.4</b> Using the Estimated variogram in an Adjusted Analysis</a>
+<li class="chapter" data-level="6.1" data-path="rcbd-sas.html"><a href="rcbd-sas.html#load-and-explore-data"><i class="fa fa-check"></i><b>6.1</b> Load and Explore Data</a>
 <ul>
-<li class="chapter" data-level="5.4.1" data-path="rcbd-example-sas.html"><a href="rcbd-example-sas.html#run-unadjusted-model"><i class="fa fa-check"></i><b>5.4.1</b> Run Unadjusted Model</a></li>
-<li class="chapter" data-level="5.4.2" data-path="rcbd-example-sas.html"><a href="rcbd-example-sas.html#run-adjusted-model-using-gaussian-model"><i class="fa fa-check"></i><b>5.4.2</b> Run Adjusted Model using Gaussian Model</a></li>
+<li class="chapter" data-level="6.1.1" data-path="rcbd-sas.html"><a href="rcbd-sas.html#plots-of-field-trends"><i class="fa fa-check"></i><b>6.1.1</b> Plots of Field Trends</a></li>
 </ul></li>
-<li class="chapter" data-level="5.5" data-path="rcbd-example-sas.html"><a href="rcbd-example-sas.html#compare-the-estimated-means"><i class="fa fa-check"></i><b>5.5</b> Compare the estimated means</a></li>
-</ul></li>
-<li class="chapter" data-level="6" data-path="the-end.html"><a href="the-end.html"><i class="fa fa-check"></i><b>6</b> Conclusion</a>
+<li class="chapter" data-level="6.2" data-path="rcbd-sas.html"><a href="rcbd-sas.html#estimating-and-testing-spatial-correlation"><i class="fa fa-check"></i><b>6.2</b> Estimating and Testing Spatial Correlation</a>
 <ul>
-<li class="chapter" data-level="6.1" data-path="the-end.html"><a href="the-end.html#other-packages"><i class="fa fa-check"></i><b>6.1</b> Other packages</a></li>
-<li class="chapter" data-level="6.2" data-path="the-end.html"><a href="the-end.html#final-recommendations"><i class="fa fa-check"></i><b>6.2</b> Final recommendations</a></li>
+<li class="chapter" data-level="6.2.1" data-path="rcbd-sas.html"><a href="rcbd-sas.html#examine-the-number-of-distance-pairs-and-maximum-lags-between-residuals"><i class="fa fa-check"></i><b>6.2.1</b> Examine the Number of Distance Pairs and Maximum Lags between Residuals</a></li>
+<li class="chapter" data-level="6.2.2" data-path="rcbd-sas.html"><a href="rcbd-sas.html#compute-morans-i-and-gearys-c."><i class="fa fa-check"></i><b>6.2.2</b> Compute Moran’s I and Geary’s C.</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="rcbd-sas.html"><a href="rcbd-sas.html#estimation-and-modeling-of-semivariance"><i class="fa fa-check"></i><b>6.3</b> 4.3 Estimation and Modeling of Semivariance</a>
+<ul>
+<li class="chapter" data-level="6.3.1" data-path="rcbd-sas.html"><a href="rcbd-sas.html#estimating-empirical-semivariance"><i class="fa fa-check"></i><b>6.3.1</b> 4.3.1 Estimating Empirical Semivariance</a></li>
+<li class="chapter" data-level="6.3.2" data-path="rcbd-sas.html"><a href="rcbd-sas.html#fitting-an-empirical-variogram-model"><i class="fa fa-check"></i><b>6.3.2</b> Fitting an Empirical Variogram Model</a></li>
+</ul></li>
+<li class="chapter" data-level="6.4" data-path="rcbd-sas.html"><a href="rcbd-sas.html#using-the-estimated-variogram-in-an-adjusted-analysis"><i class="fa fa-check"></i><b>6.4</b> Using the Estimated variogram in an Adjusted Analysis</a>
+<ul>
+<li class="chapter" data-level="6.4.1" data-path="rcbd-sas.html"><a href="rcbd-sas.html#unadjusted-rcbd-model"><i class="fa fa-check"></i><b>6.4.1</b> Unadjusted RCBD Model</a></li>
+<li class="chapter" data-level="6.4.2" data-path="rcbd-sas.html"><a href="rcbd-sas.html#rcbd-model-with-spatial-covariates"><i class="fa fa-check"></i><b>6.4.2</b> RCBD Model with Spatial Covariates</a></li>
+</ul></li>
+<li class="chapter" data-level="6.5" data-path="rcbd-sas.html"><a href="rcbd-sas.html#compare-estimated-means"><i class="fa fa-check"></i><b>6.5</b> Compare Estimated Means</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="model-extension.html"><a href="model-extension.html"><i class="fa fa-check"></i><b>7</b> Other Models</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="model-extension.html"><a href="model-extension.html#other-experimental-designs"><i class="fa fa-check"></i><b>7.1</b> Other Experimental Designs</a>
+<ul>
+<li class="chapter" data-level="7.1.1" data-path="model-extension.html"><a href="model-extension.html#factorials-rcbd"><i class="fa fa-check"></i><b>7.1.1</b> 2+ Factorials (RCBD)</a></li>
+<li class="chapter" data-level="7.1.2" data-path="model-extension.html"><a href="model-extension.html#alpha-lattice"><i class="fa fa-check"></i><b>7.1.2</b> Alpha lattice</a></li>
+<li class="chapter" data-level="7.1.3" data-path="model-extension.html"><a href="model-extension.html#latin-square"><i class="fa fa-check"></i><b>7.1.3</b> Latin square</a></li>
+<li class="chapter" data-level="7.1.4" data-path="model-extension.html"><a href="model-extension.html#augmented"><i class="fa fa-check"></i><b>7.1.4</b> Augmented</a></li>
+<li class="chapter" data-level="7.1.5" data-path="model-extension.html"><a href="model-extension.html#split-plot"><i class="fa fa-check"></i><b>7.1.5</b> Split plot</a></li>
+<li class="chapter" data-level="7.1.6" data-path="model-extension.html"><a href="model-extension.html#split-split-plot"><i class="fa fa-check"></i><b>7.1.6</b> Split-split plot</a></li>
+<li class="chapter" data-level="7.1.7" data-path="model-extension.html"><a href="model-extension.html#split-block"><i class="fa fa-check"></i><b>7.1.7</b> Split block</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="model-extension.html"><a href="model-extension.html#traits-with-non-gaussian-distributions"><i class="fa fa-check"></i><b>7.2</b> Traits with non-gaussian distributions</a>
+<ul>
+<li class="chapter" data-level="7.2.1" data-path="model-extension.html"><a href="model-extension.html#count-traits"><i class="fa fa-check"></i><b>7.2.1</b> Count traits:</a></li>
+<li class="chapter" data-level="7.2.2" data-path="model-extension.html"><a href="model-extension.html#percent-traits"><i class="fa fa-check"></i><b>7.2.2</b> Percent traits</a></li>
+<li class="chapter" data-level="7.2.3" data-path="model-extension.html"><a href="model-extension.html#ordinal-traits"><i class="fa fa-check"></i><b>7.2.3</b> Ordinal traits</a></li>
+<li class="chapter" data-level="7.2.4" data-path="model-extension.html"><a href="model-extension.html#binomial-traits"><i class="fa fa-check"></i><b>7.2.4</b> Binomial traits</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="the-end.html"><a href="the-end.html"><i class="fa fa-check"></i><b>8</b> Conclusion</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="the-end.html"><a href="the-end.html#other-packages"><i class="fa fa-check"></i><b>8.1</b> Other packages</a></li>
+<li class="chapter" data-level="8.2" data-path="the-end.html"><a href="the-end.html#final-recommendations"><i class="fa fa-check"></i><b>8.2</b> Final recommendations</a></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -238,8 +281,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="header">
 <h1 class="title">Incorporating Spatial Analysis into Agricultural Field Experiments.</h1>
-<p class="author"><em>Julia Piaskowski</em></p>
-<p class="date"><em>2021-08-13</em></p>
+<p class="author"><em>Julia Piaskowski<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a></em></p>
+<p class="author"><em>William Price<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a></em></p>
+<p class="date"><em>August 17, 2021</em></p>
 </div>
 <div id="preface" class="section level1" number="1">
 <h1><span class="header-section-number">Section 1</span> Preface</h1>
@@ -250,83 +294,127 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="tutorial-goal" class="section level2" number="1.1">
 <h2><span class="header-section-number">1.1</span> Tutorial goal</h2>
 <p><em>To help people conducting planned agricultural field trials understand and incorporate spatial variation routinely into analysis of field trials.</em></p>
-<p>Current educational resources are focused largely on geospatial appications that typically require a a moderate to deep understanding of mapping tools and spatial analytical techniques. Furthermore, there is not a comprehensive resources for spatial analytical techniques for field experiments that is also freely available. This tutorial is intended to fill that gap.</p>
+<p>Current educational resources are focused largely on geospatial applications that typically require a a moderate to deep understanding of mapping tools and spatial analytical techniques. Furthermore, there is not a comprehensive resources for spatial analytical techniques for field experiments that is also freely available. This tutorial is intended to fill that gap.</p>
 </div>
 <div id="prerequisites" class="section level2" number="1.2">
 <h2><span class="header-section-number">1.2</span> Prerequisites</h2>
-<p>In order to run the scripts in this demonstration, you will to download R, avaiable free through the <a href="https://cran.r-project.org/">Comprehensive R Archive Network</a> (CRAN). While this is sufficient for running R scripts, You may also find it hepful to use RStudio, which provides a nice graphical user interface for R. RStudio can be downloaded <a href="https://www.rstudio.com/products/rstudio/download/">here</a>.</p>
+<p>In order to run the scripts in this demonstration, you will to download R, available free through the <a href="https://cran.r-project.org/">Comprehensive R Archive Network</a> (CRAN). While this is sufficient for running R scripts, You may also find it hepful to use RStudio, which provides a nice graphical user interface for R. RStudio can be downloaded <a href="https://www.rstudio.com/products/rstudio/download/">here</a>.</p>
 <p>If you already have R installed, please make sure you have version 3.5.0 or newer.</p>
 <p>This demonstration is not intended to provide instructions on general R usage. However, There are numerous web resources for learning the Basics of R. <a href="https://software-carpentry.org/lessons/">Software carpentry</a> offers several lesson plans covering the foundation of R.</p>
 </div>
-<div id="packages-used-in-this-tutorial" class="section level2" number="1.3">
-<h2><span class="header-section-number">1.3</span> Packages used in this tutorial</h2>
+<div id="r-requirements" class="section level2" number="1.3">
+<h2><span class="header-section-number">1.3</span> R Requirements</h2>
+<p>This tutorial was built using R version 4.1 (“Camp Pontanezen”). R session information is provided in <a href="the-end.html#the-end">8</a>.</p>
+<p><strong>R Packages used in this tutorial</strong></p>
 <table>
 <thead>
 <tr class="header">
-<th>package</th>
-<th>usage</th>
+<th>Package</th>
+<th>Usage in This Tutorial</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>dplyr, tidyr</td>
+<td>dplyr, tidyr, purrr</td>
 <td>basic data manipulation</td>
 </tr>
 <tr class="even">
-<td>purrr</td>
-<td>data summary</td>
-</tr>
-<tr class="odd">
 <td>ggplot, desplot</td>
 <td>plotting</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>agridat</td>
-<td>for loading a demonstration data set</td>
+<td>contains demonstration data sets</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>sp, sf</td>
-<td>for manipulating spatial objects</td>
-</tr>
-<tr class="even">
-<td>spdep</td>
-<td>multiple functions for spatial dependence</td>
+<td>standard manipulation of spatial objects</td>
 </tr>
 <tr class="odd">
-<td>gstat</td>
-<td>empirical variogram</td>
+<td>spdep</td>
+<td>spatial dependence functions</td>
 </tr>
 <tr class="even">
+<td>gstat</td>
+<td>empirical variogram estimation</td>
+</tr>
+<tr class="odd">
 <td>nlme</td>
 <td>mixed model analysis</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>emmeans</td>
-<td>for extracting least squares means</td>
+<td>extracts treatments means</td>
+</tr>
+<tr class="odd">
+<td>spANOVA</td>
+<td>spatial lag models for field trials</td>
 </tr>
 <tr class="even">
 <td>SpATS</td>
 <td>spatial splines for field trials</td>
 </tr>
 <tr class="odd">
-<td>sommer</td>
-<td>mixed models with AR1xAR1 approximation</td>
+<td>inla</td>
+<td>Bayesian modeling with AR1xAR1 estimation</td>
 </tr>
 </tbody>
 </table>
-<p>All packages are available on CRAN.</p>
+<p>All packages aside from <strong>[inla]((<a href="https://www.r-inla.org" class="uri">https://www.r-inla.org</a>)</strong> are available on CRAN. Download instructions for <strong>inla</strong> can be found <a href="https://www.r-inla.org/download-install">here</a>.</p>
 </div>
-<div id="contributors" class="section level2" number="1.4">
-<h2><span class="header-section-number">1.4</span> Contributors</h2>
-<p><a href="mailto:jpiaskowski@uidaho.edu">Julia Piaskowski</a> is the main author of this resource.</p>
-<p>This book was written with <a href="https://bookdown.org/yihui/bookdown">bookdown</a></p>
+<div id="sas-requirements" class="section level2" number="1.4">
+<h2><span class="header-section-number">1.4</span> SAS Requirements</h2>
+<p>In order to run the SAS portion of this tutorial, a valid copy of SAS Base and Stat products and a current SAS license are required. This tutorial was built using SAS 9.4 (TS1M5). Although older versions of SAS may also work, we have not evaluated this. Users can also consider downloading and using a free version of <a href="https://support.sas.com/downloads/package.htm?pid=1924">SAS Studio</a>. The SAS scripts in this tutorial have not been tested on SAS Studio.</p>
+<p><strong>SAS procedures used in this tutorial</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th>Procedure</th>
+<th>Usage in This Tutorial</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>FORMAT, DATA, PRINT</td>
+<td>basic data input, manipulation, and display</td>
+</tr>
+<tr class="even">
+<td>SORT, RANK</td>
+<td>sort and rank estimated means</td>
+</tr>
+<tr class="odd">
+<td>SGPLOT</td>
+<td>plotting</td>
+</tr>
+<tr class="even">
+<td>MIXED, GLIMMIX</td>
+<td>mixed model analysis</td>
+</tr>
+<tr class="odd">
+<td>VARIOGRAM</td>
+<td>empirical variogram estimation</td>
+</tr>
+</tbody>
+</table>
 </div>
-<div id="license" class="section level2" number="1.5">
-<h2><span class="header-section-number">1.5</span> License</h2>
-<p>Incorporating Spatial Analysis into Agricultural Field Experiments by Julia Piaskowski is licensed under a <a href="https://creativecommons.org/licenses/by-nc/4.0/">Creative Commons Attribution-NonCommercial 4.0 International License</a></p>
+<div id="contributors" class="section level2" number="1.5">
+<h2><span class="header-section-number">1.5</span> Contributors</h2>
+<p><a href="mailto:jpiaskowski@uidaho.edu">Julia Piaskowski</a> wrote the R sections and <a href="mailto:bprice@uidaho.edu">William Price</a> wrote the SAS portions of this tutorial.</p>
+<p>This book was written in <a href="https://bookdown.org/yihui/bookdown">bookdown</a>.</p>
+</div>
+<div id="license" class="section level2" number="1.6">
+<h2><span class="header-section-number">1.6</span> License</h2>
+<p>Incorporating Spatial Analysis into Agricultural Field Experiments by Julia Piaskowski and William Price is licensed under a <a href="https://creativecommons.org/licenses/by-nc/4.0/">Creative Commons Attribution-NonCommercial 4.0 International License</a></p>
 <p><img src="img/CC-by-nc.png" width="20%" style="display: block; margin: auto;" /></p>
 
 </div>
+</div>
+<div class="footnotes">
+<hr />
+<ol start="1">
+<li id="fn1"><p>University of Idaho, <a href="mailto:jpiaskowski@uidaho.edu" class="email">jpiaskowski@uidaho.edu</a><a href="#fnref1" class="footnote-back">↩︎</a></p></li>
+<li id="fn2"><p>University of Idaho, <a href="mailto:bprice@uidaho.edu" class="email">bprice@uidaho.edu</a><a href="#fnref2" class="footnote-back">↩︎</a></p></li>
+</ol>
 </div>
             </section>
 

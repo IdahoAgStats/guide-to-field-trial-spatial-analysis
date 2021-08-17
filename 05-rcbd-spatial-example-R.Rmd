@@ -217,7 +217,7 @@ preds_spline <- predict(nin_spline, which = "gen") %>%
 ## Bayesian AR1xAR1
 
 ```{r}
-library(INLA) 
+## library(INLA) 
 ## also need to add model info...
 ```
 

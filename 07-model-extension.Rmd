@@ -4,6 +4,7 @@
 library(agridat); library(desplot)
 library(dplyr)
 library(nlme)
+library(lme4)
 ```
 
 Spatial models can easily be extended to fit other experimental designs such as alpha lattice and split plot, and traits with non-Gaussian distribution that are modeled using a generalized linear model. 
@@ -18,7 +19,7 @@ data(chinloy.fractionalfactorial)
 ### Alpha lattice
 ```{r}
 data(burgueno.alpha)
-m0 <- lmer(yield ~ gen + (1|rep/block), data=dat)
+m0 <- lmer(yield ~ gen + (1|rep/block), data=burgueno.alpha)
 ```
 
 ### Latin square
@@ -54,13 +55,13 @@ lind <- read.csv("data/AB19F5_LIND.csv")
 
 ### Split plot
 ```{r}
-library(agridat): data(durban.splitplot)
+#library(agridat): data(durban.splitplot)
 ```
 
 ### Split-split plot
 ```{r}
 data(archbold.apple)
-m1 <- lmer(yield ~ -1 + trt + (1|rep/mp/sp), archbold.apple)
+#m1 <- lmer(yield ~ -1 + trt + (1|rep/mp/sp), archbold.apple)
 ```
 
 ### Split block
