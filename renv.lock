@@ -1113,13 +1113,6 @@
       "Repository": "CRAN",
       "Hash": "dfd843ee98246cf932823acf613b05dd"
     },
-    "spANOVA": {
-      "Package": "spANOVA",
-      "Version": "0.99.2",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "ca07baf6b1694b565e2815653a65dda1"
-    },
     "spData": {
       "Package": "spData",
       "Version": "0.3.8",

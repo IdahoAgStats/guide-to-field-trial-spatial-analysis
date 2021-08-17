@@ -63,6 +63,7 @@ Obtaining predictions from the objects of `lagsarlm()`, `errorsarlm()`, and `sac
 
 ```{r eval=FALSE, include=FALSE}
 # comparable with nlme
+# from the package spAMM
 
 nin.matern <- fitme(yield ~ gen + (1|rep) +
                       Matern(1|col.width + row.length),
@@ -102,7 +103,29 @@ layout.gg <- ggplot(Nin, aes(x = row.length, y = col.width)) +
 plot_gg(layout.gg, multicore = T, width = 10, height = 5, scale = 300, 
         background = "white",shadowcolor = "#3a4f70") 
 
-render_snapshot(clear = T)
+render_snapshot(clear = T)  # for rayshader, so so slow
 ```
   
+  
+## Spatial Autoregression
+
+These models are not being used further because:
+1. They are only set up for CRD and RCBD
+2. the blocks AND genotypes must be coded as numeric vectors 
+3. This uses OLS to solve the equations
+4. In order to get out any means, many comparisons have to be made rather than just returning the means 
+5. the shiny app seems to have some problems - it did not load the NIN data set properly (but that did load fine into R with read.csv())
+
+(also called the Spatial lag model or SAR)
+This requires the package **spANOVA** which is large and may take a few seconds to load. 
+```{r, message=FALSE, warning=FALSE, include=FALSE}
+library(spANOVA)
+## get that model in here!!
+
+library(agridat); data("stroup.nin")
+nin_sar <- aovSar.rcbd(resp = as.vector(stroup.nin$yield), 
+                                 treat = as.vector(stroup.nin$gen), 
+                                 block = as.vector(stroup.nin$rep), 
+                                 coord = cbind(stroup.nin$col, stroup.nin$row))
+```
                     

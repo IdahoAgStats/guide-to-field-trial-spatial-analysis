@@ -145,7 +145,10 @@ preds_pow <- as.data.frame(emmeans(nin_pow, "gen"))
 
 ### Matérn
 
+A Matern error function is not available in **nlme**, but the packge **spaMM* has written an extension implementing the Matérn covariance structure. 
+
 ```{r message=FALSE, warning=FALSE}
+library(spaMM) # required for running `corMatern()`
 rm(nin_vgm, nin_variofit, nugget, sill, range, nugget.effect)
 nin_vgm <- vgm(model = "Mat", nugget = nugget_start) 
 nin_variofit <- fit.variogram(resid.var1, nin_vgm, fit.kappa = TRUE)
@@ -156,6 +159,7 @@ sill <- sum(nin_variofit$psill)
 nugget.effect <-  nugget/sill
 kappa <- nin_variofit$kappa[2]
 
+# from spAMM documentation: "Warning: the range parameter used in corSpatial objects is the inverse of the scale parameter used in MaternCorr and thus they have opposite meaning despite both being denoted ρ elsewhere in this package or in nlme literature" - so range is expressed as an inverse
 cor.mat <- corMatern(value = c(1/range, kappa, nugget.effect), 
                   form = ~ row.length + col.width, 
                   nugget = T, fixed = F,
@@ -164,6 +168,8 @@ nin_matern <- update(nin_lme, corr = cor.mat)
 
 preds_mat <- as.data.frame(emmeans(nin_matern, "gen"))
 ```
+
+[spAMM tutorial](https://raw.githubusercontent.com/f-rousset/spaMM-ref/master/vignettePlus/MixedModels_useR2021.pdf)
 
 In the **nlme** package, there is also an option for a linear model in the `corSpatial()` function. However, if a linear trend is present without a range or sill, it is recommended that a linear trend be fitted to the data instead. 
 
@@ -178,15 +184,8 @@ Nin$rowF <- as.factor(Nin$row)
 
 # note that the statistical model 'nin_trend1' is the same as 'nin_lme' run previously in this chapter
 # they produce the same results since they nlme and lme4 use the same estimation procedure
-nin_trend1 <- lmer(yield ~ gen + (1|rep),
-              data = Nin,
-              na.action = na.exclude)
 
-nin_trend2 <- lmer(yield ~ gen + (1|rep) + (1|colF) + (1|rowF),
-              data = Nin,
-              na.action = na.exclude)
-
-nin_trend3 <- lmer(yield ~ gen + (1|colF) + (1|rowF),
+nin_trend <- lmer(yield ~ gen + (1|rep) + (1|colF) + (1|rowF),
               data = Nin,
               na.action = na.exclude)
 ```
@@ -209,14 +208,6 @@ preds_spline <- predict(nin_spline, which = "gen") %>%
   dplyr::select(gen, emmean = "predicted.values", SE = "standard.errors")
 ```
 
-## Spatial Autoregression
-
-(also called the Spatial lag model or SAR)
-```{r, message=FALSE, warning=FALSE, include=FALSE}
-library(spANOVA)
-## get that model in here!!
-
-```
 
 ## Bayesian AR1xAR1
 
@@ -396,6 +387,7 @@ library(psych)
 pairs.panels(preds_df[,-9], smooth = F, density = F, ellipses = F, 
              hist.col = "gold", pch = 1)
 ```
+
 
 ## Making decisions
 

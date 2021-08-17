@@ -183,17 +183,45 @@ When $\lambda = 1$, that is equivalent to the linear model. Example above is whe
 
 $$\gamma(h) = c_0 + c_1 \bigg( 1- \frac{1}{2^{\kappa -1}\Gamma(\kappa)}
 \Big( \frac{h}{\alpha} \Big) ^{\kappa} K_\kappa
-\Big( \frac{h}{\alpha} \Big)    \bigg)$$
+\Big( \frac{h}{\alpha} \Big) \bigg)$$
+
 
 Where
 
 $$ C_0 = nugget \\ C_1 = partial \: scale \\ 
-\alpha = smoothing \: factor \\
+\alpha = smoothing \: factor \\ \kappa = covariance \: parameter
 $$
+
+$\Gamma(\kappa)$ is the gamma function:
+
+$$\Gamma(\kappa) = (\kappa -1)!$$
 
 and $\kappa(\alpha)$ is a modified bessel function: 
 
 $$ K_\kappa(t) = \frac{\Gamma(\alpha)}{2} \big( \frac{t}{2} \big) ^{-\kappa}$$
+
+```{r eval=FALSE, include=FALSE}
+c0 <- 0.5
+c1 <- 1.7
+alpha = 0.5
+kappa = 2
+
+x <- seq(0,2, by = 0.01)
+y <- ifelse(x <= range, c0 + psill*((3*x)/(2*range) - 0.5*(x/range)^3),
+            sill)
+
+plot(x, y, xlim = c(0,2), ylim = c(0, 2), axes = F, pch = 21, bg = "black", ann = F, type = "l", col = "dodgerblue", lwd = 2)
+arrows(0, 0, 0, 2, code = 2) 
+arrows(0, 0, 2, 0, code = 2)
+mtext(expression(paste(gamma, "(h)")), at = 2, side = 2, las = 2)
+mtext("h", at = 2, side = 1)
+abline(h = sill, lty = 2)
+abline(v = range, lty = 2)
+points(0, c0, pch = 21, bg = "white")
+mtext(expression('C'[0]), side = 2, at = c0, las = 2)
+mtext('r', side = 1, at = range)
+mtext(expression('C'[0]+'C'[1]), side = 2, at = sill, las = 2)
+```
 
 ### Correlated error model for gridded data
 
