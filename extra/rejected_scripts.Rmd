@@ -15,12 +15,6 @@ The AR1 and MA1 models can be combine into one:
 $$ y = X\beta + \rho W_1y+u \\ u = \lambda W_2 + \nu $$
 ### AR1xAR1
 
-The package **sommer** implements a version of the AR1xAR1 covariance structure. However, it does not estimate the parameter $\rho$. The user must specify the $\rho$ and that value is not optimized in the restricted maximum likelihood estimation. There may be another way to implement the AR1xAR1 spatial model using the package **TMB**. Both SAS and Asreml can implement a mixed model with this covariance structure.
-
-### ???
-
-The package **spaMM** implements additional correlation models such as Matérn, Cauchy and more. 
-
 
 ```{r eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
 library(sommer) 

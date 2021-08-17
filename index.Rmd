@@ -39,7 +39,7 @@ This demonstration is not intended to provide instructions on general R usage. H
 
 ## R Requirements
 
-This tutorial was built using R version 4.1 ("Camp Pontanezen"). Session information is provided at the end of each R-focused chapter on the packages loaded and their versions. 
+This tutorial was built using R version 4.1 ("Camp Pontanezen"). R session information is provided in \@ref(the-end). 
 
 **R Packages used in this tutorial**  
 
