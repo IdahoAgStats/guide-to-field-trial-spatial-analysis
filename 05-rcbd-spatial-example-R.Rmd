@@ -198,6 +198,40 @@ preds_spline <- predict(nin_spline, which = "gen") %>%
   dplyr::select(gen, emmean = "predicted.values", SE = "standard.errors")
 ```
 
+## AR1xAR1
+
+```{r}
+library(breedR); library(ggplot2)
+
+nin_ar1ar1  <- remlf90(fixed  = yield ~ gen,
+                       #random = ~ rep, # model would not converge with rep included
+                       spatial = list(model = 'AR', 
+                                  coord = Nin[, c('col','row')]), 
+                       data = Nin)
+
+```
+
+The estimates for $\rho$ are determined via a grid search. The default grid searches the entire space, ([-1, 1] for rows and columns) We can narrow down the grid search to the area most impactful based on log liklihood. 
+```{r}
+qplot(rho_r, rho_c, fill = loglik, geom = 'tile', data = nin_ar1ar1$rho)
+
+# Refine the grid around the most likely values (the range cannot contain exactly 1 or -1)
+rho.grid <- expand.grid(rho_r = seq(0.5, 0.95, length = 4),
+                        rho_c = seq(0.5, 0.95, length = 4))
+```
+```{r}
+nin_ar1ar1  <- remlf90(fixed  = yield ~ gen, 
+                       #random = ~ rep, #this also did not converge
+                       spatial = list(model = 'AR',
+                                  coord = Nin[, c('col','row')],
+                                  rho = rho.grid), 
+                       data = Nin)
+
+preds_ar1ar1 <- as.data.frame(fixef(nin_ar1ar1)[[1]]) %>% tibble::rownames_to_column("gen") %>% 
+  mutate(SE = attr(fixef(nin_ar1ar1)[[1]], "se"))
+colnames(preds_ar1ar1)[2] <- "emmean"
+```
+
 
 ## Bayesian AR1xAR1
 
