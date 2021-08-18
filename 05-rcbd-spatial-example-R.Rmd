@@ -168,7 +168,7 @@ In the **nlme** package, there is also an option for a linear model in the `corS
 
 The package **lme4** is used since it can handle multiple random effects while **nlme** cannot do this without nesting the effects. I prefer **nlme** for linear modeling in this tutorial because of its built-in functionality for including spatial variation. 
 ```{r}
-library(lme4)
+library(lme4); library(lmerTest)
 # variables specifying row and column as factors are needed
 Nin$colF <- as.factor(Nin$col)
 Nin$rowF <- as.factor(Nin$row)
@@ -236,7 +236,7 @@ colnames(preds_ar1ar1)[2] <- "emmean"
 ## Bayesian AR1xAR1
 
 ```{r}
-## library(INLA) 
+#library(INLA) 
 ## also need to add model info...
 ```
 
@@ -264,7 +264,7 @@ map(all.models, class)
 
 ### Spatial dependence of residuals
 
-It would be helpful to know if these methods were effective in reducing the spatial dependence among the error residuals. 
+It would be helpful to know if these methods were effective in reducing the spatial autocorrelation among the error residuals. 
 
 The function below extracts the residuals from each model and is needed because of different handling of missing values by the package **SpATS**. 
 
@@ -319,14 +319,14 @@ Only one model, `nin_spline` resulted in an improvement in Moran's I. Nearest ne
 Since these are not nested models, likelihood ratio tests cannot be performed. Log likelihood can be compared within the models from **nlme** but not across packages since they use different estimation procedures.
 
 ```{r}
-nlme_mods <- list(nin_lme, nin_trend, nin_exp, nin_gaus, nin_sph, nin_pow, nin_matern)
+nlme_mods <- list(nin_lme, nin_trend, nin_exp, nin_gaus, nin_sph, nin_matern, nin_ar1ar1)
 
-names(nlme_mods) <- c(c("LMM", "row-col_trend", "exponential", 
-                        "gaussian", "spherical", "matern"))
+names(nlme_mods) <- c("LMM", "row-col_trend", "exponential", 
+                        "gaussian", "spherical", "matern", "AR1xAR1")
 
-data.frame(loglikihood = sapply(nlme_mods, logLik),
+data.frame(logLiklihood = sapply(nlme_mods, logLik),
            AIC = sapply(nlme_mods, AIC),
-           BIC = sapply(nlme_mods, AIC, k = log(nrow(Nin_na))))
+           BIC = sapply(nlme_mods, AIC, k = log(nrow(Nin_na)))) %>% arrange(desc(logLiklihood))
 ```
 
 Larger log likelihoods indicate a better fitting model to the data. A rule of thumb when comparing log likelihoods is that differences less than 2 are not considered notable. These results suggest that the Gaussian, spherical, power and Matérn models are substantially equivalent in capturing the variation present in this data set. 
@@ -334,7 +334,7 @@ Larger log likelihoods indicate a better fitting model to the data. A rule of th
 ### Experiment-wide error
 
 ```{r}
-exp_error <- as.data.frame(sapply(nlme_mods, sigma))
+exp_error <- as.data.frame(sapply(nlme_mods[-7], sigma))
 exp_error
 ```
 
@@ -343,7 +343,7 @@ The overall experimental error, $\sigma$, increased slightly in the correlated e
 As a result, the coefficient of variation is not a good metric for evaluating the quality of spatial models. 
 
 ```{r}
-CV = sapply(nlme_mods, function(x) {
+CV = sapply(nlme_mods[-7], function(x) {
   sigma(x)/mean(fitted(x), na.rm = T) * 100
 })
 as.data.frame(CV)
@@ -354,13 +354,16 @@ as.data.frame(CV)
 Simulation studies indicate that incorporating spatial correlation into field trial analysis can improve the overall power of the experiment (the probability of detecting true differences in treatments). When working with data from a completed experiment, power is a transformed p-value. Performing ANOVA can indicate which approach maximizes power. 
 
 ```{r message=FALSE, warning=FALSE}
-anovas <- lapply(nlme_mods, function(x){ 
+anovas <- lapply(nlme_mods[-7], function(x){ 
   aov <- as.data.frame(anova(x))[2,]
   })
 
-bind_rows(anovas) %>% mutate(model = c("LMM", "exponential", "gaussian", 
-                             "spherical", "power", "matern", "row/column trend")) %>% 
-  arrange(desc(`p-value`)) %>% dplyr::select(c(model, 1:4)) %>% tibble::remove_rownames()
+a <- bind_rows(anovas) %>% mutate(model = c("LMM", "row/column trend", "exponential", 
+                                       "gaussian", "spherical", "matern")) %>% 
+  arrange(desc(`p-value`)) %>% dplyr::select(c(model, 1:4)) %>% tibble::remove_rownames() 
+
+a[6,2:5] <- anova(nin_trend)[3:6]
+a
 ```
 
 This table indicates changes in the hypothesis test for "gen".  There is a dramatic change in power for this test when incorporating spatial covariance structures. 
@@ -401,10 +404,10 @@ Plot changes in ranks:
 ```{r gen-ranks-fig, echo=FALSE, fig.align='center', fig.asp=0.75, fig.cap='Differences in Variety Ranks', message=FALSE, warning=FALSE, out.width='85%'}
 library(ggplot2)
 
-lev <- c("lme", "trend", "exp", "gaus", "mat", "sph", "spline") #, "ar1ar1")
+lev <- c("lme", "trend", "exp", "gaus", "mat", "sph", "ar1ar1", "spline")
 
-#melt(preds_df, id.vars = "gen", variable.name = "model", value.name = "emmeans") %>% 
-pivot_wider(preds_df, id_cols = gen, names_from = model, values_from = emmeans) %>% 
+#reshape::melt(preds_df, id.vars = "gen", variable.name = "model", value.name = "emmeans") %>% 
+pivot_longer(preds_df, cols = !gen, names_to = "model", values_to = "emmeans") %>% 
   mutate(model = factor(model, levels = lev)) %>% 
   ggplot(aes(x = model, y = emmeans, group = gen)) +
   geom_point(size = 5, alpha = 0.5, col = "navy") +
