@@ -132,20 +132,6 @@ nin_sph <- update(nin_lme, corr = cor.sph)
 preds_sph <- as.data.frame(emmeans(nin_sph, "gen"))
 ```
 
-### Power
-
-```{r}
-rm(nin_vgm, nin_variofit, nugget, sill, range, nugget.effect)
-
-cor.pow <- corSpatial(form = ~ row.length + col.width, 
-                  nugget = T, fixed = F,
-                  type = "ratio", 
-                  metric = "euclidean")
-
-nin_pow <- update(nin_lme, corr = cor.pow)
-preds_pow <- as.data.frame(emmeans(nin_pow, "gen"))
-```
-
 ### Matérn
 
 A Matern error function is not available in **nlme**, but the packge **spaMM** has written an extension implementing the Matérn, Cauchy and other covariance structures. The Matérn is demonstrated below. 
@@ -191,7 +177,6 @@ nin_trend <- lmer(yield ~ gen + (1|rep) + (1|colF) + (1|rowF),
               data = Nin,
               na.action = na.exclude)
 
-# extract the least squares means for variety
 preds_trend <- as.data.frame(emmeans(nin_trend, "gen"))
 ```
 
@@ -300,10 +285,10 @@ Only one model, `nin_spline` resulted in an improvement in Moran's I. Nearest ne
 Since these are not nested models, likelihood ratio tests cannot be performed. Log likelihood can be compared within the models from **nlme** but not across packages since they use different estimation procedures.
 
 ```{r}
-nlme_mods <- list(nin_lme, nin_exp, nin_gaus, nin_sph, nin_pow, nin_matern, nin_trend)
+nlme_mods <- list(nin_lme, nin_trend, nin_exp, nin_gaus, nin_sph, nin_pow, nin_matern)
 
-names(nlme_mods) <- c(c("LMM", "exponential", "gaussian", 
-                        "spherical", "power", "matern", "row-col_trend"))
+names(nlme_mods) <- c(c("LMM", "row-col_trend", "exponential", 
+                        "gaussian", "spherical", "matern"))
 
 data.frame(loglikihood = sapply(nlme_mods, logLik),
            AIC = sapply(nlme_mods, AIC),
@@ -380,11 +365,12 @@ preds_df$gen <- preds_exp$gen
 Plot changes in ranks: 
 
 ```{r gen-ranks-fig, echo=FALSE, fig.align='center', fig.asp=0.75, fig.cap='Differences in Variety Ranks', message=FALSE, warning=FALSE, out.width='85%'}
-library(ggplot2); library(reshape2)
+library(ggplot2)
 
-lev <- c("lme", "exp", "gaus", "mat", "pow", "sph", "spline", "trend") #, "ar1ar1")
+lev <- c("lme", "trend", "exp", "gaus", "mat", "sph", "spline") #, "ar1ar1")
 
-melt(preds_df, id.vars = "gen", variable.name = "model", value.name = "emmeans") %>% 
+#melt(preds_df, id.vars = "gen", variable.name = "model", value.name = "emmeans") %>% 
+pivot_wider(preds_df, id_cols = gen, names_from = model, values_from = emmeans) %>% 
   mutate(model = factor(model, levels = lev)) %>% 
   ggplot(aes(x = model, y = emmeans, group = gen)) +
   geom_point(size = 5, alpha = 0.5, col = "navy") +
@@ -393,7 +379,7 @@ melt(preds_df, id.vars = "gen", variable.name = "model", value.name = "emmeans")
   theme_minimal(base_size = 14)
 ```
 
-The black lines link the least squares means for a single variety. There is some consistency in the rankings between exponential, Gaussian, power, Matérn, and spherical covariance models. The control RCBD model, "lme", has fundamentally different rankings. The spline and AR1xAR1 ranking are also sightly different from the other models. 
+The black lines link the least squares means for a single variety. There is some consistency in the rankings between exponential, Gaussian, Matérn, and spherical covariance models. The control RCBD model, "lme", has fundamentally different rankings. The spline and AR1xAR1 ranking are also sightly different from the other models. 
 
 Nevertheless, the following plot indicates considerable consensus in the least squares means from all of the spatial models. The upper diagonal contains Pearson correlations between those values. 
 
