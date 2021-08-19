@@ -3,54 +3,92 @@
 ```{r message=FALSE, warning=FALSE}
 library(agridat); library(desplot)
 library(dplyr)
-library(nlme)
-library(lme4)
+library(nlme); library(spaMM)
+library(lme4); library(lmerTest)
+library(breedR)
+
+# set some colors for plotting (optional)
+autumn <- c("#FFFFD4", "#FED98E", "#FE9929", "#D95F0E", "#993404")
+blues <- c("aliceblue", "cornflowerblue", "blue", "Navy")
+vir <- hcl.colors(25, palette = "viridis", rev = TRUE)
 ```
 
 Spatial models can easily be extended to fit other experimental designs such as alpha lattice and split plot, and traits with non-Gaussian distribution that are modeled using a generalized linear model. 
 
+Below are minimal examples that omit several steps conducted in \@ref(rcbd-r) (e.g. fitting the empirical variogram) for brevity. Also, although spatial variance is incorporate into each example, we have not made an effort to ensure that each is the best fitting model for the data. The examples are intended to illustrate the correct syntax in R rather than model fitting. 
+
 ## Other Experimental Designs
 
-### 2+ Factorials (RCBD)
+### Completely randomized design 
+
+If you are running a field experiment with a completely randomized design (CRD), you can use the `gls()` function from the **nlme** package similar to how `lme()` was used described in \@ref(rcbd-r) to build a linear model. The `gls()` function will work with balanced and unbalanced data. 
+The *cochran.crd* data set evaluated the effect of sulfur treatments on potato scab infection. 
+```{r}
+data(cochran.crd)
+
+ggdesplot(cochran.crd, inf~col*row,
+        text = trt, cex = 1, col.regions = autumn, 
+        main = "Cochran CRD")
+
+m_crd <- gls(inf ~ trt, correlation = corExp(form = ~ row + col),
+             data = cochran.crd)
+```
+
+
+### Multiway Factorials 
+
+Factorial experiments that are evaluating the effects of multiple crossed treatments are an extension of the linear mixed model (if your experimented uses RCBD), or the lienar model in the case of CRD.
+
+The *chinloy.fractionalfactorial* evaluates the effect of different fertilizer treatments (nitrogen, phosphorus, potassium, bagasse, and filter mud press) and concentrations on sugarcane yield. The levels of {0,1,2} for all variables indicate the relative concentrations of each fertilizer. Only 2-way interactions are being evaluated. 
+
 ```{r}
 data(chinloy.fractionalfactorial)
+
+m_factor <- lme(yield ~ N + P + K + B + F + N:P + N:K + N:B + N:F, 
+          random = ~ 1|block, 
+          correlation = corMatern(form = ~row + col), 
+          data = chinloy.fractionalfactorial)
 ```
 
 ### Alpha lattice
+
+The *burgueno.alpha* data set uses an incomplete block alpha design with 16 treatment levels, 12 blocks and 3 reps. 
 ```{r}
 data(burgueno.alpha)
-m0 <- lmer(yield ~ gen + (1|rep/block), data=burgueno.alpha)
+
+ggdesplot(burgueno.alpha, yield ~ col*row, out1 = block, out2 = rep, 
+        text = gen, cex = 1, col.regions = autumn, 
+        main = "Burgueno Alpha Lattice")
+
+# complicated asreml code in example
+
+m_alpha <- lme(yield ~ gen,
+               random = ~ 1|rep/block,
+               data = burgueno.alpha)
+
+m_alpha_IBD  <- remlf90(fixed  = yield ~ gen,
+                      random = ~ block,
+                      spatial = list(model = 'AR', 
+                                 coord = burgueno.alpha[, c('col','row')]), 
+                      data = burgueno.alpha)
 ```
 
 ### Latin square
 
-Latin is a special example of a lattice experiment where each treatment occurs in each row and in each column. As a result, the row and column effects can be modeled using balanced data. 
+Latin is a special example of a lattice experiment where each treatment occurs in each row and in each column. As a result, the row and column effects are used to model spatial effects. 
 
-The "cochran.latin" data set from the package '**Agridat**': 
+The *cochran.latin** data set examines the effect of an "operator" (a person) on the difference between the true plot height and operator-measured height (of wheat plots). 
 ```{r}
 data(cochran.latin)
-head(cochran.latin)
-hist(cochran.latin$diff)
-```
 
-```{r}
-desplot(cochran.latin, diff~col*row,
-        text=operator, cex=1,
-        main="cochran.latin")
-```
+cochran.latin <- transform(cochran.latin, rowf = as.factor(row), colf = as.factor(col))
 
-```{r}
-cochran.latin <- mutate(cochran.latin,
-                        rowf = as.factor(row), colf = as.factor(col))
+ggdesplot(cochran.latin, diff ~ col*row, 
+        text = operator, cex = 1, col.regions = vir, 
+        main = "Cochran Latin Square")
 
-cochran.latin_lme1 <- lm(diff ~ operator + colf + rowf,
-                         data = cochran.latin)
-```
-
-
-### Augmented
-```{r}
-lind <- read.csv("data/AB19F5_LIND.csv")
+m_latin <- lmer(diff ~ operator + (1|colf) + (1|rowf),
+               data = cochran.latin)
 ```
 
 ### Split plot
@@ -70,33 +108,78 @@ also, over-dispersed count data
 data(beal.webworms)  
 ```
 
+### Augmented
+```{r}
+lind <- read.csv("data/AB19F5_LIND.csv")
+```
+
 ## Traits with non-gaussian distributions
+
+Here is where things start to get a bit crazy. Generalized linear models with spatial covariates are more difficult to fit and hence that functionality is not available in **nlme** except for log-normal models. **lme4** can still fit the latin square model using a spat of link functions. 
 
 ### Count traits: 
 
 Count traits are discrete rather than continuous and often follow a poisson distribution or in the case of over-dispersed data, a negative binomial distribution. 
 
-Here is a data set of wireworms counts after a fumigation treatment. 
+The *cochran.wireworms* data set reports wireworms counts after a fumigation treatment. There are 5 treatment levels, "K", "M", "N", "O", and "P", and 5 replicates. It is arranged in a latin square. 
 ```{r}
 data(cochran.wireworms)
 stem(cochran.wireworms$worms)
-```
 
-There are 5 treatment levels, "K", "M", "N", "O", and "P", and 5 replicates. It is arranged in a latin square experimental design. 
-```{r}
-desplot(cochran.wireworms, worms ~ col*row,
-        text=trt, cex=1,
+ggdesplot(cochran.wireworms, worms ~ col*row,
+        text=trt, cex=1, col.regions = vir, 
+        xlab = "col", ylab = "row",
         main="cochran wireworms")
+
+cochran.wireworms <- transform(cochran.wireworms, colf = as.factor(col), rowf = as.factor(row))
+
+m_count1 <- glmer(worms ~ trt + (1|colf) + (1|rowf),
+                  family = poisson(link = "log"),
+                  data = cochran.wireworms)
 ```
 
-### Percent traits 
-(e.g. percent germination, percent infection, percent survival)
-bounded between 0 and 100
+This warning message `boundary (singular) fit: see ?isSingular` indicates the one of the random effects is at the edge of parameter space, or in other words, near zero. Let's check it out:
+
 ```{r}
-# having a hard time finding a data set
+VarCorr(m_count1)
+```
+Since `colf` is effectively zero, the model could be refit without it. 
+
+### Another Count Example
+
+Here's an example using a RCB design, *cochran.eelworms*, which looks at eelworms counts before and after different fumigation treatments. 
+```{r}
+data(cochran.eelworms)
+
+desplot(cochran.eelworms, initial ~ col*row,
+        flip=TRUE, col.regions = vir, 
+        main="cochran eelworms")
+
+# might need inla for this, or gams
 ```
 
-### Ordinal traits 
+
+### Percent variables 
+
+These are variables that are bounded between 0 and 100 (e.g. percent germination, percent infection, percent survival). These can behave like continuous variables, especially when they are not reported only in discrete increments (e.g. 10, 20, 30). Percent variables heavily skewed towards their bounds of 0 and 100 are difficult to model. Percent variables that exceed 100 (e.g. relative yield expressed as a percentage) can quite often be treated as continuous. But, as always, it depends on the actual distribution of the variable.
+
+If the data are bound between zero and 100 and have no values exactly equal to zero or one, the beta distribution can be used on proportion data, which is percentage divided by 100. 
+
+The example below reuses a data set loaded earlier, *cochran.crd*, that is looking at percent infection of scab among potatoes clones after sulfur treatments of varying concentrations.  
+```{r}
+data(cochran.crd)
+
+range(cochran.crd$inf)
+hist(cochran.crd$inf)
+
+# needs gams
+# library(mgcv)
+# mod <- gam(inf ~ x1 + x2 + s(latitude, longitude, bs = "gp", m = 2), # change m
+#            family = betar(link='logit'), 
+#            data = data)
+```
+
+### Ordinal variables 
 (e.g. disease scores)
 
 ```{r}
