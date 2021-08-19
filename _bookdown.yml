@@ -10,6 +10,7 @@ rmd_files: [
   "04-spatial-diagnostic-R.Rmd",
   "05-rcbd-spatial-example-R.Rmd",
   "06-rcbd-spatial-example-SAS.Rmd",
-  "07-model-extension.Rmd",
-  "08-conclusion.Rmd",
+  "07-model-extension.Rmd", 
+  
+  "09-conclusion.Rmd",
 ]

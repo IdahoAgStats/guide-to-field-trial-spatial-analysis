@@ -15,7 +15,7 @@ vir <- hcl.colors(25, palette = "viridis", rev = TRUE)
 
 Spatial models can easily be extended to fit other experimental designs such as alpha lattice and split plot, and traits with non-Gaussian distribution that are modeled using a generalized linear model. 
 
-Below are minimal examples that omit several steps conducted in \@ref(rcbd-r) (e.g. fitting the empirical variogram) for brevity. Also, although spatial variance is incorporate into each example, we have not made an effort to ensure that each is the best fitting model for the data. The examples are intended to illustrate the correct syntax in R rather than model fitting. 
+Below are minimal examples that omit several steps conducted in \@ref(rcbd-r) (e.g. fitting the empirical variogram) for brevity. Also, although spatial variance is incorporate into each example, we have not made an effort to ensure that each is the best fitting model for the data. The examples are intended to illustrate the correct syntax in R rather than the process of proper model fitting (which was shown in \@ref(rcbd-r)). 
 
 ## Other Experimental Designs
 
@@ -33,7 +33,6 @@ ggdesplot(cochran.crd, inf~col*row,
 m_crd <- gls(inf ~ trt, correlation = corExp(form = ~ row + col),
              data = cochran.crd)
 ```
-
 
 ### Multiway Factorials 
 
@@ -92,14 +91,46 @@ m_latin <- lmer(diff ~ operator + (1|colf) + (1|rowf),
 ```
 
 ### Split plot
+
+The *durban.splitplot* data set looks at the effect of fungicide on barley varieties. The main plot is fungicide (2 levels), and the sub plot is variety (70 levels). There are 4 blocks. 
 ```{r}
-#library(agridat): data(durban.splitplot)
+# "bed" refers to the spatial position orthogonal to row (usually called 'column')
+
+data(durban.splitplot)
+
+ggdesplot(durban.splitplot, yield~bed*row, col.regions = vir,
+          out1 = block, out2 = fung, num = gen, 
+          main = "durban splitplot")
+
+m_sp <- lme(yield ~ fung*gen,
+            random = ~ 1|block/fung, 
+            correlation = corGaus(form = ~ row + bed), 
+            data = durban.splitplot)
 ```
 
 ### Split-split plot
+
+The *archbold.apple* data set of apple trees is examining the impact of spacing (the main plot), root stock (the split plot) and variety (the split-split plot) on fruit yield. There are 5 blocks. 
 ```{r}
 data(archbold.apple)
-#m1 <- lmer(yield ~ -1 + trt + (1|rep/mp/sp), archbold.apple)
+
+archbold.apple <- transform(archbold.apple, rep=factor(rep), spacing=factor(spacing), trt=factor(trt),
+                 mainp = factor(paste(row, spacing, sep="")),
+                 splitp = factor(paste(row, spacing, stock, sep="")))
+
+m_ssp <- lme(yield ~ spacing*stock*gen, 
+             random = ~ 1|rep/mainp/splitp, 
+             correlation = corExp(form = ~ row + pos), 
+             data = archbold.apple, na.action = na.exclude)
+```
+
+#### Estimated marginal means
+
+Emmeans can be extracted in the same way as previously described in \@ref(rcbd-r):
+```{r}
+library(emmeans)
+preds <- emmeans(m_ssp, ~ gen | stock)
+pairs(preds)
 ```
 
 ### Split block
@@ -113,82 +144,4 @@ data(beal.webworms)
 lind <- read.csv("data/AB19F5_LIND.csv")
 ```
 
-## Traits with non-gaussian distributions
-
-Here is where things start to get a bit crazy. Generalized linear models with spatial covariates are more difficult to fit and hence that functionality is not available in **nlme** except for log-normal models. **lme4** can still fit the latin square model using a spat of link functions. 
-
-### Count traits: 
-
-Count traits are discrete rather than continuous and often follow a poisson distribution or in the case of over-dispersed data, a negative binomial distribution. 
-
-The *cochran.wireworms* data set reports wireworms counts after a fumigation treatment. There are 5 treatment levels, "K", "M", "N", "O", and "P", and 5 replicates. It is arranged in a latin square. 
-```{r}
-data(cochran.wireworms)
-stem(cochran.wireworms$worms)
-
-ggdesplot(cochran.wireworms, worms ~ col*row,
-        text=trt, cex=1, col.regions = vir, 
-        xlab = "col", ylab = "row",
-        main="cochran wireworms")
-
-cochran.wireworms <- transform(cochran.wireworms, colf = as.factor(col), rowf = as.factor(row))
-
-m_count1 <- glmer(worms ~ trt + (1|colf) + (1|rowf),
-                  family = poisson(link = "log"),
-                  data = cochran.wireworms)
-```
-
-This warning message `boundary (singular) fit: see ?isSingular` indicates the one of the random effects is at the edge of parameter space, or in other words, near zero. Let's check it out:
-
-```{r}
-VarCorr(m_count1)
-```
-Since `colf` is effectively zero, the model could be refit without it. 
-
-### Another Count Example
-
-Here's an example using a RCB design, *cochran.eelworms*, which looks at eelworms counts before and after different fumigation treatments. 
-```{r}
-data(cochran.eelworms)
-
-desplot(cochran.eelworms, initial ~ col*row,
-        flip=TRUE, col.regions = vir, 
-        main="cochran eelworms")
-
-# might need inla for this, or gams
-```
-
-
-### Percent variables 
-
-These are variables that are bounded between 0 and 100 (e.g. percent germination, percent infection, percent survival). These can behave like continuous variables, especially when they are not reported only in discrete increments (e.g. 10, 20, 30). Percent variables heavily skewed towards their bounds of 0 and 100 are difficult to model. Percent variables that exceed 100 (e.g. relative yield expressed as a percentage) can quite often be treated as continuous. But, as always, it depends on the actual distribution of the variable.
-
-If the data are bound between zero and 100 and have no values exactly equal to zero or one, the beta distribution can be used on proportion data, which is percentage divided by 100. 
-
-The example below reuses a data set loaded earlier, *cochran.crd*, that is looking at percent infection of scab among potatoes clones after sulfur treatments of varying concentrations.  
-```{r}
-data(cochran.crd)
-
-range(cochran.crd$inf)
-hist(cochran.crd$inf)
-
-# needs gams
-# library(mgcv)
-# mod <- gam(inf ~ x1 + x2 + s(latitude, longitude, bs = "gp", m = 2), # change m
-#            family = betar(link='logit'), 
-#            data = data)
-```
-
-### Ordinal variables 
-(e.g. disease scores)
-
-```{r}
-data(lee.potatoblight)
-```
-
-### Binomial traits
-(e.g. )
-```{r}
-data(gotway.hessianfly)
-```
 
