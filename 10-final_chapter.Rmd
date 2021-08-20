@@ -1,0 +1,10 @@
+# Flotsam & Jetsam
+
+## R Session Info
+
+```{r}
+sessionInfo()
+```
+
+## References
+
