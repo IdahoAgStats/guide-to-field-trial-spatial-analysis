@@ -8,3 +8,5 @@ git checkout gh-pages
 git merge master
 # need to make docs folder for github to read for gitbook deployment
 cp _book docs
+# remember to return to main branch!
+git checkout master 

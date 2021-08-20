@@ -28,7 +28,5 @@ Until this situation is improved, it is probably wisest to focus on using spatia
 
 Although these options may appear overwhelming, investigating spatial correlation in a field trial and controlling for it if necessary using any of the methods previously described is recommended over doing nothing. 
 
-```{r}
-sessionInfo()
-```
+
 
