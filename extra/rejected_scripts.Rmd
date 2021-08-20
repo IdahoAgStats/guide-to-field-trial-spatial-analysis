@@ -21,7 +21,7 @@ $$ y = X\beta + \rho W_1y+u \\ u = \lambda W_2 + \nu $$
 ### AR1xAR1 w/sommer)
 
 ```{r eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
-library(sommer) 
+#library(sommer) 
 
 Nin$colF <- as.factor(Nin$col)
 Nin$rowF <- as.factor(Nin$row)
@@ -40,7 +40,7 @@ This is not being used because the $\rho$ parameters are not estimated in the an
 
 (to use this, we need to define more neighbors)
 ```{r}
-library(spdep)
+#library(spdep)
 nin.sem <- errorsarlm(yield ~ gen + rep,
                        listw = nb2listw(xy.rook),
                        data = Nin, na.action = na.exclude)
@@ -86,7 +86,7 @@ matern.preds <- data.frame(gen = attributes(preds)$frame,
 
 (conclusion: it's very slow to render and the final plot underwhelming)
 ```{r eval=FALSE, include=FALSE}
-library(rayshader)
+#library(rayshader)
 options(cores = 3)
 ```
 
@@ -117,10 +117,10 @@ These models are not being used further because:
 (also called the Spatial lag model or SAR)
 This requires the package **spANOVA** which is large and may take a few seconds to load. 
 ```{r, message=FALSE, warning=FALSE, include=FALSE}
-library(spANOVA)
+#library(spANOVA)
 ## get that model in here!!
 
-library(agridat); data("stroup.nin")
+#library(agridat); data("stroup.nin")
 nin_sar <- aovSar.rcbd(resp = as.vector(stroup.nin$yield), 
                                  treat = as.vector(stroup.nin$gen), 
                                  block = as.vector(stroup.nin$rep), 

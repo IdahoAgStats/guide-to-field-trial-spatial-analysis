@@ -1,7 +1,4 @@
 
-
-
-
 N <- sum(!is.na(resid.lme)) - 1
 keep <- !is.na(resid.lme)  
 weights <- nb2listw(xy.rook, style = "B") # weights are all one

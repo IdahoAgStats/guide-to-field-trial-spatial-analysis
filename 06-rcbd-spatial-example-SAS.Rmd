@@ -21,7 +21,7 @@ proc format;
 ;
 
  data alliance;
-    infile '.\data\Stroup_NIN_wheat.csv' firstobs=2 delimiter=',';
+    infile '.\data\stroup_nin.csv' firstobs=2 delimiter=',';
   	informat yield has_NA.;
     input entry $	rep $	yield	col	row;
     Row  = 4.3*Row;

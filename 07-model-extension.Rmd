@@ -34,7 +34,7 @@ m_crd <- gls(inf ~ trt, correlation = corExp(form = ~ row + col),
              data = cochran.crd)
 ```
 
-### Multiway Factorials 
+### Multi-way Factorials 
 
 Factorial experiments that are evaluating the effects of multiple crossed treatments are an extension of the linear mixed model (if your experimented uses RCBD), or the lienar model in the case of CRD.
 
@@ -136,7 +136,7 @@ pairs(preds)
 ### Split block
 also, over-dispersed count data
 ```{r}
-data(beal.webworms)  
+data(beall.webworms)  
 ```
 
 ### Augmented
