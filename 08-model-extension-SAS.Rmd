@@ -1,0 +1,114 @@
+# Other Models - SAS {#model-extension-sas}
+
+```{r include=FALSE}
+require(SASmarkdown)
+saspath <- "C:/Program Files/SASHome/SASFoundation/9.4/sas.exe"
+sasopts <- "-nosplash -ls 200"
+```
+
+## Other Experimental and Treatment Designs 
+
+Spatial models can be extended to fit other experimental designs such as CRD, Lattice, and split plot or treatment designs such as factorials. 
+
+Below are minimal examples that omit several steps conducted in section \@ref(rcbd-sas) (e.g. fitting the empirical variogram) for brevity. Also, although spatial variance is incorporated into each example, we have not made an effort to ensure that each is the best fitting model for the data. The examples are intended to illustrate the correct syntax rather than the complete process of proper model fitting. 
+
+Unless indicated otherwise, these data are adapted from the R package agridat. Specific links to csv data files are given in the examples.
+
+### Completely randomized design (CRD) 
+
+Data: [cochran_crd.csv](https://raw.githubusercontent.com/IdahoAgStats/guide-to-field-trial-spatial-analysis/master/data/cochran_crd.csv)<br><br>
+
+This study investigated the effect of sulfur on controlling scab disease in potatoes and had seven treatments (trt) measuring the percent surface area infected (inf). Row and column indices are also given. The design was a completely randomized design  with 8 control replications  and 4 treatment replications.
+
+Two possible methods of adjustment are shown: row column trend adjustment (as suggested in agridat), and a spline adjustment.
+
+```{r SAS8_1, engine="sashtml", collectcode=TRUE, engine.path=saspath, include=TRUE, engine.opts=sasopts, comment=""}
+
+ods html close;
+proc format;
+invalue has_NA
+ 'NA' = .;
+run;
+
+data CRD;
+    infile '.\data\cochran_crd.csv' firstobs=2 delimiter=',';
+    input inf trt$ row col;
+  	informat inf has_NA.;
+    if inf=. then delete;
+run;
+
+proc mixed data=crd;
+	class trt;
+	model inf=trt row col;
+run;
+
+proc glimmix data=crd;
+	class trt;
+	effect sp_r = spline(row col);
+	model inf=trt sp_r;
+	random row col/type=rsmooth;
+run;
+ 
+ods html; 
+```
+
+### Multi-way Factorials 
+
+Data: [chinloy_fractionalfactorial.csv](https://raw.githubusercontent.com/IdahoAgStats/guide-to-field-trial-spatial-analysis/master/data/chinloy_fractionalfactorial.csv)<br><br>
+
+Factorial experiments consider multiple treatments and their combinations. The study here evaluated the effect of 5 different fertilizer treatments (nitrogen, phosphorus, potassium, bagasse, and a filter mud press), each at various concentrations, on sugarcane yield. The levels of {0,1,2} indicate the relative concentrations of each fertilizer. Because all possible treatment combinations were too numerous, only a subset were used (fractional factorial) and only 2-way interactions with nitrogen are evaluated in the model. The treatments were laid out in a randomized complete block design (block).
+
+A guassian spatial model is used below.
+
+```{r SAS8_2, engine="sashtml", collectcode=TRUE, engine.path=saspath, include=TRUE, engine.opts=sasopts, comment=""}
+
+ods html close;
+
+proc format;
+invalue has_NA
+ 'NA' = .;
+run;
+
+data Factorial;
+    infile '.\data\chinloy_fractionalfactorial.csv' firstobs=2 delimiter=',';
+    input yield block$ row col trt N P K B F;
+  	informat yield has_NA.;
+    if yield=. then delete;
+run;
+ 
+proc mixed data=Factorial maxiter=150;
+	class block N P K B F;
+	model yield = N P K B F N*P N*K N*B N*F/ ddfm=kr;
+	random block;
+	repeated/subject=intercept type=sp(gau) (row col) local;
+	parms (6) (.25) (.21) (.1);
+run;
+
+ods html;
+
+```
+
+### Alpha lattice
+
+The *burgueno.alpha* data set uses an incomplete block alpha design with 16 treatment levels, 12 blocks and 3 reps. 
+
+### Latin square
+
+Latin is a special example of a lattice experiment where each treatment occurs in each row and in each column. As a result, the row and column effects are used to model spatial effects. 
+
+The *cochran.latin** data set examines the effect of an "operator" (a person) on the difference between the true plot height and operator-measured height (of wheat plots). 
+
+### Split plot
+
+The *durban.splitplot* data set looks at the effect of fungicide on barley varieties. The main plot is fungicide (2 levels), and the sub plot is variety (70 levels). There are 4 blocks. 
+
+### Split-split plot
+
+The *archbold.apple* data set of apple trees is examining the impact of spacing (the main plot), root stock (the split plot) and variety (the split-split plot) on fruit yield. There are 5 blocks. 
+
+### Split block
+also, over-dispersed count data
+
+### Augmented
+
+

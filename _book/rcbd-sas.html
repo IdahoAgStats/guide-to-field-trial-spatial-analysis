@@ -5,27 +5,27 @@
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Section 6 RCBD Example: SAS | Incorporating Spatial Analysis into Agricultural Field Experiments.</title>
-  <meta name="description" content="Instructions for identifying spatial autocorrelation in agricultural field trials and incorporating spatial variation into analysis of trial using R and SAS."" />
-  <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
+  <meta name="description" content="Instructions for identifying spatial autocorrelation in agricultural field trials and incorporating spatial variation into analysis of trial using R and SAS." />
+  <meta name="generator" content="bookdown 0.23.1 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Section 6 RCBD Example: SAS | Incorporating Spatial Analysis into Agricultural Field Experiments." />
   <meta property="og:type" content="book" />
   
   
-  <meta property="og:description" content="Instructions for identifying spatial autocorrelation in agricultural field trials and incorporating spatial variation into analysis of trial using R and SAS."" />
+  <meta property="og:description" content="Instructions for identifying spatial autocorrelation in agricultural field trials and incorporating spatial variation into analysis of trial using R and SAS." />
   
 
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Section 6 RCBD Example: SAS | Incorporating Spatial Analysis into Agricultural Field Experiments." />
   
-  <meta name="twitter:description" content="Instructions for identifying spatial autocorrelation in agricultural field trials and incorporating spatial variation into analysis of trial using R and SAS."" />
+  <meta name="twitter:description" content="Instructions for identifying spatial autocorrelation in agricultural field trials and incorporating spatial variation into analysis of trial using R and SAS." />
   
 
 <meta name="author" content="Julia Piaskowski" />
 <meta name="author" content="William Price" />
 
 
-<meta name="date" content="2021-08-17" />
+<meta name="date" content="2021-08-20" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -33,9 +33,9 @@
   
   
 <link rel="prev" href="rcbd-r.html"/>
-<link rel="next" href="model-extension.html"/>
-<script src="libs/header-attrs-2.7/header-attrs.js"></script>
-<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link rel="next" href="model-extension-r.html"/>
+<script src="libs/header-attrs-2.10/header-attrs.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -52,6 +52,8 @@
 
 
 
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
 
 
 <style type="text/css">
@@ -117,6 +119,29 @@ code span.st { color: #4070a0; } /* String */
 code span.va { color: #19177c; } /* Variable */
 code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
 </style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
@@ -194,22 +219,22 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="5.2.1" data-path="rcbd-r.html"><a href="rcbd-r.html#exponential-1"><i class="fa fa-check"></i><b>5.2.1</b> Exponential</a></li>
 <li class="chapter" data-level="5.2.2" data-path="rcbd-r.html"><a href="rcbd-r.html#spherical-1"><i class="fa fa-check"></i><b>5.2.2</b> Spherical</a></li>
-<li class="chapter" data-level="5.2.3" data-path="rcbd-r.html"><a href="rcbd-r.html#power-1"><i class="fa fa-check"></i><b>5.2.3</b> Power</a></li>
-<li class="chapter" data-level="5.2.4" data-path="rcbd-r.html"><a href="rcbd-r.html#matérn-1"><i class="fa fa-check"></i><b>5.2.4</b> Matérn</a></li>
+<li class="chapter" data-level="5.2.3" data-path="rcbd-r.html"><a href="rcbd-r.html#matérn-1"><i class="fa fa-check"></i><b>5.2.3</b> Matérn</a></li>
 </ul></li>
 <li class="chapter" data-level="5.3" data-path="rcbd-r.html"><a href="rcbd-r.html#rowcolumn-trends"><i class="fa fa-check"></i><b>5.3</b> Row/Column Trends:</a></li>
 <li class="chapter" data-level="5.4" data-path="rcbd-r.html"><a href="rcbd-r.html#splines-1"><i class="fa fa-check"></i><b>5.4</b> Splines</a></li>
-<li class="chapter" data-level="5.5" data-path="rcbd-r.html"><a href="rcbd-r.html#bayesian-ar1xar1"><i class="fa fa-check"></i><b>5.5</b> Bayesian AR1xAR1</a></li>
-<li class="chapter" data-level="5.6" data-path="rcbd-r.html"><a href="rcbd-r.html#model-selection"><i class="fa fa-check"></i><b>5.6</b> Model Selection</a>
+<li class="chapter" data-level="5.5" data-path="rcbd-r.html"><a href="rcbd-r.html#ar1xar1"><i class="fa fa-check"></i><b>5.5</b> AR1xAR1</a></li>
+<li class="chapter" data-level="5.6" data-path="rcbd-r.html"><a href="rcbd-r.html#bayesian-ar1xar1"><i class="fa fa-check"></i><b>5.6</b> Bayesian AR1xAR1</a></li>
+<li class="chapter" data-level="5.7" data-path="rcbd-r.html"><a href="rcbd-r.html#model-selection"><i class="fa fa-check"></i><b>5.7</b> Model Selection</a>
 <ul>
-<li class="chapter" data-level="5.6.1" data-path="rcbd-r.html"><a href="rcbd-r.html#spatial-dependence-of-residuals"><i class="fa fa-check"></i><b>5.6.1</b> Spatial dependence of residuals</a></li>
-<li class="chapter" data-level="5.6.2" data-path="rcbd-r.html"><a href="rcbd-r.html#compare-model-fit"><i class="fa fa-check"></i><b>5.6.2</b> Compare Model Fit</a></li>
-<li class="chapter" data-level="5.6.3" data-path="rcbd-r.html"><a href="rcbd-r.html#experiment-wide-error"><i class="fa fa-check"></i><b>5.6.3</b> Experiment-wide error</a></li>
-<li class="chapter" data-level="5.6.4" data-path="rcbd-r.html"><a href="rcbd-r.html#post-hoc-power"><i class="fa fa-check"></i><b>5.6.4</b> Post-hoc power</a></li>
-<li class="chapter" data-level="5.6.5" data-path="rcbd-r.html"><a href="rcbd-r.html#standard-error-of-treatment-means"><i class="fa fa-check"></i><b>5.6.5</b> Standard error of treatment means</a></li>
-<li class="chapter" data-level="5.6.6" data-path="rcbd-r.html"><a href="rcbd-r.html#treatment-means"><i class="fa fa-check"></i><b>5.6.6</b> Treatment means</a></li>
+<li class="chapter" data-level="5.7.1" data-path="rcbd-r.html"><a href="rcbd-r.html#spatial-dependence-of-residuals"><i class="fa fa-check"></i><b>5.7.1</b> Spatial dependence of residuals</a></li>
+<li class="chapter" data-level="5.7.2" data-path="rcbd-r.html"><a href="rcbd-r.html#compare-model-fit"><i class="fa fa-check"></i><b>5.7.2</b> Compare Model Fit</a></li>
+<li class="chapter" data-level="5.7.3" data-path="rcbd-r.html"><a href="rcbd-r.html#experiment-wide-error"><i class="fa fa-check"></i><b>5.7.3</b> Experiment-wide error</a></li>
+<li class="chapter" data-level="5.7.4" data-path="rcbd-r.html"><a href="rcbd-r.html#post-hoc-power"><i class="fa fa-check"></i><b>5.7.4</b> Post-hoc power</a></li>
+<li class="chapter" data-level="5.7.5" data-path="rcbd-r.html"><a href="rcbd-r.html#standard-error-of-treatment-means"><i class="fa fa-check"></i><b>5.7.5</b> Standard error of treatment means</a></li>
+<li class="chapter" data-level="5.7.6" data-path="rcbd-r.html"><a href="rcbd-r.html#treatment-means"><i class="fa fa-check"></i><b>5.7.6</b> Treatment means</a></li>
 </ul></li>
-<li class="chapter" data-level="5.7" data-path="rcbd-r.html"><a href="rcbd-r.html#making-decisions"><i class="fa fa-check"></i><b>5.7</b> Making decisions</a></li>
+<li class="chapter" data-level="5.8" data-path="rcbd-r.html"><a href="rcbd-r.html#making-decisions"><i class="fa fa-check"></i><b>5.8</b> Making decisions</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="rcbd-sas.html"><a href="rcbd-sas.html"><i class="fa fa-check"></i><b>6</b> RCBD Example: SAS</a>
 <ul>
@@ -222,42 +247,56 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="6.2.1" data-path="rcbd-sas.html"><a href="rcbd-sas.html#examine-the-number-of-distance-pairs-and-maximum-lags-between-residuals"><i class="fa fa-check"></i><b>6.2.1</b> Examine the Number of Distance Pairs and Maximum Lags between Residuals</a></li>
 <li class="chapter" data-level="6.2.2" data-path="rcbd-sas.html"><a href="rcbd-sas.html#compute-morans-i-and-gearys-c."><i class="fa fa-check"></i><b>6.2.2</b> Compute Moran’s I and Geary’s C.</a></li>
 </ul></li>
-<li class="chapter" data-level="6.3" data-path="rcbd-sas.html"><a href="rcbd-sas.html#estimation-and-modeling-of-semivariance"><i class="fa fa-check"></i><b>6.3</b> 4.3 Estimation and Modeling of Semivariance</a>
+<li class="chapter" data-level="6.3" data-path="rcbd-sas.html"><a href="rcbd-sas.html#estimation-and-modeling-of-semivariance"><i class="fa fa-check"></i><b>6.3</b> Estimation and Modeling of Semivariance</a>
 <ul>
-<li class="chapter" data-level="6.3.1" data-path="rcbd-sas.html"><a href="rcbd-sas.html#estimating-empirical-semivariance"><i class="fa fa-check"></i><b>6.3.1</b> 4.3.1 Estimating Empirical Semivariance</a></li>
+<li class="chapter" data-level="6.3.1" data-path="rcbd-sas.html"><a href="rcbd-sas.html#estimating-empirical-semivariance"><i class="fa fa-check"></i><b>6.3.1</b> Estimating Empirical Semivariance</a></li>
 <li class="chapter" data-level="6.3.2" data-path="rcbd-sas.html"><a href="rcbd-sas.html#fitting-an-empirical-variogram-model"><i class="fa fa-check"></i><b>6.3.2</b> Fitting an Empirical Variogram Model</a></li>
 </ul></li>
 <li class="chapter" data-level="6.4" data-path="rcbd-sas.html"><a href="rcbd-sas.html#using-the-estimated-variogram-in-an-adjusted-analysis"><i class="fa fa-check"></i><b>6.4</b> Using the Estimated variogram in an Adjusted Analysis</a>
 <ul>
-<li class="chapter" data-level="6.4.1" data-path="rcbd-sas.html"><a href="rcbd-sas.html#unadjusted-rcbd-model"><i class="fa fa-check"></i><b>6.4.1</b> Unadjusted RCBD Model</a></li>
-<li class="chapter" data-level="6.4.2" data-path="rcbd-sas.html"><a href="rcbd-sas.html#rcbd-model-with-spatial-covariates"><i class="fa fa-check"></i><b>6.4.2</b> RCBD Model with Spatial Covariates</a></li>
+<li class="chapter" data-level="6.4.1" data-path="rcbd-sas.html"><a href="rcbd-sas.html#unadjusted-rcb-model"><i class="fa fa-check"></i><b>6.4.1</b> Unadjusted RCB Model</a></li>
+<li class="chapter" data-level="6.4.2" data-path="rcbd-sas.html"><a href="rcbd-sas.html#rcb-model-with-spatial-covariance"><i class="fa fa-check"></i><b>6.4.2</b> RCB Model with Spatial Covariance</a></li>
+<li class="chapter" data-level="6.4.3" data-path="rcbd-sas.html"><a href="rcbd-sas.html#other-spatial-adjustments"><i class="fa fa-check"></i><b>6.4.3</b> Other Spatial Adjustments</a></li>
 </ul></li>
 <li class="chapter" data-level="6.5" data-path="rcbd-sas.html"><a href="rcbd-sas.html#compare-estimated-means"><i class="fa fa-check"></i><b>6.5</b> Compare Estimated Means</a></li>
 </ul></li>
-<li class="chapter" data-level="7" data-path="model-extension.html"><a href="model-extension.html"><i class="fa fa-check"></i><b>7</b> Other Models</a>
+<li class="chapter" data-level="7" data-path="model-extension-r.html"><a href="model-extension-r.html"><i class="fa fa-check"></i><b>7</b> Other Models - R</a>
 <ul>
-<li class="chapter" data-level="7.1" data-path="model-extension.html"><a href="model-extension.html#other-experimental-designs"><i class="fa fa-check"></i><b>7.1</b> Other Experimental Designs</a>
+<li class="chapter" data-level="7.1" data-path="model-extension-r.html"><a href="model-extension-r.html#other-experimental-and-treatment-designs"><i class="fa fa-check"></i><b>7.1</b> Other Experimental and Treatment Designs</a>
 <ul>
-<li class="chapter" data-level="7.1.1" data-path="model-extension.html"><a href="model-extension.html#factorials-rcbd"><i class="fa fa-check"></i><b>7.1.1</b> 2+ Factorials (RCBD)</a></li>
-<li class="chapter" data-level="7.1.2" data-path="model-extension.html"><a href="model-extension.html#alpha-lattice"><i class="fa fa-check"></i><b>7.1.2</b> Alpha lattice</a></li>
-<li class="chapter" data-level="7.1.3" data-path="model-extension.html"><a href="model-extension.html#latin-square"><i class="fa fa-check"></i><b>7.1.3</b> Latin square</a></li>
-<li class="chapter" data-level="7.1.4" data-path="model-extension.html"><a href="model-extension.html#augmented"><i class="fa fa-check"></i><b>7.1.4</b> Augmented</a></li>
-<li class="chapter" data-level="7.1.5" data-path="model-extension.html"><a href="model-extension.html#split-plot"><i class="fa fa-check"></i><b>7.1.5</b> Split plot</a></li>
-<li class="chapter" data-level="7.1.6" data-path="model-extension.html"><a href="model-extension.html#split-split-plot"><i class="fa fa-check"></i><b>7.1.6</b> Split-split plot</a></li>
-<li class="chapter" data-level="7.1.7" data-path="model-extension.html"><a href="model-extension.html#split-block"><i class="fa fa-check"></i><b>7.1.7</b> Split block</a></li>
-</ul></li>
-<li class="chapter" data-level="7.2" data-path="model-extension.html"><a href="model-extension.html#traits-with-non-gaussian-distributions"><i class="fa fa-check"></i><b>7.2</b> Traits with non-gaussian distributions</a>
-<ul>
-<li class="chapter" data-level="7.2.1" data-path="model-extension.html"><a href="model-extension.html#count-traits"><i class="fa fa-check"></i><b>7.2.1</b> Count traits:</a></li>
-<li class="chapter" data-level="7.2.2" data-path="model-extension.html"><a href="model-extension.html#percent-traits"><i class="fa fa-check"></i><b>7.2.2</b> Percent traits</a></li>
-<li class="chapter" data-level="7.2.3" data-path="model-extension.html"><a href="model-extension.html#ordinal-traits"><i class="fa fa-check"></i><b>7.2.3</b> Ordinal traits</a></li>
-<li class="chapter" data-level="7.2.4" data-path="model-extension.html"><a href="model-extension.html#binomial-traits"><i class="fa fa-check"></i><b>7.2.4</b> Binomial traits</a></li>
+<li class="chapter" data-level="7.1.1" data-path="model-extension-r.html"><a href="model-extension-r.html#completely-randomized-design"><i class="fa fa-check"></i><b>7.1.1</b> Completely randomized design</a></li>
+<li class="chapter" data-level="7.1.2" data-path="model-extension-r.html"><a href="model-extension-r.html#multi-way-factorials"><i class="fa fa-check"></i><b>7.1.2</b> Multi-way Factorials</a></li>
+<li class="chapter" data-level="7.1.3" data-path="model-extension-r.html"><a href="model-extension-r.html#alpha-lattice"><i class="fa fa-check"></i><b>7.1.3</b> Alpha lattice</a></li>
+<li class="chapter" data-level="7.1.4" data-path="model-extension-r.html"><a href="model-extension-r.html#latin-square"><i class="fa fa-check"></i><b>7.1.4</b> Latin square</a></li>
+<li class="chapter" data-level="7.1.5" data-path="model-extension-r.html"><a href="model-extension-r.html#split-plot"><i class="fa fa-check"></i><b>7.1.5</b> Split plot</a></li>
+<li class="chapter" data-level="7.1.6" data-path="model-extension-r.html"><a href="model-extension-r.html#split-split-plot"><i class="fa fa-check"></i><b>7.1.6</b> Split-split plot</a></li>
+<li class="chapter" data-level="7.1.7" data-path="model-extension-r.html"><a href="model-extension-r.html#split-block"><i class="fa fa-check"></i><b>7.1.7</b> Split block</a></li>
+<li class="chapter" data-level="7.1.8" data-path="model-extension-r.html"><a href="model-extension-r.html#augmented"><i class="fa fa-check"></i><b>7.1.8</b> Augmented</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="8" data-path="the-end.html"><a href="the-end.html"><i class="fa fa-check"></i><b>8</b> Conclusion</a>
+<li class="chapter" data-level="8" data-path="model-extension-sas.html"><a href="model-extension-sas.html"><i class="fa fa-check"></i><b>8</b> Other Models - SAS</a>
 <ul>
-<li class="chapter" data-level="8.1" data-path="the-end.html"><a href="the-end.html#other-packages"><i class="fa fa-check"></i><b>8.1</b> Other packages</a></li>
-<li class="chapter" data-level="8.2" data-path="the-end.html"><a href="the-end.html#final-recommendations"><i class="fa fa-check"></i><b>8.2</b> Final recommendations</a></li>
+<li class="chapter" data-level="8.1" data-path="model-extension-sas.html"><a href="model-extension-sas.html#other-experimental-and-treatment-designs-1"><i class="fa fa-check"></i><b>8.1</b> Other Experimental and Treatment Designs</a>
+<ul>
+<li class="chapter" data-level="8.1.1" data-path="model-extension-sas.html"><a href="model-extension-sas.html#completely-randomized-design-crd"><i class="fa fa-check"></i><b>8.1.1</b> Completely randomized design (CRD)</a></li>
+<li class="chapter" data-level="8.1.2" data-path="model-extension-sas.html"><a href="model-extension-sas.html#multi-way-factorials-1"><i class="fa fa-check"></i><b>8.1.2</b> Multi-way Factorials</a></li>
+<li class="chapter" data-level="8.1.3" data-path="model-extension-sas.html"><a href="model-extension-sas.html#alpha-lattice-1"><i class="fa fa-check"></i><b>8.1.3</b> Alpha lattice</a></li>
+<li class="chapter" data-level="8.1.4" data-path="model-extension-sas.html"><a href="model-extension-sas.html#latin-square-1"><i class="fa fa-check"></i><b>8.1.4</b> Latin square</a></li>
+<li class="chapter" data-level="8.1.5" data-path="model-extension-sas.html"><a href="model-extension-sas.html#split-plot-1"><i class="fa fa-check"></i><b>8.1.5</b> Split plot</a></li>
+<li class="chapter" data-level="8.1.6" data-path="model-extension-sas.html"><a href="model-extension-sas.html#split-split-plot-1"><i class="fa fa-check"></i><b>8.1.6</b> Split-split plot</a></li>
+<li class="chapter" data-level="8.1.7" data-path="model-extension-sas.html"><a href="model-extension-sas.html#split-block-1"><i class="fa fa-check"></i><b>8.1.7</b> Split block</a></li>
+<li class="chapter" data-level="8.1.8" data-path="model-extension-sas.html"><a href="model-extension-sas.html#augmented-1"><i class="fa fa-check"></i><b>8.1.8</b> Augmented</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="the-end.html"><a href="the-end.html"><i class="fa fa-check"></i><b>9</b> Conclusion</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="the-end.html"><a href="the-end.html#other-packages"><i class="fa fa-check"></i><b>9.1</b> Other packages</a></li>
+<li class="chapter" data-level="9.2" data-path="the-end.html"><a href="the-end.html#final-recommendations"><i class="fa fa-check"></i><b>9.2</b> Final recommendations</a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="flotsam-jetsam.html"><a href="flotsam-jetsam.html"><i class="fa fa-check"></i><b>10</b> Flotsam &amp; Jetsam</a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="flotsam-jetsam.html"><a href="flotsam-jetsam.html#r-session-info"><i class="fa fa-check"></i><b>10.1</b> R Session Info</a></li>
+<li class="chapter" data-level="10.2" data-path="flotsam-jetsam.html"><a href="flotsam-jetsam.html#references"><i class="fa fa-check"></i><b>10.2</b> References</a></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -283,8 +322,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h1><span class="header-section-number">Section 6</span> RCBD Example: SAS</h1>
 <div id="load-and-explore-data" class="section level2" number="6.1">
 <h2><span class="header-section-number">6.1</span> Load and Explore Data</h2>
-<p>These data are from a winter wheat variety trial in Alliance, Nebraska <span class="citation">(<a href="the-end.html#ref-stroup1994" role="doc-biblioref">Stroup, Baenziger, and Mulitze 1994</a>)</span> and are commonly used to demonstrate spatial adjustment in linear modeling. The data represent yields of 56 varieties originally layed out in a randomized complete block design (RCB). The local topography combined with winter kill, however, induced spatial variability that did not correspond to the RCB design <span class="citation">(<a href="the-end.html#ref-stroup2013" role="doc-biblioref">Stroup 2013</a>)</span> which produced biased estimates in a standard unadjusted analysis. <br><br></p>
-<p>The code below reads the data from a CSV file where missing values for yield are denoted as ‘NA.’ These values are not actually missing, but represent blank plots in the original design of the study. The <strong>PROC FORMAT</strong> section converts these to numeric missing values in SAS (defined as a single period). They are then removed from the data before proceeding to analyses. Also note that row and column indices are multiplied by constants to convert them to the meter dimensions of the plots. This CSV data file can be downloaded <a href="https://raw.githubusercontent.com/IdahoAgStats/guide-to-field-trial-spatial-analysis/master/data/Stroup_NIN_wheat.csv">here</a> <br><br></p>
+<p>These data are from a winter wheat variety trial in Alliance, Nebraska <span class="citation">(<a href="#ref-stroup1994" role="doc-biblioref">Stroup, Baenziger, and Mulitze 1994</a>)</span> and are commonly used to demonstrate spatial adjustment in linear modeling. The data represent yields of 56 varieties originally layed out in a randomized complete block design (RCB). The local topography combined with winter kill, however, induced spatial variability that did not correspond to the RCB design <span class="citation">(<a href="#ref-stroup2013" role="doc-biblioref">Stroup 2013</a>)</span> which produced biased estimates in a standard unadjusted analysis. <br><br></p>
+<p>The code below reads the data from a CSV file where missing values for yield are denoted as ‘NA.’ These values are not actually missing, but represent blank plots in the original design of the study. The <strong>PROC FORMAT</strong> section converts these to numeric missing values in SAS (defined as a single period). They are then removed from the data before proceeding to analyses. Also note that row and column indices are multiplied by constants to convert them to the meter dimensions of the plots. This CSV data file can be downloaded <a href="https://raw.githubusercontent.com/IdahoAgStats/guide-to-field-trial-spatial-analysis/master/data/stroup_nin_wheat.csv">here</a>. <br><br></p>
 <p>The first six observations are displayed. The data contains variables for variety (gen), replication (rep), yield, and column and row identifiers.<br><br> Last, a map of the 4 replications (blocks) from the original experimental design is shown.</p>
 <pre class="sashtml"><code>proc format;
   invalue has_NA
@@ -292,7 +331,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ;
 
  data alliance;
-    infile &#39;.\data\Stroup_NIN_wheat.csv&#39; firstobs=2 delimiter=&#39;,&#39;;
+    infile &#39;.\data\stroup_nin_wheat.csv&#39; firstobs=2 delimiter=&#39;,&#39;;
     informat yield has_NA.;
     input entry $   rep $   yield   col row;
     Row  = 4.3*Row;
@@ -307,7 +346,7 @@ run;
 ODS html GPATH = &quot;.\img\&quot; ;
 
 proc sgplot data=alliance;
-    styleattrs datacolors=(red  blue green yellow) datalinepatterns=(solid dash);
+    styleattrs datacolors=(cx28D400 cx00D4C8 cx0055D4 cxB400D4) datalinepatterns=(solid dash);
     HEATMAPPARM y=row x=col COLORgroup=rep/ outline; 
 title1 &#39;Layout of Blocks&#39;;
 run;</code></pre>
@@ -493,7 +532,7 @@ R1
 <a name="IDX1"></a>
 <div>
 <div class="c">
-<p><img alt="The SGPlot Procedure" src="img/SAS1.png" style=" height: 480px; width: 640px;" border="0" class="c"></p>
+<p><img alt="The SGPlot Procedure" src="img/SAS6_1.png" style=" height: 480px; width: 640px;" border="0" class="c"></p>
 </div>
 </div>
 <br>
@@ -522,7 +561,7 @@ run;</code></pre>
 <a name="IDX1"></a>
 <div>
 <div class="c">
-<p><img alt="The SGPlot Procedure" src="img/SAS2.png" style=" height: 480px; width: 640px;" border="0" class="c"></p>
+<p><img alt="The SGPlot Procedure" src="img/SAS6_2.png" style=" height: 480px; width: 640px;" border="0" class="c"></p>
 </div>
 </div>
 <p><br></p>
@@ -535,7 +574,7 @@ run;</code></pre>
 <a name="IDX2"></a>
 <div>
 <div class="c">
-<p><img alt="The SGPlot Procedure" src="img/SAS21.png" style=" height: 480px; width: 640px;" border="0" class="c"></p>
+<p><img alt="The SGPlot Procedure" src="img/SAS6_21.png" style=" height: 480px; width: 640px;" border="0" class="c"></p>
 </div>
 </div>
 <br>
@@ -548,7 +587,7 @@ run;</code></pre>
 <a name="IDX3"></a>
 <div>
 <div class="c">
-<p><img alt="The SGPlot Procedure" src="img/SAS22.png" style=" height: 480px; width: 640px;" border="0" class="c"></p>
+<p><img alt="The SGPlot Procedure" src="img/SAS6_22.png" style=" height: 480px; width: 640px;" border="0" class="c"></p>
 </div>
 </div>
 <br>
@@ -561,12 +600,12 @@ run;</code></pre>
 <a name="IDX4"></a>
 <div>
 <div class="c">
-<p><img alt="The SGPlot Procedure" src="img/SAS23.png" style=" height: 480px; width: 640px;" border="0" class="c"></p>
+<p><img alt="The SGPlot Procedure" src="img/SAS6_23.png" style=" height: 480px; width: 640px;" border="0" class="c"></p>
 </div>
 </div>
 <br>
 </div>
-<p>In the heat map, there is a notable region where yield dips in the north west corner of the study area. This area runs across the two top most blocks and is positioned towards their ends, making those blocks non-homogeneous. As Stroup <span class="citation">(<a href="the-end.html#ref-stroup2013" role="doc-biblioref">Stroup 2013</a>)</span> notes, this is due to a hilly area with low snow cover and high exposure to low winter temperatures. The box plots demonstrate this pattern across blocks, columns, and rows as well. From these initial graphics, it is clear there is discernible spatial patterns and trends present.<br><br></p>
+<p>In the heat map, there is a notable region where yield dips in the north west corner of the study area. This area runs across the two top most blocks and is positioned towards their ends, making those blocks non-homogeneous. As Stroup <span class="citation">(<a href="#ref-stroup2013" role="doc-biblioref">Stroup 2013</a>)</span> notes, this is due to a hilly area with low snow cover and high exposure to low winter temperatures. The box plots demonstrate this pattern across blocks, columns, and rows as well. From these initial graphics, it is clear there are discernible spatial patterns and trends present.<br><br></p>
 </div>
 </div>
 <div id="estimating-and-testing-spatial-correlation" class="section level2" number="6.2">
@@ -582,7 +621,7 @@ proc mixed data=alliance;
    random Rep;
 run;
 ods html;</code></pre>
-<p>Examining and estimating spatial variability typically proceeds in several steps. In SAS, these can all be accomplished using <strong>PROC VARIOGRAM</strong>. In this first step, we summarize the potential distances (lags) between row/column positions. The <strong>nhclasses</strong> option sets a value for the number of lag classes or bins to try. Some trial and error here may be necessary to find a good setting, however, this value should be big enough to cover the range of possible distances between data row and column coordinates. Setting this to 40 was found to be a reasonable value here. The <strong>novariogram</strong> option tells SAS to only look at these distances and not compute the empirical semivariance values yet.<br><br></p>
+<p>Examining and estimating spatial variability typically proceeds in several steps. In SAS, these can all be accomplished using <strong>PROC VARIOGRAM</strong>. In this first step, we summarize the potential distances (lags) between row/column positions. The <strong>nhclasses</strong> option sets a value for the number of lag classes or bins to try. Some trial and error here may be necessary in order to find a good setting, however, this value should be big enough to cover the range of possible distances between data row and column coordinates. Setting this initially to 40 was found to be a reasonable choice here. The <strong>novariogram</strong> option tells SAS to only look at these distances and not compute the empirical semivariance values yet.<br><br></p>
 <pre class="sashtml"><code>
 /* Examine lag distance &amp; maxlag */
 ODS html GPATH = &quot;.\img\&quot; ;
@@ -632,7 +671,7 @@ Number of Observations Used
 <a name="IDX1"></a>
 <div>
 <div class="c">
-<p><img alt="Spatial Distribution of Resid Observations" src="img/SAS4.png" style=" height: 480px; width: 640px;" border="0" class="c"></p>
+<p><img alt="Spatial Distribution of Resid Observations" src="img/SAS6_4.png" style=" height: 480px; width: 640px;" border="0" class="c"></p>
 </div>
 </div>
 <br>
@@ -1439,7 +1478,7 @@ Percentage<br/>of Pairs
 <a name="IDX4"></a>
 <div>
 <div class="c">
-<p><img alt="Distribution of Pairwise Distance for Resid" src="img/SAS41.png" style=" height: 480px; width: 640px;" border="0" class="c"></p>
+<p><img alt="Distribution of Pairwise Distance for Resid" src="img/SAS6_41.png" style=" height: 480px; width: 640px;" border="0" class="c"></p>
 </div>
 </div>
 <br>
@@ -1448,7 +1487,7 @@ Percentage<br/>of Pairs
 </div>
 <div id="compute-morans-i-and-gearys-c." class="section level3" number="6.2.2">
 <h3><span class="header-section-number">6.2.2</span> Compute Moran’s I and Geary’s C.</h3>
-<p>Two common metrics of spatial correlation are Moran’s I and Geary’s C. Both these measures are essentially weighted correlations between pairs of observations and measure global and local variability, respectively. If no spatial correlation is present, Moran’s I has an expected value close to 0.0 while Geary’s C will be close to 1.0. The estimates for I and C can be computed and tested against these null values with the <strong>PROC VARIOGRAM</strong> code below. <br><br></p>
+<p>Two common metrics of spatial correlation are Moran’s I and Geary’s c. Both these measures are essentially weighted correlations between pairs of observations and measure global and local variability, respectively. If no spatial correlation is present, Moran’s I has an expected value close to 0.0 while Geary’s C will be close to 1.0. The estimates for I and C can be computed and tested against these null values with the <strong>PROC VARIOGRAM</strong> code below. <br><br></p>
 <pre class="sashtml"><code>ODS html GPATH = &quot;.\img\&quot; ;
 
 proc variogram data=residuals plots(only)=moran ;
@@ -1883,7 +1922,7 @@ Geary's c
 <a name="IDX4"></a>
 <div>
 <div class="c">
-<p><img alt="Moran Scatter Plot for Resid" src="img/SAS5.png" style=" height: 480px; width: 640px;" border="0" class="c"></p>
+<p><img alt="Moran Scatter Plot for Resid" src="img/SAS6_5.png" style=" height: 480px; width: 640px;" border="0" class="c"></p>
 </div>
 </div>
 <br>
@@ -1892,10 +1931,10 @@ Geary's c
 </div>
 </div>
 <div id="estimation-and-modeling-of-semivariance" class="section level2" number="6.3">
-<h2><span class="header-section-number">6.3</span> 4.3 Estimation and Modeling of Semivariance</h2>
+<h2><span class="header-section-number">6.3</span> Estimation and Modeling of Semivariance</h2>
 <div id="estimating-empirical-semivariance" class="section level3" number="6.3.1">
-<h3><span class="header-section-number">6.3.1</span> 4.3.1 Estimating Empirical Semivariance</h3>
-<p>Using the lag bdistance and maximum lag values obtained in the previous steps, we can now estimate an empirical variogram (via the <strong>compute</strong> statement) as described in Section 2.</p>
+<h3><span class="header-section-number">6.3.1</span> Estimating Empirical Semivariance</h3>
+<p>Using the lag distance and maximum lag values obtained in the previous steps, we can now use the <strong>compute</strong> statement to estimate an empirical variogram as described in Section <a href="intro.html#intro">2</a></p>
 <pre class="sashtml"><code>ODS html GPATH = &quot;.\img\&quot; ;
 
 proc variogram data=residuals plots(only)=(semivar);
@@ -2434,7 +2473,7 @@ Dependent Variable: Resid
 <p>
 <div>
 <div class="c">
-<p><img alt="Empirical Semivariogram Plot for Resid" src="img/SAS6.png" style=" height: 480px; width: 640px;" border="0" class="c"></p>
+<p><img alt="Empirical Semivariogram Plot for Resid" src="img/SAS6_6.png" style=" height: 480px; width: 640px;" border="0" class="c"></p>
 </div>
 </div>
 <br>
@@ -2443,7 +2482,7 @@ Dependent Variable: Resid
 </div>
 <div id="fitting-an-empirical-variogram-model" class="section level3" number="6.3.2">
 <h3><span class="header-section-number">6.3.2</span> Fitting an Empirical Variogram Model</h3>
-<p>In Section <a href="background.html#background">3</a>, several theoretical variogram models were described. We can use <strong>PROC VARIOGRAM</strong> to fit and compare any number of these models. In the code below, the Gaussian, Exponential, Power, and Spherical models are fit using the <strong>model</strong> statement. SAS, by default, will carry out a more sophisticated spatial modeling approach, not covered here, that uses combinations of these models. We, however, just want to focus on single model scenarios. Hence, the <strong>nest=1</strong> option is given which restricts the variogram modeling to single models only.<br><br></p>
+<p>In Section <a href="background.html#background">3</a>, several theoretical variogram models were described. We can use <strong>PROC VARIOGRAM</strong> to fit and compare any number of these models. In the code below, the Gaussian, Exponential, Power, and Spherical models are fit using the <strong>model</strong> statement. By default when several models are listed, SAS will carry out a more sophisticated spatial modeling approach that uses combinations of these models. We, however, just want to focus on single model scenarios. Hence, the <strong>nest=1</strong> option is given which restricts the variogram modeling to single models only.<br><br></p>
 <pre class="sashtml"><code>ODS html GPATH = &quot;.\img\&quot; ;
 
 proc variogram data=residuals plots(only)=(fitplot);
@@ -3388,23 +3427,23 @@ Dependent Variable: Resid
 <p>
 <div>
 <div class="c">
-<p><img alt="WLS Fitted Semivariograms Plot for Resid" src="img/SAS7.png" style=" height: 480px; width: 640px;" border="0" class="c"></p>
+<p><img alt="WLS Fitted Semivariograms Plot for Resid" src="img/SAS6_7.png" style=" height: 480px; width: 640px;" border="0" class="c"></p>
 </div>
 </div>
 <br>
 </div>
-<p>The table <strong>Fit Summary</strong> provides statistics on each variogram model fit. The AIC statistic can be used as a guide where smaller values indicate a better fit. For this data, the Gaussian model is rated as “best,” although the Spherical model is practically indistinguishable. Given the numerically lower AIC value, however, <strong>PROC VARIOGRAM</strong> selects the Gaussian model and reports the model parameter estimates in the final table. These parameter estimates will be used in the next step. The plot shown at the end shows how well each variogram model fits the binned semivariance values.<br><br></p>
+<p>The table <strong>Fit Summary</strong> provides statistics on each variogram model fit. The AIC or SSE statistics can be used as a guide for model selection where smaller values indicate a better fit. For this data, the Gaussian model is rated as “best,” although the Spherical model is relatively similar. Given the numerically lower AIC and SSE values, however, <strong>PROC VARIOGRAM</strong> selects the Gaussian model and reports those semivariogram model parameter estimates in the final table. These parameter estimates will be used in the next step. The plot shown at the end provides a visual comparison each variogram model fit with the selected Gaussian model highlighted in bold.<br><br></p>
 </div>
 </div>
 <div id="using-the-estimated-variogram-in-an-adjusted-analysis" class="section level2" number="6.4">
 <h2><span class="header-section-number">6.4</span> Using the Estimated variogram in an Adjusted Analysis</h2>
 <p>The previous steps have:<br>
 1. Diagnosed the presence and pattern of spatial variability.<br>
-1. Identified and estimated the a model to describe the variability<br></p>
+2. Identified and estimated the a model to describe the variability<br></p>
 <p>The last step is to utilize this information in a statistical analysis as outlined at the beginning of Section <a href="background.html#background">3</a>. To do this, the linear mixed model procedure <strong>PROC MIXED</strong> will be used to incorporate the spatial variability into the linear model variance-covariance matrix, assuming the variogram model identified above.<br></p>
-<p>As an intial step, for comparison purposes, the unadjusted RCB model is run first and the means saved in data set “NIN_RCBD_means.”<br><br></p>
-<div id="unadjusted-rcbd-model" class="section level3" number="6.4.1">
-<h3><span class="header-section-number">6.4.1</span> Unadjusted RCBD Model</h3>
+<p>As an initial step, for comparison purposes, the unadjusted RCB model is run first and the means saved in data set “NIN_RCBD_means.”<br><br></p>
+<div id="unadjusted-rcb-model" class="section level3" number="6.4.1">
+<h3><span class="header-section-number">6.4.1</span> Unadjusted RCB Model</h3>
 <pre class="sashtml"><code>
 /** Fit unadjusted RCBD model **/
 ODS html GPATH = &quot;.\img\&quot; ;
@@ -5784,11 +5823,11 @@ Vona
 </div>
 <br>
 </div>
-<p>The F-statistic and accompanying large p-value for ‘gen’ indicate no differences between genotypes. This is surprising for a variety trial. The fit statistics (e.g. AIC) are helpful for model comparison. Although On their own, these metrics do not have much meaning. The AIC value for this standard RCBD analysis is 1221.7; let’s compare that number to that for the spatially-adjusted models (in the case of AIC, smaller numbers indicate a better fitting model). Another point of comparison he standard error of the means is 3.8557.<br></p>
-<p>The next step is to try a spatially-adjusted model. This is done by adding a <strong>repeated</strong> statement specifying the spatial model form (Gaussian, <strong>type=sp(gau)</strong>) and the variables related to position in the study (row, col). The <strong>local</strong> option tells SAS to use a nugget parameter in the Gaussian variogram model. The second additional statement is <strong>parms</strong>. This gives SAS a starting place for estimating the range, sill, and nugget parameters. The values given here are taken from the <strong>PROC VARIOGRAM</strong> output above. While this step can be omitted, it is recommended not to do so because, on its own, <strong>PROC MIXED</strong> can often have trouble narrowing in on reasonable parameter estimates. One reason for the preceding variogram steps is to obtain these parameter values so <strong>PROC MIXED</strong> has a good starting place for estimation. As before, the estimated means (adjusted now) are saved, this time in data set “NIN_Spatial_means.”<br></p>
+<p>The F-statistic and accompanying large p-value for ‘gen’ indicate no differences between genotypes. This is surprising for a variety trial. The fit statistics (e.g. AIC) are helpful for model comparison, although on their own, these metrics do not have much meaning. The AIC value for this standard RCB analysis is 1221.7; let’s compare that number to that for the spatially-adjusted models (in the case of AIC, smaller numbers indicate a better fitting model). Another point of comparison is the standard error of the means: 3.8557.<br></p>
+<p>The next step is to try a spatially-adjusted model. This is done by adding a <strong>repeated</strong> statement specifying the spatial model form (Gaussian, <strong>type=sp(gau)</strong>) and the variables related to spatial positions in the study (row, col). The <strong>local</strong> option tells SAS to use a nugget parameter in the Gaussian variogram model. The second additional statement is <strong>parms</strong>. This gives SAS a starting place for estimating the range, sill, and nugget parameters. The values given here are taken from the <strong>PROC VARIOGRAM</strong> output above. While this step can be omitted, it is recommended not to do so because, on its own, <strong>PROC MIXED</strong> can often have trouble narrowing in on reasonable parameter estimates. One reason for the preceding variogram steps was to obtain these parameter values so <strong>PROC MIXED</strong> has a good starting place for estimation. As before, the estimated means (adjusted now) are saved, this time in data set “NIN_Spatial_means.”<br></p>
 </div>
-<div id="rcbd-model-with-spatial-covariates" class="section level3" number="6.4.2">
-<h3><span class="header-section-number">6.4.2</span> RCBD Model with Spatial Covariates</h3>
+<div id="rcb-model-with-spatial-covariance" class="section level3" number="6.4.2">
+<h3><span class="header-section-number">6.4.2</span> RCB Model with Spatial Covariance</h3>
 <pre class="sashtml"><code>
 /** Fit Gaussian adjusted model **/
 /** Parms statement order: Range, Sill, Nugget **/
@@ -8374,26 +8413,69 @@ Vona
 <br>
 </div>
 <p>From this output, we see the AIC value is now 1073.1. This is substantially lower than the AIC=1221.7 from the unadjusted model indicating a better model fit. Additionally, the gen effect in the model now has a low p-value (p=0.0024) giving evidence for differences among genotypes where we did not see them previously. Lastly, the standard errors for the means are now lower than those of the unadjusted model indicating an increased precision in mean estimation.<br></p>
-<p>Presence of spatial variability can also bias the mean estimates. In this data, this would result in the means ranking incorrectly relative to one another under the unadjusted model. The steps below combine the saved means from the unadjusted and adjusted data sets so that we can see how the ranking changes.<br><br></p>
+</div>
+<div id="other-spatial-adjustments" class="section level3" number="6.4.3">
+<h3><span class="header-section-number">6.4.3</span> Other Spatial Adjustments</h3>
+<div id="rcb-model-with-row-and-column-covariates" class="section level4" number="6.4.3.1">
+<h4><span class="header-section-number">6.4.3.1</span> RCB Model with Row and Column Covariates</h4>
+<p>Spatial variability might also be addressed by including covariates in the model for row and/or column trends. The following script fits this model where rows and columns enter the model as continuous effects (not in the class statement).</p>
+<pre class="sashtml"><code>
+/** Row column model **/
+ods html close;
+
+proc mixed data=alliance ;
+    class entry rep;
+    model yield = entry  row col/ddfm=kr;
+    random rep;
+    lsmeans entry/cl;
+    ods output LSMeans=NIN_row_col_means;
+    title1 &#39;NIN data: RCBD&#39;;
+run;
+ods html;
+</code></pre>
+</div>
+<div id="rcb-with-spline-adjustment" class="section level4" number="6.4.3.2">
+<h4><span class="header-section-number">6.4.3.2</span> RCB with Spline Adjustment</h4>
+<p>Polynomial splines are an additional method for spatial adjustment and represent a more non-parametric method that does not rely on estimation or modeling of variograms. Instead, it uses the raw data and residuals to fit a surface to the spatial data and adjust the variance covariance matrix accordingly. <strong>PROC MIXED</strong>, however, does not have an option for this, so the code below moves to <strong>PROC GLIMMIX</strong>, the generalized Linear Mixed Model procedure in SAS. The syntax for the two procedures are very similar, so, in this example adapted from <span class="citation">(<a href="#ref-stroup2013" role="doc-biblioref">Stroup 2013</a>)</span>, only a few changes are required. First, a random statement is added for rows and columns with a “type=rsmooth” option. This fits a spline to the residuals over the row and column axes of the study area. Second, an “effect” statement is given defining a new covariate, sm_r, which is a splined surface for raw yields over the study area. When entered into the model as a continuous covariate, this centers the data such that the resulting model residuals will have a mean of zero.</p>
+<pre class="sashtml"><code>
+ods html close;
+/** Fit  RCBD model with Spline **/
+
+proc glimmix data=alliance ;
+    class entry rep;
+    effect sp_r = spline(row col);
+    model yield = entry  sp_r/ddfm=kr;
+    random row col/type=rsmooth;
+    lsmeans entry/cl;
+    ods output LSMeans=NIN_smooth_means;
+    title1 &#39;NIN data: RCBD&#39;;
+run;
+
+ods html;
+</code></pre>
+</div>
 </div>
 </div>
 <div id="compare-estimated-means" class="section level2" number="6.5">
 <h2><span class="header-section-number">6.5</span> Compare Estimated Means</h2>
+<p>Presence of spatial variability can also bias the mean estimates. In this data, this would result in the means ranking incorrectly relative to one another under the unadjusted model. The steps below combine the saved means from the unadjusted and spatially adjusted models above so that we can see how the ranking changes.<br><br></p>
 <pre class="sashtml"><code>
 data NIN_RCBD_means (drop=tvalue probt alpha estimate stderr lower upper df);
     set NIN_RCBD_means;
-    RCBD_estimate = estimate;
-    RCBD_stderr = stderr;
+    RCB_est = estimate;
+    RCB_se = stderr;
 run;
+
 data NIN_Spatial_means (drop=tvalue probt alpha estimate stderr lower upper df);
     set NIN_Spatial_means;
-    Spatial_estimate = estimate;
-    Spatial_stderr = stderr;
+    Sp_est = estimate;
+    Sp_se = stderr;
 run;
 
 proc sort data=NIN_RCBD_means;
     by entry;
 run;
+
 proc sort data=NIN_Spatial_means;
     by entry;
 run;
@@ -8404,19 +8486,19 @@ data compare;
 run;
 
 proc rank data=compare out=compare descending;
-    var RCBD_estimate Spatial_estimate;
-    ranks RCBD_Rank Spatial_Rank;
+    var RCB_est Sp_est;
+    ranks RCB_Rank Sp_Rank;
 run;
 
 proc sort data=compare;
-    by  Spatial_rank;
+    by  Sp_rank;
 run;
 
-proc print data=compare;
-    var entry rcbd_estimate Spatial_estimate rcbd_rank spatial_rank;
+proc print data=compare(obs=15);
+    var entry rcb_est Sp_est rcb_se sp_se rcb_rank sp_rank;
 run;</code></pre>
 <div class="branch">
-<a name="IDX22"></a>
+<a name="IDX"></a>
 <div>
 <div align="center">
 <!--BEGINTABLE-->
@@ -8425,6 +8507,8 @@ run;</code></pre>
 <col>
 </colgroup>
 <colgroup>
+<col>
+<col>
 <col>
 <col>
 <col>
@@ -8440,16 +8524,22 @@ Obs
 entry
 </th>
 <th class="r header" scope="col">
-RCBD_estimate
+RCB_est
 </th>
 <th class="r header" scope="col">
-Spatial_estimate
+Sp_est
 </th>
 <th class="r header" scope="col">
-RCBD_Rank
+RCB_se
 </th>
 <th class="r header" scope="col">
-Spatial_Rank
+Sp_se
+</th>
+<th class="r header" scope="col">
+RCB_Rank
+</th>
+<th class="r header" scope="col">
+Sp_Rank
 </th>
 </tr>
 </thead>
@@ -8466,6 +8556,12 @@ Buckskin
 </td>
 <td class="r data">
 35.6362
+</td>
+<td class="r data">
+3.85569
+</td>
+<td class="r data">
+3.33413
 </td>
 <td class="r data">
 28
@@ -8488,6 +8584,12 @@ NE83498
 29.7725
 </td>
 <td class="r data">
+3.85569
+</td>
+<td class="r data">
+3.30417
+</td>
+<td class="r data">
 6
 </td>
 <td class="r data">
@@ -8506,6 +8608,12 @@ NE87619
 </td>
 <td class="r data">
 29.3455
+</td>
+<td class="r data">
+3.85569
+</td>
+<td class="r data">
+3.29042
 </td>
 <td class="r data">
 2
@@ -8528,6 +8636,12 @@ NE87612
 28.9563
 </td>
 <td class="r data">
+3.85569
+</td>
+<td class="r data">
+3.28084
+</td>
+<td class="r data">
 45
 </td>
 <td class="r data">
@@ -8546,6 +8660,12 @@ NE85556
 </td>
 <td class="r data">
 28.6144
+</td>
+<td class="r data">
+3.85569
+</td>
+<td class="r data">
+3.28870
 </td>
 <td class="r data">
 23
@@ -8568,6 +8688,12 @@ NE87613
 28.2664
 </td>
 <td class="r data">
+3.85569
+</td>
+<td class="r data">
+3.30377
+</td>
+<td class="r data">
 10
 </td>
 <td class="r data">
@@ -8586,6 +8712,12 @@ Redland
 </td>
 <td class="r data">
 28.2315
+</td>
+<td class="r data">
+3.85569
+</td>
+<td class="r data">
+3.26531
 </td>
 <td class="r data">
 4
@@ -8608,6 +8740,12 @@ NE86606
 28.0865
 </td>
 <td class="r data">
+3.85569
+</td>
+<td class="r data">
+3.32212
+</td>
+<td class="r data">
 8
 </td>
 <td class="r data">
@@ -8626,6 +8764,12 @@ NE86503
 </td>
 <td class="r data">
 27.8735
+</td>
+<td class="r data">
+3.85569
+</td>
+<td class="r data">
+3.31941
 </td>
 <td class="r data">
 1
@@ -8648,6 +8792,12 @@ NE86507
 27.8365
 </td>
 <td class="r data">
+3.85569
+</td>
+<td class="r data">
+3.33361
+</td>
+<td class="r data">
 39
 </td>
 <td class="r data">
@@ -8666,6 +8816,12 @@ Centurk7
 </td>
 <td class="r data">
 27.2432
+</td>
+<td class="r data">
+3.85569
+</td>
+<td class="r data">
+3.29145
 </td>
 <td class="r data">
 5
@@ -8688,6 +8844,12 @@ Arapahoe
 27.0657
 </td>
 <td class="r data">
+3.85569
+</td>
+<td class="r data">
+3.27598
+</td>
+<td class="r data">
 9
 </td>
 <td class="r data">
@@ -8706,6 +8868,12 @@ Brule
 </td>
 <td class="r data">
 27.0363
+</td>
+<td class="r data">
+3.85569
+</td>
+<td class="r data">
+3.29121
 </td>
 <td class="r data">
 25
@@ -8728,6 +8896,12 @@ KS831374
 26.9109
 </td>
 <td class="r data">
+3.85569
+</td>
+<td class="r data">
+3.25366
+</td>
+<td class="r data">
 37
 </td>
 <td class="r data">
@@ -8748,830 +8922,16 @@ NE87409
 26.8337
 </td>
 <td class="r data">
+3.85569
+</td>
+<td class="r data">
+3.30810
+</td>
+<td class="r data">
 50
 </td>
 <td class="r data">
 15
-</td>
-</tr>
-<tr>
-<th class="r rowheader" scope="row">
-16
-</th>
-<td class="l data">
-Scout66
-</td>
-<td class="r data">
-27.5250
-</td>
-<td class="r data">
-26.6969
-</td>
-<td class="r data">
-17
-</td>
-<td class="r data">
-16
-</td>
-</tr>
-<tr>
-<th class="r rowheader" scope="row">
-17
-</th>
-<td class="l data">
-NE83406
-</td>
-<td class="r data">
-24.2750
-</td>
-<td class="r data">
-26.5136
-</td>
-<td class="r data">
-36
-</td>
-<td class="r data">
-17
-</td>
-</tr>
-<tr>
-<th class="r rowheader" scope="row">
-18
-</th>
-<td class="l data">
-Siouxlan
-</td>
-<td class="r data">
-30.1125
-</td>
-<td class="r data">
-26.4493
-</td>
-<td class="r data">
-7
-</td>
-<td class="r data">
-18
-</td>
-</tr>
-<tr>
-<th class="r rowheader" scope="row">
-19
-</th>
-<td class="l data">
-NE86607
-</td>
-<td class="r data">
-29.3250
-</td>
-<td class="r data">
-26.4158
-</td>
-<td class="r data">
-11
-</td>
-<td class="r data">
-19
-</td>
-</tr>
-<tr>
-<th class="r rowheader" scope="row">
-20
-</th>
-<td class="l data">
-Roughrid
-</td>
-<td class="r data">
-21.1875
-</td>
-<td class="r data">
-26.3372
-</td>
-<td class="r data">
-53
-</td>
-<td class="r data">
-20
-</td>
-</tr>
-<tr>
-<th class="r rowheader" scope="row">
-21
-</th>
-<td class="l data">
-NE83407
-</td>
-<td class="r data">
-22.6875
-</td>
-<td class="r data">
-26.0105
-</td>
-<td class="r data">
-43
-</td>
-<td class="r data">
-21
-</td>
-</tr>
-<tr>
-<th class="r rowheader" scope="row">
-22
-</th>
-<td class="l data">
-Colt
-</td>
-<td class="r data">
-27.0000
-</td>
-<td class="r data">
-25.7772
-</td>
-<td class="r data">
-19
-</td>
-<td class="r data">
-22
-</td>
-</tr>
-<tr>
-<th class="r rowheader" scope="row">
-23
-</th>
-<td class="l data">
-Vona
-</td>
-<td class="r data">
-23.6000
-</td>
-<td class="r data">
-25.6633
-</td>
-<td class="r data">
-40
-</td>
-<td class="r data">
-23
-</td>
-</tr>
-<tr>
-<th class="r rowheader" scope="row">
-24
-</th>
-<td class="l data">
-NE86501
-</td>
-<td class="r data">
-30.9375
-</td>
-<td class="r data">
-25.4990
-</td>
-<td class="r data">
-3
-</td>
-<td class="r data">
-24
-</td>
-</tr>
-<tr>
-<th class="r rowheader" scope="row">
-25
-</th>
-<td class="l data">
-NE86527
-</td>
-<td class="r data">
-22.0125
-</td>
-<td class="r data">
-25.4641
-</td>
-<td class="r data">
-44
-</td>
-<td class="r data">
-25
-</td>
-</tr>
-<tr>
-<th class="r rowheader" scope="row">
-26
-</th>
-<td class="l data">
-NE83404
-</td>
-<td class="r data">
-27.3875
-</td>
-<td class="r data">
-25.4502
-</td>
-<td class="r data">
-18
-</td>
-<td class="r data">
-26
-</td>
-</tr>
-<tr>
-<th class="r rowheader" scope="row">
-27
-</th>
-<td class="l data">
-Centura
-</td>
-<td class="r data">
-21.6500
-</td>
-<td class="r data">
-25.4196
-</td>
-<td class="r data">
-47
-</td>
-<td class="r data">
-27
-</td>
-</tr>
-<tr>
-<th class="r rowheader" scope="row">
-28
-</th>
-<td class="l data">
-NE87408
-</td>
-<td class="r data">
-26.3000
-</td>
-<td class="r data">
-25.1692
-</td>
-<td class="r data">
-24
-</td>
-<td class="r data">
-28
-</td>
-</tr>
-<tr>
-<th class="r rowheader" scope="row">
-29
-</th>
-<td class="l data">
-Cheyenne
-</td>
-<td class="r data">
-28.0625
-</td>
-<td class="r data">
-25.0592
-</td>
-<td class="r data">
-14
-</td>
-<td class="r data">
-29
-</td>
-</tr>
-<tr>
-<th class="r rowheader" scope="row">
-30
-</th>
-<td class="l data">
-Gage
-</td>
-<td class="r data">
-24.5125
-</td>
-<td class="r data">
-25.0110
-</td>
-<td class="r data">
-33
-</td>
-<td class="r data">
-30
-</td>
-</tr>
-<tr>
-<th class="r rowheader" scope="row">
-31
-</th>
-<td class="l data">
-NE87451
-</td>
-<td class="r data">
-24.6125
-</td>
-<td class="r data">
-24.8679
-</td>
-<td class="r data">
-31
-</td>
-<td class="r data">
-31
-</td>
-</tr>
-<tr>
-<th class="r rowheader" scope="row">
-32
-</th>
-<td class="l data">
-NE86482
-</td>
-<td class="r data">
-24.2875
-</td>
-<td class="r data">
-24.7351
-</td>
-<td class="r data">
-35
-</td>
-<td class="r data">
-32
-</td>
-</tr>
-<tr>
-<th class="r rowheader" scope="row">
-33
-</th>
-<td class="l data">
-NE87615
-</td>
-<td class="r data">
-25.6875
-</td>
-<td class="r data">
-24.6426
-</td>
-<td class="r data">
-27
-</td>
-<td class="r data">
-33
-</td>
-</tr>
-<tr>
-<th class="r rowheader" scope="row">
-34
-</th>
-<td class="l data">
-NE85623
-</td>
-<td class="r data">
-21.7250
-</td>
-<td class="r data">
-24.2722
-</td>
-<td class="r data">
-46
-</td>
-<td class="r data">
-34
-</td>
-</tr>
-<tr>
-<th class="r rowheader" scope="row">
-35
-</th>
-<td class="l data">
-NE87457
-</td>
-<td class="r data">
-23.9125
-</td>
-<td class="r data">
-24.1953
-</td>
-<td class="r data">
-38
-</td>
-<td class="r data">
-35
-</td>
-</tr>
-<tr>
-<th class="r rowheader" scope="row">
-36
-</th>
-<td class="l data">
-Cody
-</td>
-<td class="r data">
-21.2125
-</td>
-<td class="r data">
-24.0971
-</td>
-<td class="r data">
-52
-</td>
-<td class="r data">
-36
-</td>
-</tr>
-<tr>
-<th class="r rowheader" scope="row">
-37
-</th>
-<td class="l data">
-NE87463
-</td>
-<td class="r data">
-25.9125
-</td>
-<td class="r data">
-24.0642
-</td>
-<td class="r data">
-26
-</td>
-<td class="r data">
-37
-</td>
-</tr>
-<tr>
-<th class="r rowheader" scope="row">
-38
-</th>
-<td class="l data">
-NE86582
-</td>
-<td class="r data">
-24.5375
-</td>
-<td class="r data">
-24.0511
-</td>
-<td class="r data">
-32
-</td>
-<td class="r data">
-38
-</td>
-</tr>
-<tr>
-<th class="r rowheader" scope="row">
-39
-</th>
-<td class="l data">
-Lancer
-</td>
-<td class="r data">
-28.5625
-</td>
-<td class="r data">
-23.6478
-</td>
-<td class="r data">
-12
-</td>
-<td class="r data">
-39
-</td>
-</tr>
-<tr>
-<th class="r rowheader" scope="row">
-40
-</th>
-<td class="l data">
-Norkan
-</td>
-<td class="r data">
-24.4125
-</td>
-<td class="r data">
-23.2929
-</td>
-<td class="r data">
-34
-</td>
-<td class="r data">
-40
-</td>
-</tr>
-<tr>
-<th class="r rowheader" scope="row">
-41
-</th>
-<td class="l data">
-NE87512
-</td>
-<td class="r data">
-23.2500
-</td>
-<td class="r data">
-23.2063
-</td>
-<td class="r data">
-41
-</td>
-<td class="r data">
-41
-</td>
-</tr>
-<tr>
-<th class="r rowheader" scope="row">
-42
-</th>
-<td class="l data">
-TAM107
-</td>
-<td class="r data">
-28.4000
-</td>
-<td class="r data">
-23.1066
-</td>
-<td class="r data">
-13
-</td>
-<td class="r data">
-42
-</td>
-</tr>
-<tr>
-<th class="r rowheader" scope="row">
-43
-</th>
-<td class="l data">
-NE86509
-</td>
-<td class="r data">
-26.8500
-</td>
-<td class="r data">
-22.7981
-</td>
-<td class="r data">
-20
-</td>
-<td class="r data">
-43
-</td>
-</tr>
-<tr>
-<th class="r rowheader" scope="row">
-44
-</th>
-<td class="l data">
-NE87446
-</td>
-<td class="r data">
-27.6750
-</td>
-<td class="r data">
-22.6374
-</td>
-<td class="r data">
-15
-</td>
-<td class="r data">
-44
-</td>
-</tr>
-<tr>
-<th class="r rowheader" scope="row">
-45
-</th>
-<td class="l data">
-NE87499
-</td>
-<td class="r data">
-20.4125
-</td>
-<td class="r data">
-22.4493
-</td>
-<td class="r data">
-55
-</td>
-<td class="r data">
-45
-</td>
-</tr>
-<tr>
-<th class="r rowheader" scope="row">
-46
-</th>
-<td class="l data">
-NE83432
-</td>
-<td class="r data">
-19.7250
-</td>
-<td class="r data">
-22.3448
-</td>
-<td class="r data">
-56
-</td>
-<td class="r data">
-46
-</td>
-</tr>
-<tr>
-<th class="r rowheader" scope="row">
-47
-</th>
-<td class="l data">
-NE87403
-</td>
-<td class="r data">
-25.1250
-</td>
-<td class="r data">
-22.3379
-</td>
-<td class="r data">
-29
-</td>
-<td class="r data">
-47
-</td>
-</tr>
-<tr>
-<th class="r rowheader" scope="row">
-48
-</th>
-<td class="l data">
-Homestea
-</td>
-<td class="r data">
-27.6375
-</td>
-<td class="r data">
-22.1425
-</td>
-<td class="r data">
-16
-</td>
-<td class="r data">
-48
-</td>
-</tr>
-<tr>
-<th class="r rowheader" scope="row">
-49
-</th>
-<td class="l data">
-NE87513
-</td>
-<td class="r data">
-26.8125
-</td>
-<td class="r data">
-22.1161
-</td>
-<td class="r data">
-21
-</td>
-<td class="r data">
-49
-</td>
-</tr>
-<tr>
-<th class="r rowheader" scope="row">
-50
-</th>
-<td class="l data">
-NE83T12
-</td>
-<td class="r data">
-21.5625
-</td>
-<td class="r data">
-21.9692
-</td>
-<td class="r data">
-48
-</td>
-<td class="r data">
-50
-</td>
-</tr>
-<tr>
-<th class="r rowheader" scope="row">
-51
-</th>
-<td class="l data">
-NE84557
-</td>
-<td class="r data">
-20.5250
-</td>
-<td class="r data">
-21.8553
-</td>
-<td class="r data">
-54
-</td>
-<td class="r data">
-51
-</td>
-</tr>
-<tr>
-<th class="r rowheader" scope="row">
-52
-</th>
-<td class="l data">
-Lancota
-</td>
-<td class="r data">
-26.5500
-</td>
-<td class="r data">
-21.7590
-</td>
-<td class="r data">
-22
-</td>
-<td class="r data">
-52
-</td>
-</tr>
-<tr>
-<th class="r rowheader" scope="row">
-53
-</th>
-<td class="l data">
-NE87522
-</td>
-<td class="r data">
-25.0000
-</td>
-<td class="r data">
-20.3275
-</td>
-<td class="r data">
-30
-</td>
-<td class="r data">
-53
-</td>
-</tr>
-<tr>
-<th class="r rowheader" scope="row">
-54
-</th>
-<td class="l data">
-NE87627
-</td>
-<td class="r data">
-23.2250
-</td>
-<td class="r data">
-19.7546
-</td>
-<td class="r data">
-42
-</td>
-<td class="r data">
-54
-</td>
-</tr>
-<tr>
-<th class="r rowheader" scope="row">
-55
-</th>
-<td class="l data">
-TAM200
-</td>
-<td class="r data">
-21.2375
-</td>
-<td class="r data">
-19.2002
-</td>
-<td class="r data">
-51
-</td>
-<td class="r data">
-55
-</td>
-</tr>
-<tr>
-<th class="r rowheader" scope="row">
-56
-</th>
-<td class="l data">
-NE86T666
-</td>
-<td class="r data">
-21.5375
-</td>
-<td class="r data">
-17.8942
-</td>
-<td class="r data">
-49
-</td>
-<td class="r data">
-56
 </td>
 </tr>
 </tbody>
@@ -9581,7 +8941,7 @@ NE86T666
 </div>
 <br>
 </div>
-<p>This comparison shows some clear changes in rank. In his discussion of this data, Stroup <span class="citation">(<a href="the-end.html#ref-stroup2013" role="doc-biblioref">Stroup 2013</a>)</span>, writes:<br></p>
+<p>This comparison of the first 15 means shows some clear changes in rank. In his discussion of this data, Stroup <span class="citation">(<a href="#ref-stroup2013" role="doc-biblioref">Stroup 2013</a>)</span>, writes:<br></p>
 <blockquote>
 <p>… Buckskin was a variety known to be a high-yielding benchmark; its mediocre mean yield in the RCB analysis despite being observed in the field outperforming all varieties in the vicinity was one symptom that the RCB analysis was giving nonsense results.</p>
 <p>— Stroup (2013)</p>
@@ -9591,13 +8951,22 @@ NE86T666
 
 </div>
 </div>
+<h3>References</h3>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-stroup2013" class="csl-entry">
+Stroup, Walter W. 2013. <em>Generalized Linear Mixed Models: Modern Concepts, Methods and Applications</em>. Boca Raton, FL: Chapman &amp; Hall/CRC Press.
+</div>
+<div id="ref-stroup1994" class="csl-entry">
+Stroup, Walter W., Stephen B. Baenziger, and Dieter K. Mulitze. 1994. <span>“Removing Spatial Variation from Wheat Yield Trials: A Comparison of Methods.”</span> <em>Crop Science</em> 34: 62–66.
+</div>
+</div>
             </section>
 
           </div>
         </div>
       </div>
 <a href="rcbd-r.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="model-extension.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="model-extension-r.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -9620,6 +8989,7 @@ gitbook.start({
 "weibo": false,
 "instapaper": false,
 "vk": false,
+"whatsapp": false,
 "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {
@@ -9640,6 +9010,10 @@ gitbook.start({
 "text": null
 },
 "download": null,
+"search": {
+"engine": "lunr",
+"options": null
+},
 "toc": {
 "collapse": "section",
 "scroll_highlight": true

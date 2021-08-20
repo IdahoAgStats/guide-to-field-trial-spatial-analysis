@@ -1,4 +1,4 @@
-# Other Models {#model-extension}
+# Other Models - R {#model-extension-r}
 
 ```{r message=FALSE, warning=FALSE}
 library(agridat); library(desplot)
@@ -17,7 +17,7 @@ Spatial models can easily be extended to fit other experimental designs such as 
 
 Below are minimal examples that omit several steps conducted in \@ref(rcbd-r) (e.g. fitting the empirical variogram) for brevity. Also, although spatial variance is incorporate into each example, we have not made an effort to ensure that each is the best fitting model for the data. The examples are intended to illustrate the correct syntax in R rather than the process of proper model fitting (which was shown in \@ref(rcbd-r)). 
 
-## Other Experimental Designs
+## Other Experimental and Treatment Designs
 
 ### Completely randomized design 
 

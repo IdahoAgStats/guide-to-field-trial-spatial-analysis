@@ -5,27 +5,27 @@
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Section 4 Identifying Spatial Variation: R | Incorporating Spatial Analysis into Agricultural Field Experiments.</title>
-  <meta name="description" content="Instructions for identifying spatial autocorrelation in agricultural field trials and incorporating spatial variation into analysis of trial using R and SAS."" />
-  <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
+  <meta name="description" content="Instructions for identifying spatial autocorrelation in agricultural field trials and incorporating spatial variation into analysis of trial using R and SAS." />
+  <meta name="generator" content="bookdown 0.23.1 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Section 4 Identifying Spatial Variation: R | Incorporating Spatial Analysis into Agricultural Field Experiments." />
   <meta property="og:type" content="book" />
   
   
-  <meta property="og:description" content="Instructions for identifying spatial autocorrelation in agricultural field trials and incorporating spatial variation into analysis of trial using R and SAS."" />
+  <meta property="og:description" content="Instructions for identifying spatial autocorrelation in agricultural field trials and incorporating spatial variation into analysis of trial using R and SAS." />
   
 
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Section 4 Identifying Spatial Variation: R | Incorporating Spatial Analysis into Agricultural Field Experiments." />
   
-  <meta name="twitter:description" content="Instructions for identifying spatial autocorrelation in agricultural field trials and incorporating spatial variation into analysis of trial using R and SAS."" />
+  <meta name="twitter:description" content="Instructions for identifying spatial autocorrelation in agricultural field trials and incorporating spatial variation into analysis of trial using R and SAS." />
   
 
 <meta name="author" content="Julia Piaskowski" />
 <meta name="author" content="William Price" />
 
 
-<meta name="date" content="2021-08-17" />
+<meta name="date" content="2021-08-20" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -34,8 +34,8 @@
   
 <link rel="prev" href="background.html"/>
 <link rel="next" href="rcbd-r.html"/>
-<script src="libs/header-attrs-2.7/header-attrs.js"></script>
-<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<script src="libs/header-attrs-2.10/header-attrs.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -52,6 +52,8 @@
 
 
 
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
 
 
 <style type="text/css">
@@ -117,6 +119,29 @@ code span.st { color: #4070a0; } /* String */
 code span.va { color: #19177c; } /* Variable */
 code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
 </style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
@@ -194,22 +219,22 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="5.2.1" data-path="rcbd-r.html"><a href="rcbd-r.html#exponential-1"><i class="fa fa-check"></i><b>5.2.1</b> Exponential</a></li>
 <li class="chapter" data-level="5.2.2" data-path="rcbd-r.html"><a href="rcbd-r.html#spherical-1"><i class="fa fa-check"></i><b>5.2.2</b> Spherical</a></li>
-<li class="chapter" data-level="5.2.3" data-path="rcbd-r.html"><a href="rcbd-r.html#power-1"><i class="fa fa-check"></i><b>5.2.3</b> Power</a></li>
-<li class="chapter" data-level="5.2.4" data-path="rcbd-r.html"><a href="rcbd-r.html#matérn-1"><i class="fa fa-check"></i><b>5.2.4</b> Matérn</a></li>
+<li class="chapter" data-level="5.2.3" data-path="rcbd-r.html"><a href="rcbd-r.html#matérn-1"><i class="fa fa-check"></i><b>5.2.3</b> Matérn</a></li>
 </ul></li>
 <li class="chapter" data-level="5.3" data-path="rcbd-r.html"><a href="rcbd-r.html#rowcolumn-trends"><i class="fa fa-check"></i><b>5.3</b> Row/Column Trends:</a></li>
 <li class="chapter" data-level="5.4" data-path="rcbd-r.html"><a href="rcbd-r.html#splines-1"><i class="fa fa-check"></i><b>5.4</b> Splines</a></li>
-<li class="chapter" data-level="5.5" data-path="rcbd-r.html"><a href="rcbd-r.html#bayesian-ar1xar1"><i class="fa fa-check"></i><b>5.5</b> Bayesian AR1xAR1</a></li>
-<li class="chapter" data-level="5.6" data-path="rcbd-r.html"><a href="rcbd-r.html#model-selection"><i class="fa fa-check"></i><b>5.6</b> Model Selection</a>
+<li class="chapter" data-level="5.5" data-path="rcbd-r.html"><a href="rcbd-r.html#ar1xar1"><i class="fa fa-check"></i><b>5.5</b> AR1xAR1</a></li>
+<li class="chapter" data-level="5.6" data-path="rcbd-r.html"><a href="rcbd-r.html#bayesian-ar1xar1"><i class="fa fa-check"></i><b>5.6</b> Bayesian AR1xAR1</a></li>
+<li class="chapter" data-level="5.7" data-path="rcbd-r.html"><a href="rcbd-r.html#model-selection"><i class="fa fa-check"></i><b>5.7</b> Model Selection</a>
 <ul>
-<li class="chapter" data-level="5.6.1" data-path="rcbd-r.html"><a href="rcbd-r.html#spatial-dependence-of-residuals"><i class="fa fa-check"></i><b>5.6.1</b> Spatial dependence of residuals</a></li>
-<li class="chapter" data-level="5.6.2" data-path="rcbd-r.html"><a href="rcbd-r.html#compare-model-fit"><i class="fa fa-check"></i><b>5.6.2</b> Compare Model Fit</a></li>
-<li class="chapter" data-level="5.6.3" data-path="rcbd-r.html"><a href="rcbd-r.html#experiment-wide-error"><i class="fa fa-check"></i><b>5.6.3</b> Experiment-wide error</a></li>
-<li class="chapter" data-level="5.6.4" data-path="rcbd-r.html"><a href="rcbd-r.html#post-hoc-power"><i class="fa fa-check"></i><b>5.6.4</b> Post-hoc power</a></li>
-<li class="chapter" data-level="5.6.5" data-path="rcbd-r.html"><a href="rcbd-r.html#standard-error-of-treatment-means"><i class="fa fa-check"></i><b>5.6.5</b> Standard error of treatment means</a></li>
-<li class="chapter" data-level="5.6.6" data-path="rcbd-r.html"><a href="rcbd-r.html#treatment-means"><i class="fa fa-check"></i><b>5.6.6</b> Treatment means</a></li>
+<li class="chapter" data-level="5.7.1" data-path="rcbd-r.html"><a href="rcbd-r.html#spatial-dependence-of-residuals"><i class="fa fa-check"></i><b>5.7.1</b> Spatial dependence of residuals</a></li>
+<li class="chapter" data-level="5.7.2" data-path="rcbd-r.html"><a href="rcbd-r.html#compare-model-fit"><i class="fa fa-check"></i><b>5.7.2</b> Compare Model Fit</a></li>
+<li class="chapter" data-level="5.7.3" data-path="rcbd-r.html"><a href="rcbd-r.html#experiment-wide-error"><i class="fa fa-check"></i><b>5.7.3</b> Experiment-wide error</a></li>
+<li class="chapter" data-level="5.7.4" data-path="rcbd-r.html"><a href="rcbd-r.html#post-hoc-power"><i class="fa fa-check"></i><b>5.7.4</b> Post-hoc power</a></li>
+<li class="chapter" data-level="5.7.5" data-path="rcbd-r.html"><a href="rcbd-r.html#standard-error-of-treatment-means"><i class="fa fa-check"></i><b>5.7.5</b> Standard error of treatment means</a></li>
+<li class="chapter" data-level="5.7.6" data-path="rcbd-r.html"><a href="rcbd-r.html#treatment-means"><i class="fa fa-check"></i><b>5.7.6</b> Treatment means</a></li>
 </ul></li>
-<li class="chapter" data-level="5.7" data-path="rcbd-r.html"><a href="rcbd-r.html#making-decisions"><i class="fa fa-check"></i><b>5.7</b> Making decisions</a></li>
+<li class="chapter" data-level="5.8" data-path="rcbd-r.html"><a href="rcbd-r.html#making-decisions"><i class="fa fa-check"></i><b>5.8</b> Making decisions</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="rcbd-sas.html"><a href="rcbd-sas.html"><i class="fa fa-check"></i><b>6</b> RCBD Example: SAS</a>
 <ul>
@@ -222,42 +247,56 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="6.2.1" data-path="rcbd-sas.html"><a href="rcbd-sas.html#examine-the-number-of-distance-pairs-and-maximum-lags-between-residuals"><i class="fa fa-check"></i><b>6.2.1</b> Examine the Number of Distance Pairs and Maximum Lags between Residuals</a></li>
 <li class="chapter" data-level="6.2.2" data-path="rcbd-sas.html"><a href="rcbd-sas.html#compute-morans-i-and-gearys-c."><i class="fa fa-check"></i><b>6.2.2</b> Compute Moran’s I and Geary’s C.</a></li>
 </ul></li>
-<li class="chapter" data-level="6.3" data-path="rcbd-sas.html"><a href="rcbd-sas.html#estimation-and-modeling-of-semivariance"><i class="fa fa-check"></i><b>6.3</b> 4.3 Estimation and Modeling of Semivariance</a>
+<li class="chapter" data-level="6.3" data-path="rcbd-sas.html"><a href="rcbd-sas.html#estimation-and-modeling-of-semivariance"><i class="fa fa-check"></i><b>6.3</b> Estimation and Modeling of Semivariance</a>
 <ul>
-<li class="chapter" data-level="6.3.1" data-path="rcbd-sas.html"><a href="rcbd-sas.html#estimating-empirical-semivariance"><i class="fa fa-check"></i><b>6.3.1</b> 4.3.1 Estimating Empirical Semivariance</a></li>
+<li class="chapter" data-level="6.3.1" data-path="rcbd-sas.html"><a href="rcbd-sas.html#estimating-empirical-semivariance"><i class="fa fa-check"></i><b>6.3.1</b> Estimating Empirical Semivariance</a></li>
 <li class="chapter" data-level="6.3.2" data-path="rcbd-sas.html"><a href="rcbd-sas.html#fitting-an-empirical-variogram-model"><i class="fa fa-check"></i><b>6.3.2</b> Fitting an Empirical Variogram Model</a></li>
 </ul></li>
 <li class="chapter" data-level="6.4" data-path="rcbd-sas.html"><a href="rcbd-sas.html#using-the-estimated-variogram-in-an-adjusted-analysis"><i class="fa fa-check"></i><b>6.4</b> Using the Estimated variogram in an Adjusted Analysis</a>
 <ul>
-<li class="chapter" data-level="6.4.1" data-path="rcbd-sas.html"><a href="rcbd-sas.html#unadjusted-rcbd-model"><i class="fa fa-check"></i><b>6.4.1</b> Unadjusted RCBD Model</a></li>
-<li class="chapter" data-level="6.4.2" data-path="rcbd-sas.html"><a href="rcbd-sas.html#rcbd-model-with-spatial-covariates"><i class="fa fa-check"></i><b>6.4.2</b> RCBD Model with Spatial Covariates</a></li>
+<li class="chapter" data-level="6.4.1" data-path="rcbd-sas.html"><a href="rcbd-sas.html#unadjusted-rcb-model"><i class="fa fa-check"></i><b>6.4.1</b> Unadjusted RCB Model</a></li>
+<li class="chapter" data-level="6.4.2" data-path="rcbd-sas.html"><a href="rcbd-sas.html#rcb-model-with-spatial-covariance"><i class="fa fa-check"></i><b>6.4.2</b> RCB Model with Spatial Covariance</a></li>
+<li class="chapter" data-level="6.4.3" data-path="rcbd-sas.html"><a href="rcbd-sas.html#other-spatial-adjustments"><i class="fa fa-check"></i><b>6.4.3</b> Other Spatial Adjustments</a></li>
 </ul></li>
 <li class="chapter" data-level="6.5" data-path="rcbd-sas.html"><a href="rcbd-sas.html#compare-estimated-means"><i class="fa fa-check"></i><b>6.5</b> Compare Estimated Means</a></li>
 </ul></li>
-<li class="chapter" data-level="7" data-path="model-extension.html"><a href="model-extension.html"><i class="fa fa-check"></i><b>7</b> Other Models</a>
+<li class="chapter" data-level="7" data-path="model-extension-r.html"><a href="model-extension-r.html"><i class="fa fa-check"></i><b>7</b> Other Models - R</a>
 <ul>
-<li class="chapter" data-level="7.1" data-path="model-extension.html"><a href="model-extension.html#other-experimental-designs"><i class="fa fa-check"></i><b>7.1</b> Other Experimental Designs</a>
+<li class="chapter" data-level="7.1" data-path="model-extension-r.html"><a href="model-extension-r.html#other-experimental-and-treatment-designs"><i class="fa fa-check"></i><b>7.1</b> Other Experimental and Treatment Designs</a>
 <ul>
-<li class="chapter" data-level="7.1.1" data-path="model-extension.html"><a href="model-extension.html#factorials-rcbd"><i class="fa fa-check"></i><b>7.1.1</b> 2+ Factorials (RCBD)</a></li>
-<li class="chapter" data-level="7.1.2" data-path="model-extension.html"><a href="model-extension.html#alpha-lattice"><i class="fa fa-check"></i><b>7.1.2</b> Alpha lattice</a></li>
-<li class="chapter" data-level="7.1.3" data-path="model-extension.html"><a href="model-extension.html#latin-square"><i class="fa fa-check"></i><b>7.1.3</b> Latin square</a></li>
-<li class="chapter" data-level="7.1.4" data-path="model-extension.html"><a href="model-extension.html#augmented"><i class="fa fa-check"></i><b>7.1.4</b> Augmented</a></li>
-<li class="chapter" data-level="7.1.5" data-path="model-extension.html"><a href="model-extension.html#split-plot"><i class="fa fa-check"></i><b>7.1.5</b> Split plot</a></li>
-<li class="chapter" data-level="7.1.6" data-path="model-extension.html"><a href="model-extension.html#split-split-plot"><i class="fa fa-check"></i><b>7.1.6</b> Split-split plot</a></li>
-<li class="chapter" data-level="7.1.7" data-path="model-extension.html"><a href="model-extension.html#split-block"><i class="fa fa-check"></i><b>7.1.7</b> Split block</a></li>
-</ul></li>
-<li class="chapter" data-level="7.2" data-path="model-extension.html"><a href="model-extension.html#traits-with-non-gaussian-distributions"><i class="fa fa-check"></i><b>7.2</b> Traits with non-gaussian distributions</a>
-<ul>
-<li class="chapter" data-level="7.2.1" data-path="model-extension.html"><a href="model-extension.html#count-traits"><i class="fa fa-check"></i><b>7.2.1</b> Count traits:</a></li>
-<li class="chapter" data-level="7.2.2" data-path="model-extension.html"><a href="model-extension.html#percent-traits"><i class="fa fa-check"></i><b>7.2.2</b> Percent traits</a></li>
-<li class="chapter" data-level="7.2.3" data-path="model-extension.html"><a href="model-extension.html#ordinal-traits"><i class="fa fa-check"></i><b>7.2.3</b> Ordinal traits</a></li>
-<li class="chapter" data-level="7.2.4" data-path="model-extension.html"><a href="model-extension.html#binomial-traits"><i class="fa fa-check"></i><b>7.2.4</b> Binomial traits</a></li>
+<li class="chapter" data-level="7.1.1" data-path="model-extension-r.html"><a href="model-extension-r.html#completely-randomized-design"><i class="fa fa-check"></i><b>7.1.1</b> Completely randomized design</a></li>
+<li class="chapter" data-level="7.1.2" data-path="model-extension-r.html"><a href="model-extension-r.html#multi-way-factorials"><i class="fa fa-check"></i><b>7.1.2</b> Multi-way Factorials</a></li>
+<li class="chapter" data-level="7.1.3" data-path="model-extension-r.html"><a href="model-extension-r.html#alpha-lattice"><i class="fa fa-check"></i><b>7.1.3</b> Alpha lattice</a></li>
+<li class="chapter" data-level="7.1.4" data-path="model-extension-r.html"><a href="model-extension-r.html#latin-square"><i class="fa fa-check"></i><b>7.1.4</b> Latin square</a></li>
+<li class="chapter" data-level="7.1.5" data-path="model-extension-r.html"><a href="model-extension-r.html#split-plot"><i class="fa fa-check"></i><b>7.1.5</b> Split plot</a></li>
+<li class="chapter" data-level="7.1.6" data-path="model-extension-r.html"><a href="model-extension-r.html#split-split-plot"><i class="fa fa-check"></i><b>7.1.6</b> Split-split plot</a></li>
+<li class="chapter" data-level="7.1.7" data-path="model-extension-r.html"><a href="model-extension-r.html#split-block"><i class="fa fa-check"></i><b>7.1.7</b> Split block</a></li>
+<li class="chapter" data-level="7.1.8" data-path="model-extension-r.html"><a href="model-extension-r.html#augmented"><i class="fa fa-check"></i><b>7.1.8</b> Augmented</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="8" data-path="the-end.html"><a href="the-end.html"><i class="fa fa-check"></i><b>8</b> Conclusion</a>
+<li class="chapter" data-level="8" data-path="model-extension-sas.html"><a href="model-extension-sas.html"><i class="fa fa-check"></i><b>8</b> Other Models - SAS</a>
 <ul>
-<li class="chapter" data-level="8.1" data-path="the-end.html"><a href="the-end.html#other-packages"><i class="fa fa-check"></i><b>8.1</b> Other packages</a></li>
-<li class="chapter" data-level="8.2" data-path="the-end.html"><a href="the-end.html#final-recommendations"><i class="fa fa-check"></i><b>8.2</b> Final recommendations</a></li>
+<li class="chapter" data-level="8.1" data-path="model-extension-sas.html"><a href="model-extension-sas.html#other-experimental-and-treatment-designs-1"><i class="fa fa-check"></i><b>8.1</b> Other Experimental and Treatment Designs</a>
+<ul>
+<li class="chapter" data-level="8.1.1" data-path="model-extension-sas.html"><a href="model-extension-sas.html#completely-randomized-design-crd"><i class="fa fa-check"></i><b>8.1.1</b> Completely randomized design (CRD)</a></li>
+<li class="chapter" data-level="8.1.2" data-path="model-extension-sas.html"><a href="model-extension-sas.html#multi-way-factorials-1"><i class="fa fa-check"></i><b>8.1.2</b> Multi-way Factorials</a></li>
+<li class="chapter" data-level="8.1.3" data-path="model-extension-sas.html"><a href="model-extension-sas.html#alpha-lattice-1"><i class="fa fa-check"></i><b>8.1.3</b> Alpha lattice</a></li>
+<li class="chapter" data-level="8.1.4" data-path="model-extension-sas.html"><a href="model-extension-sas.html#latin-square-1"><i class="fa fa-check"></i><b>8.1.4</b> Latin square</a></li>
+<li class="chapter" data-level="8.1.5" data-path="model-extension-sas.html"><a href="model-extension-sas.html#split-plot-1"><i class="fa fa-check"></i><b>8.1.5</b> Split plot</a></li>
+<li class="chapter" data-level="8.1.6" data-path="model-extension-sas.html"><a href="model-extension-sas.html#split-split-plot-1"><i class="fa fa-check"></i><b>8.1.6</b> Split-split plot</a></li>
+<li class="chapter" data-level="8.1.7" data-path="model-extension-sas.html"><a href="model-extension-sas.html#split-block-1"><i class="fa fa-check"></i><b>8.1.7</b> Split block</a></li>
+<li class="chapter" data-level="8.1.8" data-path="model-extension-sas.html"><a href="model-extension-sas.html#augmented-1"><i class="fa fa-check"></i><b>8.1.8</b> Augmented</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="the-end.html"><a href="the-end.html"><i class="fa fa-check"></i><b>9</b> Conclusion</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="the-end.html"><a href="the-end.html#other-packages"><i class="fa fa-check"></i><b>9.1</b> Other packages</a></li>
+<li class="chapter" data-level="9.2" data-path="the-end.html"><a href="the-end.html#final-recommendations"><i class="fa fa-check"></i><b>9.2</b> Final recommendations</a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="flotsam-jetsam.html"><a href="flotsam-jetsam.html"><i class="fa fa-check"></i><b>10</b> Flotsam &amp; Jetsam</a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="flotsam-jetsam.html"><a href="flotsam-jetsam.html#r-session-info"><i class="fa fa-check"></i><b>10.1</b> R Session Info</a></li>
+<li class="chapter" data-level="10.2" data-path="flotsam-jetsam.html"><a href="flotsam-jetsam.html#references"><i class="fa fa-check"></i><b>10.2</b> References</a></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -283,20 +322,20 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h1><span class="header-section-number">Section 4</span> Identifying Spatial Variation: R</h1>
 <div id="load-data" class="section level2" number="4.1">
 <h2><span class="header-section-number">4.1</span> Load data</h2>
-<p>This tutorial uses the Nebraska Interstate wheat trials, first published by Stroup et al in 1994 <span class="citation">(<a href="the-end.html#ref-stroup1994" role="doc-biblioref">Stroup, Baenziger, and Mulitze 1994</a>)</span> and reused extensively in field spatial variation studies.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="spatial-r.html#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(agridat); <span class="fu">library</span>(dplyr); <span class="fu">library</span>(tidyr)</span>
-<span id="cb2-2"><a href="spatial-r.html#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;stroup.nin&quot;</span>)</span>
-<span id="cb2-3"><a href="spatial-r.html#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="spatial-r.html#cb2-4" aria-hidden="true" tabindex="-1"></a>Nin <span class="ot">&lt;-</span> stroup.nin <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">col.width =</span> col <span class="sc">*</span> <span class="fl">1.2</span>, </span>
-<span id="cb2-5"><a href="spatial-r.html#cb2-5" aria-hidden="true" tabindex="-1"></a>                             <span class="at">row.length =</span> row <span class="sc">*</span> <span class="fl">4.3</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb2-6"><a href="spatial-r.html#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">name =</span> <span class="fu">case_when</span>(<span class="fu">is.na</span>(<span class="fu">as.character</span>(rep)) <span class="sc">~</span> <span class="cn">NA_character_</span>, </span>
-<span id="cb2-7"><a href="spatial-r.html#cb2-7" aria-hidden="true" tabindex="-1"></a>                          <span class="cn">TRUE</span> <span class="sc">~</span> <span class="fu">as.character</span>(gen))) <span class="sc">%&gt;%</span> </span>
-<span id="cb2-8"><a href="spatial-r.html#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(col, row)</span>
-<span id="cb2-9"><a href="spatial-r.html#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-10"><a href="spatial-r.html#cb2-10" aria-hidden="true" tabindex="-1"></a>Nin_na <span class="ot">&lt;-</span> <span class="fu">filter</span>(Nin, <span class="sc">!</span><span class="fu">is.na</span>(rep))</span></code></pre></div>
+<p>This tutorial uses the Nebraska Interstate wheat trials, first published by Stroup et al in 1994 <span class="citation">(<a href="#ref-stroup1994" role="doc-biblioref">Stroup, Baenziger, and Mulitze 1994</a>)</span> and reused extensively in field spatial variation studies.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="spatial-r.html#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(agridat); <span class="fu">library</span>(dplyr); <span class="fu">library</span>(tidyr)</span>
+<span id="cb3-2"><a href="spatial-r.html#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;stroup.nin&quot;</span>)</span>
+<span id="cb3-3"><a href="spatial-r.html#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="spatial-r.html#cb3-4" aria-hidden="true" tabindex="-1"></a>Nin <span class="ot">&lt;-</span> stroup.nin <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">col.width =</span> col <span class="sc">*</span> <span class="fl">1.2</span>, </span>
+<span id="cb3-5"><a href="spatial-r.html#cb3-5" aria-hidden="true" tabindex="-1"></a>                             <span class="at">row.length =</span> row <span class="sc">*</span> <span class="fl">4.3</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-6"><a href="spatial-r.html#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">name =</span> <span class="fu">case_when</span>(<span class="fu">is.na</span>(<span class="fu">as.character</span>(rep)) <span class="sc">~</span> <span class="cn">NA_character_</span>, </span>
+<span id="cb3-7"><a href="spatial-r.html#cb3-7" aria-hidden="true" tabindex="-1"></a>                          <span class="cn">TRUE</span> <span class="sc">~</span> <span class="fu">as.character</span>(gen))) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-8"><a href="spatial-r.html#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(col, row)</span>
+<span id="cb3-9"><a href="spatial-r.html#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-10"><a href="spatial-r.html#cb3-10" aria-hidden="true" tabindex="-1"></a>Nin_na <span class="ot">&lt;-</span> <span class="fu">filter</span>(Nin, <span class="sc">!</span><span class="fu">is.na</span>(rep))</span></code></pre></div>
 <div id="examine-data" class="section level3" number="4.1.1">
 <h3><span class="header-section-number">4.1.1</span> Examine data</h3>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="spatial-r.html#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(Nin)</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="spatial-r.html#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(Nin)</span></code></pre></div>
 <pre><code>##        gen  rep yield col row col.width row.length     name
 ## 1   Lancer &lt;NA&gt;    NA   1   1       1.2        4.3     &lt;NA&gt;
 ## 2  NE83407   R1 19.40   1   2       1.2        8.6  NE83407
@@ -306,29 +345,30 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## 6  NE87512   R2 20.20   1   6       1.2       25.8  NE87512</code></pre>
 <p>This data set actually has no missing data – this is a balanced trial. However, there are empty fill plot with no data which creates some issues regarding NA handling.</p>
 <p>Plot raw yield data as it appeared in the field:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="spatial-r.html#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2); <span class="fu">library</span>(desplot)</span></code></pre></div>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="spatial-r.html#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(Nin, <span class="fu">aes</span>(<span class="at">x =</span> row, <span class="at">y =</span> col)) <span class="sc">+</span></span>
-<span id="cb6-2"><a href="spatial-r.html#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_tile</span>(<span class="fu">aes</span>(<span class="at">fill =</span> yield), <span class="at">col =</span> <span class="st">&quot;white&quot;</span>) <span class="sc">+</span></span>
-<span id="cb6-3"><a href="spatial-r.html#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> name)) <span class="sc">+</span></span>
-<span id="cb6-4"><a href="spatial-r.html#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_tileborder</span>(<span class="fu">aes</span>(<span class="at">group =</span> <span class="dv">1</span>, <span class="at">grp =</span> rep), <span class="at">lwd =</span> <span class="fl">1.2</span>) <span class="sc">+</span></span>
-<span id="cb6-5"><a href="spatial-r.html#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_gradient</span>(<span class="at">low =</span> <span class="st">&quot;white&quot;</span>, <span class="at">high =</span> <span class="st">&quot;blue&quot;</span>) <span class="sc">+</span></span>
-<span id="cb6-6"><a href="spatial-r.html#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">1</span>,<span class="fu">max</span>(Nin<span class="sc">$</span>row), <span class="dv">1</span>)) <span class="sc">+</span></span>
-<span id="cb6-7"><a href="spatial-r.html#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">breaks =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">max</span>(Nin<span class="sc">$</span>col)) <span class="sc">+</span></span>
-<span id="cb6-8"><a href="spatial-r.html#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;row&quot;</span>, <span class="at">y =</span> <span class="st">&quot;column&quot;</span>, <span class="at">title =</span> <span class="st">&quot;field plot layout&quot;</span>) <span class="sc">+</span> </span>
-<span id="cb6-9"><a href="spatial-r.html#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>() <span class="sc">+</span></span>
-<span id="cb6-10"><a href="spatial-r.html#cb6-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">12</span>),</span>
-<span id="cb6-11"><a href="spatial-r.html#cb6-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">14</span>),</span>
-<span id="cb6-12"><a href="spatial-r.html#cb6-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">14</span>),</span>
-<span id="cb6-13"><a href="spatial-r.html#cb6-13" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">12</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="spatial-r.html#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb6-2"><a href="spatial-r.html#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(desplot)</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="spatial-r.html#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(Nin, <span class="fu">aes</span>(<span class="at">x =</span> row, <span class="at">y =</span> col)) <span class="sc">+</span></span>
+<span id="cb7-2"><a href="spatial-r.html#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_tile</span>(<span class="fu">aes</span>(<span class="at">fill =</span> yield), <span class="at">col =</span> <span class="st">&quot;white&quot;</span>) <span class="sc">+</span></span>
+<span id="cb7-3"><a href="spatial-r.html#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> name)) <span class="sc">+</span></span>
+<span id="cb7-4"><a href="spatial-r.html#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_tileborder</span>(<span class="fu">aes</span>(<span class="at">group =</span> <span class="dv">1</span>, <span class="at">grp =</span> rep), <span class="at">lwd =</span> <span class="fl">1.2</span>) <span class="sc">+</span></span>
+<span id="cb7-5"><a href="spatial-r.html#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_gradient</span>(<span class="at">low =</span> <span class="st">&quot;white&quot;</span>, <span class="at">high =</span> <span class="st">&quot;blue&quot;</span>) <span class="sc">+</span></span>
+<span id="cb7-6"><a href="spatial-r.html#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">1</span>,<span class="fu">max</span>(Nin<span class="sc">$</span>row), <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb7-7"><a href="spatial-r.html#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">breaks =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">max</span>(Nin<span class="sc">$</span>col)) <span class="sc">+</span></span>
+<span id="cb7-8"><a href="spatial-r.html#cb7-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;row&quot;</span>, <span class="at">y =</span> <span class="st">&quot;column&quot;</span>, <span class="at">title =</span> <span class="st">&quot;field plot layout&quot;</span>) <span class="sc">+</span> </span>
+<span id="cb7-9"><a href="spatial-r.html#cb7-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>() <span class="sc">+</span></span>
+<span id="cb7-10"><a href="spatial-r.html#cb7-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">12</span>),</span>
+<span id="cb7-11"><a href="spatial-r.html#cb7-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">14</span>),</span>
+<span id="cb7-12"><a href="spatial-r.html#cb7-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">14</span>),</span>
+<span id="cb7-13"><a href="spatial-r.html#cb7-13" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">12</span>))</span></code></pre></div>
 <p><img src="Field-Trial-Spatial-Analysis-Guide_files/figure-html/Nin-yield-layout-fig-1.png" width="100%" /></p>
 <p>Black lines delineate the blocks.</p>
 <p>It’s also helpful to plot raw response data:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="spatial-r.html#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">3</span>))</span>
-<span id="cb7-2"><a href="spatial-r.html#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(yield <span class="sc">~</span> rep, <span class="at">data =</span> Nin, <span class="at">xlab =</span> <span class="st">&quot;rep&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;yield (bu/acres)&quot;</span>, <span class="at">col =</span> <span class="st">&quot;red2&quot;</span>, <span class="at">main =</span> <span class="st">&quot;yield across blocks&quot;</span>)</span>
-<span id="cb7-3"><a href="spatial-r.html#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(yield <span class="sc">~</span> row, <span class="at">data =</span> Nin, <span class="at">xlab =</span> <span class="st">&quot;row&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;yield (bu/acres)&quot;</span>,<span class="at">col =</span> <span class="st">&quot;dodgerblue2&quot;</span>, <span class="at">main =</span> <span class="st">&quot;yield across rows&quot;</span>)</span>
-<span id="cb7-4"><a href="spatial-r.html#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(yield <span class="sc">~</span> col, <span class="at">data =</span> Nin, <span class="at">col =</span> <span class="st">&quot;gold&quot;</span>, <span class="at">xlab =</span> <span class="st">&quot;column&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;yield (bu/acres)&quot;</span>,<span class="at">main =</span> <span class="st">&quot;yield across columns&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="spatial-r.html#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">3</span>))</span>
+<span id="cb8-2"><a href="spatial-r.html#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(yield <span class="sc">~</span> rep, <span class="at">data =</span> Nin, <span class="at">xlab =</span> <span class="st">&quot;rep&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;yield (bu/acres)&quot;</span>, <span class="at">col =</span> <span class="st">&quot;red2&quot;</span>, <span class="at">main =</span> <span class="st">&quot;yield across blocks&quot;</span>)</span>
+<span id="cb8-3"><a href="spatial-r.html#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(yield <span class="sc">~</span> row, <span class="at">data =</span> Nin, <span class="at">xlab =</span> <span class="st">&quot;row&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;yield (bu/acres)&quot;</span>,<span class="at">col =</span> <span class="st">&quot;dodgerblue2&quot;</span>, <span class="at">main =</span> <span class="st">&quot;yield across rows&quot;</span>)</span>
+<span id="cb8-4"><a href="spatial-r.html#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(yield <span class="sc">~</span> col, <span class="at">data =</span> Nin, <span class="at">col =</span> <span class="st">&quot;gold&quot;</span>, <span class="at">xlab =</span> <span class="st">&quot;column&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;yield (bu/acres)&quot;</span>,<span class="at">main =</span> <span class="st">&quot;yield across columns&quot;</span>)</span></code></pre></div>
 <p><img src="Field-Trial-Spatial-Analysis-Guide_files/figure-html/Nin-boxplot-fig-1.png" width="80%" /></p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="spatial-r.html#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="spatial-r.html#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))</span></code></pre></div>
 </div>
 </div>
 <div id="test-for-spatial-autocorrelation" class="section level2" number="4.2">
@@ -336,21 +376,21 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="morans-i-1" class="section level3" number="4.2.1">
 <h3><span class="header-section-number">4.2.1</span> Moran’s I</h3>
 <p>First, run a standard linear model of the experiment:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="spatial-r.html#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(nlme)</span>
-<span id="cb9-2"><a href="spatial-r.html#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-3"><a href="spatial-r.html#cb9-3" aria-hidden="true" tabindex="-1"></a>nin.lme <span class="ot">&lt;-</span> <span class="fu">lme</span>(yield <span class="sc">~</span> gen, <span class="at">random =</span> <span class="sc">~</span><span class="dv">1</span><span class="sc">|</span>rep,</span>
-<span id="cb9-4"><a href="spatial-r.html#cb9-4" aria-hidden="true" tabindex="-1"></a>              <span class="at">data =</span> Nin,</span>
-<span id="cb9-5"><a href="spatial-r.html#cb9-5" aria-hidden="true" tabindex="-1"></a>              <span class="at">na.action =</span> na.exclude)</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="spatial-r.html#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(nlme)</span>
+<span id="cb10-2"><a href="spatial-r.html#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="spatial-r.html#cb10-3" aria-hidden="true" tabindex="-1"></a>nin.lme <span class="ot">&lt;-</span> <span class="fu">lme</span>(yield <span class="sc">~</span> gen, <span class="at">random =</span> <span class="sc">~</span><span class="dv">1</span><span class="sc">|</span>rep,</span>
+<span id="cb10-4"><a href="spatial-r.html#cb10-4" aria-hidden="true" tabindex="-1"></a>              <span class="at">data =</span> Nin,</span>
+<span id="cb10-5"><a href="spatial-r.html#cb10-5" aria-hidden="true" tabindex="-1"></a>              <span class="at">na.action =</span> na.exclude)</span></code></pre></div>
 <p>Next, establish and weight neighbors for each plot. In this example, only adjacent neighbors in the rook formation (see <a href="background.html#background">3</a>) are used and are weighted proportionally according to their representation as neighbors to an individual. That is, if a unit has 4 adjacent neighbors, each neighbor is weighted as 0.25. If there are only two neighbors, each is weighted 0.5.</p>
 <p>The function <code>cell2nb()</code> is a function for setting neighbors when working with data laid out in a regular grid.</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="spatial-r.html#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(spdep)</span>
-<span id="cb10-2"><a href="spatial-r.html#cb10-2" aria-hidden="true" tabindex="-1"></a>xy_rook <span class="ot">&lt;-</span> <span class="fu">cell2nb</span>(<span class="at">nrow =</span> <span class="fu">max</span>(Nin<span class="sc">$</span>row), <span class="at">ncol =</span> <span class="fu">max</span>(Nin<span class="sc">$</span>col), <span class="at">type=</span><span class="st">&quot;rook&quot;</span>, <span class="at">torus =</span> <span class="cn">FALSE</span>, <span class="at">legacy =</span> <span class="cn">FALSE</span>)  </span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="spatial-r.html#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(spdep)</span>
+<span id="cb11-2"><a href="spatial-r.html#cb11-2" aria-hidden="true" tabindex="-1"></a>xy_rook <span class="ot">&lt;-</span> <span class="fu">cell2nb</span>(<span class="at">nrow =</span> <span class="fu">max</span>(Nin<span class="sc">$</span>row), <span class="at">ncol =</span> <span class="fu">max</span>(Nin<span class="sc">$</span>col), <span class="at">type=</span><span class="st">&quot;rook&quot;</span>, <span class="at">torus =</span> <span class="cn">FALSE</span>, <span class="at">legacy =</span> <span class="cn">FALSE</span>)  </span></code></pre></div>
 <p><strong>Make sure your data sorted by the variables assigned to row and col (in that order), and there is one and only one observation in the data set for each unique row/col combination. Even missing plots need a row.</strong></p>
 <p><em>Rook adjacency plot for the NIN data</em></p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="spatial-r.html#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
-<span id="cb11-2"><a href="spatial-r.html#cb11-2" aria-hidden="true" tabindex="-1"></a>rook_matrix <span class="ot">&lt;-</span> <span class="fu">st_as_sf</span>(<span class="fu">expand.grid</span>(<span class="at">col=</span><span class="dv">1</span><span class="sc">:</span><span class="dv">22</span>, <span class="at">row=</span><span class="dv">1</span><span class="sc">:</span><span class="dv">11</span>), <span class="at">coords=</span><span class="fu">c</span>(<span class="st">&quot;col&quot;</span>, <span class="st">&quot;row&quot;</span>))</span>
-<span id="cb11-3"><a href="spatial-r.html#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(xy_rook, <span class="at">coords =</span> <span class="fu">st_geometry</span>(rook_matrix), <span class="at">points =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
-<div class="figure"><span id="fig:nin-rook-adj-fg"></span>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="spatial-r.html#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
+<span id="cb12-2"><a href="spatial-r.html#cb12-2" aria-hidden="true" tabindex="-1"></a>rook_matrix <span class="ot">&lt;-</span> <span class="fu">st_as_sf</span>(<span class="fu">expand.grid</span>(<span class="at">col=</span><span class="dv">1</span><span class="sc">:</span><span class="dv">22</span>, <span class="at">row=</span><span class="dv">1</span><span class="sc">:</span><span class="dv">11</span>), <span class="at">coords=</span><span class="fu">c</span>(<span class="st">&quot;col&quot;</span>, <span class="st">&quot;row&quot;</span>))</span>
+<span id="cb12-3"><a href="spatial-r.html#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(xy_rook, <span class="at">coords =</span> <span class="fu">st_geometry</span>(rook_matrix), <span class="at">points =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="figure"><span style="display:block;" id="fig:nin-rook-adj-fg"></span>
 <img src="Field-Trial-Spatial-Analysis-Guide_files/figure-html/nin-rook-adj-fg-1.png" alt="Rook adjacency plot for the NIN data" width="672" />
 <p class="caption">
 Figure 4.1: Rook adjacency plot for the NIN data
@@ -358,9 +398,9 @@ Figure 4.1: Rook adjacency plot for the NIN data
 </div>
 <p>Each observation considers “neighbors” to be those which touch the cell in a row or column orientation, but not diagonal.</p>
 <p>Conduct Moran’s test via standard t-test and using MC sampling.</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="spatial-r.html#cb12-1" aria-hidden="true" tabindex="-1"></a>resid_lme <span class="ot">&lt;-</span> <span class="fu">residuals</span>(nin.lme)</span>
-<span id="cb12-2"><a href="spatial-r.html#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(resid_lme) <span class="ot">&lt;-</span> Nin<span class="sc">$</span>plot</span>
-<span id="cb12-3"><a href="spatial-r.html#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="fu">moran.test</span>(resid_lme, <span class="fu">nb2listw</span>(xy_rook), <span class="at">na.action =</span> na.exclude)</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="spatial-r.html#cb13-1" aria-hidden="true" tabindex="-1"></a>resid_lme <span class="ot">&lt;-</span> <span class="fu">residuals</span>(nin.lme)</span>
+<span id="cb13-2"><a href="spatial-r.html#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(resid_lme) <span class="ot">&lt;-</span> Nin<span class="sc">$</span>plot</span>
+<span id="cb13-3"><a href="spatial-r.html#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="fu">moran.test</span>(resid_lme, <span class="fu">nb2listw</span>(xy_rook), <span class="at">na.action =</span> na.exclude)</span></code></pre></div>
 <pre><code>## 
 ##  Moran I test under randomisation
 ## 
@@ -373,7 +413,7 @@ Figure 4.1: Rook adjacency plot for the NIN data
 ## sample estimates:
 ## Moran I statistic       Expectation          Variance 
 ##       0.402504491      -0.004484305       0.002487522</code></pre>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="spatial-r.html#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">moran.mc</span>(resid_lme, <span class="fu">nb2listw</span>(xy_rook), <span class="dv">999</span>, <span class="at">na.action =</span> na.exclude)</span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="spatial-r.html#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">moran.mc</span>(resid_lme, <span class="fu">nb2listw</span>(xy_rook), <span class="dv">999</span>, <span class="at">na.action =</span> na.exclude)</span></code></pre></div>
 <pre><code>## 
 ##  Monte-Carlo simulation of Moran I
 ## 
@@ -385,13 +425,13 @@ Figure 4.1: Rook adjacency plot for the NIN data
 ## statistic = 0.4025, observed rank = 1000, p-value = 0.001
 ## alternative hypothesis: greater</code></pre>
 <p>Plot Spatial dependence of residuals</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="spatial-r.html#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(purrr)</span>
-<span id="cb16-2"><a href="spatial-r.html#cb16-2" aria-hidden="true" tabindex="-1"></a>res.nn1 <span class="ot">&lt;-</span> <span class="fu">map_dbl</span>(xy_rook, <span class="cf">function</span>(j) <span class="fu">mean</span>(resid_lme[j]))</span>
-<span id="cb16-3"><a href="spatial-r.html#cb16-3" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb16-4"><a href="spatial-r.html#cb16-4" aria-hidden="true" tabindex="-1"></a>rc <span class="ot">&lt;-</span> <span class="fu">signif</span>(<span class="fu">cor</span>(resid_lme, res.nn1, <span class="at">use =</span> <span class="st">&quot;pairwise.complete.obs&quot;</span>), <span class="dv">2</span>)</span>
-<span id="cb16-5"><a href="spatial-r.html#cb16-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-6"><a href="spatial-r.html#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="at">x =</span> resid_lme, <span class="at">y =</span> res.nn1, </span>
-<span id="cb16-7"><a href="spatial-r.html#cb16-7" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="fu">paste0</span>(<span class="st">&quot;r = &quot;</span>, rc), <span class="at">xlab =</span> <span class="st">&quot;residual&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;average residual of neighbor (rook)&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="spatial-r.html#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(purrr)</span>
+<span id="cb17-2"><a href="spatial-r.html#cb17-2" aria-hidden="true" tabindex="-1"></a>res.nn1 <span class="ot">&lt;-</span> <span class="fu">map_dbl</span>(xy_rook, <span class="cf">function</span>(j) <span class="fu">mean</span>(resid_lme[j]))</span>
+<span id="cb17-3"><a href="spatial-r.html#cb17-3" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb17-4"><a href="spatial-r.html#cb17-4" aria-hidden="true" tabindex="-1"></a>rc <span class="ot">&lt;-</span> <span class="fu">signif</span>(<span class="fu">cor</span>(resid_lme, res.nn1, <span class="at">use =</span> <span class="st">&quot;pairwise.complete.obs&quot;</span>), <span class="dv">2</span>)</span>
+<span id="cb17-5"><a href="spatial-r.html#cb17-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-6"><a href="spatial-r.html#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="at">x =</span> resid_lme, <span class="at">y =</span> res.nn1, </span>
+<span id="cb17-7"><a href="spatial-r.html#cb17-7" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="fu">paste0</span>(<span class="st">&quot;r = &quot;</span>, rc), <span class="at">xlab =</span> <span class="st">&quot;residual&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;average residual of neighbor (rook)&quot;</span>)</span></code></pre></div>
 <p><img src="Field-Trial-Spatial-Analysis-Guide_files/figure-html/resid-cor-fig-1.png" width="672" /></p>
 </div>
 <div id="note-on-gearys-c" class="section level3" number="4.2.2">
@@ -402,23 +442,23 @@ Figure 4.1: Rook adjacency plot for the NIN data
 <div id="empirical-variogram-fitting" class="section level2" number="4.3">
 <h2><span class="header-section-number">4.3</span> Empirical variogram fitting</h2>
 <p>First, create a spatial object by adding spatial coordinates to an ordinary data frame. I like to use the actual size of the plots since they are often exaggerated rectangles that have a significantly greater length than width.</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="spatial-r.html#cb17-1" aria-hidden="true" tabindex="-1"></a>Nin_spatial <span class="ot">&lt;-</span> Nin_na</span>
-<span id="cb17-2"><a href="spatial-r.html#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">coordinates</span>(Nin_spatial) <span class="ot">&lt;-</span> <span class="er">~</span> col.width <span class="sc">+</span> row.length</span>
-<span id="cb17-3"><a href="spatial-r.html#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(Nin_spatial)</span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="spatial-r.html#cb18-1" aria-hidden="true" tabindex="-1"></a>Nin_spatial <span class="ot">&lt;-</span> Nin_na</span>
+<span id="cb18-2"><a href="spatial-r.html#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">coordinates</span>(Nin_spatial) <span class="ot">&lt;-</span> <span class="er">~</span> col.width <span class="sc">+</span> row.length</span>
+<span id="cb18-3"><a href="spatial-r.html#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(Nin_spatial)</span></code></pre></div>
 <pre><code>## [1] &quot;SpatialPointsDataFrame&quot;
 ## attr(,&quot;package&quot;)
 ## [1] &quot;sp&quot;</code></pre>
 <p>Set the maximum distance for calculating the variogram model (which is one-half the maximum distance between two points).</p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="spatial-r.html#cb19-1" aria-hidden="true" tabindex="-1"></a>max_dist <span class="ot">=</span> <span class="fl">0.6</span><span class="sc">*</span><span class="fu">max</span>(<span class="fu">dist</span>(<span class="fu">coordinates</span>(Nin_spatial)))</span>
-<span id="cb19-2"><a href="spatial-r.html#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(max_dist, <span class="at">digits =</span> <span class="dv">2</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="spatial-r.html#cb20-1" aria-hidden="true" tabindex="-1"></a>max_dist <span class="ot">=</span> <span class="fl">0.6</span><span class="sc">*</span><span class="fu">max</span>(<span class="fu">dist</span>(<span class="fu">coordinates</span>(Nin_spatial)))</span>
+<span id="cb20-2"><a href="spatial-r.html#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(max_dist, <span class="at">digits =</span> <span class="dv">2</span>)</span></code></pre></div>
 <pre><code>## [1] 29.9</code></pre>
 <p>Calculate semivariance for an isotropic model and plot the variogram.</p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="spatial-r.html#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gstat)</span>
-<span id="cb21-2"><a href="spatial-r.html#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(Nin_spatial)</span></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="spatial-r.html#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gstat)</span>
+<span id="cb22-2"><a href="spatial-r.html#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(Nin_spatial)</span></code></pre></div>
 <pre><code>## [1] &quot;SpatialPointsDataFrame&quot;
 ## attr(,&quot;package&quot;)
 ## [1] &quot;sp&quot;</code></pre>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="spatial-r.html#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(Nin_spatial)</span></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="spatial-r.html#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(Nin_spatial)</span></code></pre></div>
 <pre><code>## class       : SpatialPointsDataFrame 
 ## features    : 6 
 ## extent      : 1.2, 1.2, 8.6, 30.1  (xmin, xmax, ymin, ymax)
@@ -427,88 +467,88 @@ Figure 4.1: Rook adjacency plot for the NIN data
 ## names       :      gen, rep, yield, col, row,     name 
 ## min values  : Buckskin,  R1,  19.4,   1,   2, Buckskin 
 ## max values  :     Vona,  R3, 29.85,   1,   7,     Vona</code></pre>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="spatial-r.html#cb25-1" aria-hidden="true" tabindex="-1"></a>resid_var1 <span class="ot">&lt;-</span> gstat<span class="sc">::</span><span class="fu">variogram</span>(yield <span class="sc">~</span> rep <span class="sc">+</span> gen, </span>
-<span id="cb25-2"><a href="spatial-r.html#cb25-2" aria-hidden="true" tabindex="-1"></a>                        <span class="at">cutoff =</span> max_dist,</span>
-<span id="cb25-3"><a href="spatial-r.html#cb25-3" aria-hidden="true" tabindex="-1"></a>                        <span class="at">width =</span> max_dist<span class="sc">/</span><span class="dv">20</span>, <span class="co"># 20 is the number of bins</span></span>
-<span id="cb25-4"><a href="spatial-r.html#cb25-4" aria-hidden="true" tabindex="-1"></a>                        <span class="at">data =</span> Nin_spatial)</span>
-<span id="cb25-5"><a href="spatial-r.html#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(resid_var1)</span></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="spatial-r.html#cb26-1" aria-hidden="true" tabindex="-1"></a>resid_var1 <span class="ot">&lt;-</span> gstat<span class="sc">::</span><span class="fu">variogram</span>(yield <span class="sc">~</span> rep <span class="sc">+</span> gen, </span>
+<span id="cb26-2"><a href="spatial-r.html#cb26-2" aria-hidden="true" tabindex="-1"></a>                        <span class="at">cutoff =</span> max_dist,</span>
+<span id="cb26-3"><a href="spatial-r.html#cb26-3" aria-hidden="true" tabindex="-1"></a>                        <span class="at">width =</span> max_dist<span class="sc">/</span><span class="dv">20</span>, <span class="co"># 20 is the number of bins</span></span>
+<span id="cb26-4"><a href="spatial-r.html#cb26-4" aria-hidden="true" tabindex="-1"></a>                        <span class="at">data =</span> Nin_spatial)</span>
+<span id="cb26-5"><a href="spatial-r.html#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(resid_var1)</span></code></pre></div>
 <p><img src="Field-Trial-Spatial-Analysis-Guide_files/figure-html/possible-error-1.png" width="672" /></p>
 <p>Test out correlated error models:</p>
 <p>First, set the starting nugget values as the minimum of the semi-variance. There is likely more sophisticated methods to establish the starting value for nugget, but I have found that extracting the minimum value of the semivariance to work well as a starting point.</p>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="spatial-r.html#cb26-1" aria-hidden="true" tabindex="-1"></a>nugget_start <span class="ot">&lt;-</span> <span class="fu">min</span>(resid_var1<span class="sc">$</span>gamma)</span></code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="spatial-r.html#cb27-1" aria-hidden="true" tabindex="-1"></a>nugget_start <span class="ot">&lt;-</span> <span class="fu">min</span>(resid_var1<span class="sc">$</span>gamma)</span></code></pre></div>
 <p>Establish models for variogram fitting.</p>
-<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="spatial-r.html#cb27-1" aria-hidden="true" tabindex="-1"></a>Nin_vgm1 <span class="ot">&lt;-</span> <span class="fu">vgm</span>(<span class="at">model =</span> <span class="st">&quot;Exp&quot;</span>, <span class="at">nugget =</span> nugget_start) <span class="co"># exponential</span></span>
-<span id="cb27-2"><a href="spatial-r.html#cb27-2" aria-hidden="true" tabindex="-1"></a>Nin_vgm2 <span class="ot">&lt;-</span> <span class="fu">vgm</span>(<span class="at">model =</span> <span class="st">&quot;Sph&quot;</span>, <span class="at">nugget =</span> nugget_start) <span class="co"># spherical</span></span>
-<span id="cb27-3"><a href="spatial-r.html#cb27-3" aria-hidden="true" tabindex="-1"></a>Nin_vgm3 <span class="ot">&lt;-</span> <span class="fu">vgm</span>(<span class="at">model =</span> <span class="st">&quot;Gau&quot;</span>, <span class="at">nugget =</span> nugget_start) <span class="co"># Gaussian</span></span>
-<span id="cb27-4"><a href="spatial-r.html#cb27-4" aria-hidden="true" tabindex="-1"></a>Nin_vgm4 <span class="ot">&lt;-</span> <span class="fu">vgm</span>(<span class="at">model =</span> <span class="st">&quot;Mat&quot;</span>, <span class="at">nugget =</span> nugget_start) <span class="co"># Matern</span></span></code></pre></div>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="spatial-r.html#cb28-1" aria-hidden="true" tabindex="-1"></a>Nin_vgm1 <span class="ot">&lt;-</span> <span class="fu">vgm</span>(<span class="at">model =</span> <span class="st">&quot;Exp&quot;</span>, <span class="at">nugget =</span> nugget_start) <span class="co"># exponential</span></span>
+<span id="cb28-2"><a href="spatial-r.html#cb28-2" aria-hidden="true" tabindex="-1"></a>Nin_vgm2 <span class="ot">&lt;-</span> <span class="fu">vgm</span>(<span class="at">model =</span> <span class="st">&quot;Sph&quot;</span>, <span class="at">nugget =</span> nugget_start) <span class="co"># spherical</span></span>
+<span id="cb28-3"><a href="spatial-r.html#cb28-3" aria-hidden="true" tabindex="-1"></a>Nin_vgm3 <span class="ot">&lt;-</span> <span class="fu">vgm</span>(<span class="at">model =</span> <span class="st">&quot;Gau&quot;</span>, <span class="at">nugget =</span> nugget_start) <span class="co"># Gaussian</span></span>
+<span id="cb28-4"><a href="spatial-r.html#cb28-4" aria-hidden="true" tabindex="-1"></a>Nin_vgm4 <span class="ot">&lt;-</span> <span class="fu">vgm</span>(<span class="at">model =</span> <span class="st">&quot;Mat&quot;</span>, <span class="at">nugget =</span> nugget_start) <span class="co"># Matern</span></span></code></pre></div>
 <p>Fit the variograms to the data:</p>
-<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="spatial-r.html#cb28-1" aria-hidden="true" tabindex="-1"></a>Nin_variofit1 <span class="ot">&lt;-</span> <span class="fu">fit.variogram</span>(resid_var1, Nin_vgm1)</span>
-<span id="cb28-2"><a href="spatial-r.html#cb28-2" aria-hidden="true" tabindex="-1"></a>Nin_variofit2 <span class="ot">&lt;-</span> <span class="fu">fit.variogram</span>(resid_var1, Nin_vgm2)</span>
-<span id="cb28-3"><a href="spatial-r.html#cb28-3" aria-hidden="true" tabindex="-1"></a>Nin_variofit3 <span class="ot">&lt;-</span> <span class="fu">fit.variogram</span>(resid_var1, Nin_vgm3)</span>
-<span id="cb28-4"><a href="spatial-r.html#cb28-4" aria-hidden="true" tabindex="-1"></a>Nin_variofit4 <span class="ot">&lt;-</span> <span class="fu">fit.variogram</span>(resid_var1, Nin_vgm4, <span class="at">fit.kappa =</span> T)</span></code></pre></div>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="spatial-r.html#cb29-1" aria-hidden="true" tabindex="-1"></a>Nin_variofit1 <span class="ot">&lt;-</span> <span class="fu">fit.variogram</span>(resid_var1, Nin_vgm1)</span>
+<span id="cb29-2"><a href="spatial-r.html#cb29-2" aria-hidden="true" tabindex="-1"></a>Nin_variofit2 <span class="ot">&lt;-</span> <span class="fu">fit.variogram</span>(resid_var1, Nin_vgm2)</span>
+<span id="cb29-3"><a href="spatial-r.html#cb29-3" aria-hidden="true" tabindex="-1"></a>Nin_variofit3 <span class="ot">&lt;-</span> <span class="fu">fit.variogram</span>(resid_var1, Nin_vgm3)</span>
+<span id="cb29-4"><a href="spatial-r.html#cb29-4" aria-hidden="true" tabindex="-1"></a>Nin_variofit4 <span class="ot">&lt;-</span> <span class="fu">fit.variogram</span>(resid_var1, Nin_vgm4, <span class="at">fit.kappa =</span> T)</span></code></pre></div>
 <div id="compare-variograms" class="section level3" number="4.3.1">
 <h3><span class="header-section-number">4.3.1</span> Compare variograms</h3>
 <p>Look at the results! (this is fun)</p>
-<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="spatial-r.html#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(resid_var1, Nin_variofit1, <span class="at">main =</span> <span class="st">&quot;Exponential model&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="spatial-r.html#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(resid_var1, Nin_variofit1, <span class="at">main =</span> <span class="st">&quot;Exponential model&quot;</span>)</span></code></pre></div>
 <p><img src="Field-Trial-Spatial-Analysis-Guide_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
-<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="spatial-r.html#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(resid_var1, Nin_variofit2, <span class="at">main =</span> <span class="st">&quot;Spherical model&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="spatial-r.html#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(resid_var1, Nin_variofit2, <span class="at">main =</span> <span class="st">&quot;Spherical model&quot;</span>)</span></code></pre></div>
 <p><img src="Field-Trial-Spatial-Analysis-Guide_files/figure-html/unnamed-chunk-18-2.png" width="672" /></p>
-<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="spatial-r.html#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(resid_var1, Nin_variofit3, <span class="at">main =</span> <span class="st">&quot;Gaussian model&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="spatial-r.html#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(resid_var1, Nin_variofit3, <span class="at">main =</span> <span class="st">&quot;Gaussian model&quot;</span>)</span></code></pre></div>
 <p><img src="Field-Trial-Spatial-Analysis-Guide_files/figure-html/unnamed-chunk-18-3.png" width="672" /></p>
-<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="spatial-r.html#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(resid_var1, Nin_variofit4, <span class="at">main =</span> <span class="st">&quot;Matern model&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="spatial-r.html#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(resid_var1, Nin_variofit4, <span class="at">main =</span> <span class="st">&quot;Matern model&quot;</span>)</span></code></pre></div>
 <p><img src="Field-Trial-Spatial-Analysis-Guide_files/figure-html/unnamed-chunk-18-4.png" width="672" /></p>
 <p>How to pick the best one mdoel? The attribute “SSError” indicates how well each model was able to predict the binned error terms as a function of distance. However, it’s important to look at the model as well to see if the model was able to fit the data.</p>
-<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="spatial-r.html#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">&quot;Exponential&quot;</span>); <span class="fu">attr</span>(Nin_variofit1, <span class="st">&quot;SSErr&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="spatial-r.html#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">&quot;Exponential&quot;</span>); <span class="fu">attr</span>(Nin_variofit1, <span class="st">&quot;SSErr&quot;</span>)</span></code></pre></div>
 <pre><code>## [1] &quot;Exponential&quot;</code></pre>
 <pre><code>## [1] 1129.799</code></pre>
-<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="spatial-r.html#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">&quot;Spherical&quot;</span>); <span class="fu">attr</span>(Nin_variofit2, <span class="st">&quot;SSErr&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="spatial-r.html#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">&quot;Spherical&quot;</span>); <span class="fu">attr</span>(Nin_variofit2, <span class="st">&quot;SSErr&quot;</span>)</span></code></pre></div>
 <pre><code>## [1] &quot;Spherical&quot;</code></pre>
 <pre><code>## [1] 1012.76</code></pre>
-<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="spatial-r.html#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">&quot;Gaussian&quot;</span>); <span class="fu">attr</span>(Nin_variofit3, <span class="st">&quot;SSErr&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="spatial-r.html#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">&quot;Gaussian&quot;</span>); <span class="fu">attr</span>(Nin_variofit3, <span class="st">&quot;SSErr&quot;</span>)</span></code></pre></div>
 <pre><code>## [1] &quot;Gaussian&quot;</code></pre>
 <pre><code>## [1] 752.5491</code></pre>
-<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="spatial-r.html#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">&quot;Matern&quot;</span>); <span class="fu">attr</span>(Nin_variofit4, <span class="st">&quot;SSErr&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="spatial-r.html#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">&quot;Matern&quot;</span>); <span class="fu">attr</span>(Nin_variofit4, <span class="st">&quot;SSErr&quot;</span>)</span></code></pre></div>
 <pre><code>## [1] &quot;Matern&quot;</code></pre>
 <pre><code>## [1] 771.4813</code></pre>
 <p><code>Nin_variofit3</code> had the lowest error terms, corresponding to the Gaussian model.</p>
 <p>Results from the empirical variogram:</p>
-<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="spatial-r.html#cb45-1" aria-hidden="true" tabindex="-1"></a>Nin_variofit3</span></code></pre></div>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="spatial-r.html#cb46-1" aria-hidden="true" tabindex="-1"></a>Nin_variofit3</span></code></pre></div>
 <pre><code>##   model    psill    range
 ## 1   Nug 20.04106  0.00000
 ## 2   Gau 22.04013 12.19921</code></pre>
 <p>The variogram parameters can be easily extracted from this table:</p>
-<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="spatial-r.html#cb47-1" aria-hidden="true" tabindex="-1"></a>nugget <span class="ot">&lt;-</span> Nin_variofit3<span class="sc">$</span>psill[<span class="dv">1</span>] <span class="co"># &quot;measurement error&quot;</span></span>
-<span id="cb47-2"><a href="spatial-r.html#cb47-2" aria-hidden="true" tabindex="-1"></a>range <span class="ot">&lt;-</span> Nin_variofit3<span class="sc">$</span>range[<span class="dv">2</span>] <span class="co"># distance to establish independence between data points</span></span>
-<span id="cb47-3"><a href="spatial-r.html#cb47-3" aria-hidden="true" tabindex="-1"></a>sill <span class="ot">&lt;-</span> <span class="fu">sum</span>(Nin_variofit3<span class="sc">$</span>psill) <span class="co"># maximum semivariance</span></span></code></pre></div>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="spatial-r.html#cb48-1" aria-hidden="true" tabindex="-1"></a>nugget <span class="ot">&lt;-</span> Nin_variofit3<span class="sc">$</span>psill[<span class="dv">1</span>] <span class="co"># &quot;measurement error&quot;</span></span>
+<span id="cb48-2"><a href="spatial-r.html#cb48-2" aria-hidden="true" tabindex="-1"></a>range <span class="ot">&lt;-</span> Nin_variofit3<span class="sc">$</span>range[<span class="dv">2</span>] <span class="co"># distance to establish independence between data points</span></span>
+<span id="cb48-3"><a href="spatial-r.html#cb48-3" aria-hidden="true" tabindex="-1"></a>sill <span class="ot">&lt;-</span> <span class="fu">sum</span>(Nin_variofit3<span class="sc">$</span>psill) <span class="co"># maximum semivariance</span></span></code></pre></div>
 </div>
 <div id="explore-anisotropy" class="section level3" number="4.3.2">
 <h3><span class="header-section-number">4.3.2</span> Explore anisotropy</h3>
 <p>Most field experiments occur on a relatively small scale,where the entire experimental layout is less than 0.25 square miles. As such, isotropic models (where spatial correlation is based on distance but not direction) are often adequate for understanding localised field heterogeneity. However, there are always exceptions where a spatial correlation in a field trail is best describe by an anistropic model.</p>
 <p>Reestablish models for variogram fitting:</p>
-<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="spatial-r.html#cb48-1" aria-hidden="true" tabindex="-1"></a>Nin_vgm1a <span class="ot">&lt;-</span> <span class="fu">vgm</span>(<span class="at">model =</span> <span class="st">&quot;Exp&quot;</span>, <span class="at">anis =</span> <span class="fu">c</span>(<span class="dv">90</span>, <span class="fl">0.5</span>)) <span class="co"># 90 refers to the angle of the main direction and 0.5 creates a second 90 degree axis of variability to estimate </span></span>
-<span id="cb48-2"><a href="spatial-r.html#cb48-2" aria-hidden="true" tabindex="-1"></a>Nin_vgm2a <span class="ot">&lt;-</span> <span class="fu">vgm</span>(<span class="at">model =</span> <span class="st">&quot;Sph&quot;</span>, <span class="at">anis =</span> <span class="fu">c</span>(<span class="dv">90</span>, <span class="fl">0.5</span>))</span>
-<span id="cb48-3"><a href="spatial-r.html#cb48-3" aria-hidden="true" tabindex="-1"></a>Nin_vgm3a <span class="ot">&lt;-</span> <span class="fu">vgm</span>(<span class="at">model =</span> <span class="st">&quot;Gau&quot;</span>, <span class="at">anis =</span> <span class="fu">c</span>(<span class="dv">90</span>, <span class="fl">0.5</span>))</span>
-<span id="cb48-4"><a href="spatial-r.html#cb48-4" aria-hidden="true" tabindex="-1"></a>Nin_vgm4a <span class="ot">&lt;-</span> <span class="fu">vgm</span>(<span class="at">model =</span> <span class="st">&quot;Mat&quot;</span>, <span class="at">anis =</span> <span class="fu">c</span>(<span class="dv">90</span>, <span class="fl">0.5</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="spatial-r.html#cb49-1" aria-hidden="true" tabindex="-1"></a>Nin_vgm1a <span class="ot">&lt;-</span> <span class="fu">vgm</span>(<span class="at">model =</span> <span class="st">&quot;Exp&quot;</span>, <span class="at">anis =</span> <span class="fu">c</span>(<span class="dv">90</span>, <span class="fl">0.5</span>)) <span class="co"># 90 refers to the angle of the main direction and 0.5 creates a second 90 degree axis of variability to estimate </span></span>
+<span id="cb49-2"><a href="spatial-r.html#cb49-2" aria-hidden="true" tabindex="-1"></a>Nin_vgm2a <span class="ot">&lt;-</span> <span class="fu">vgm</span>(<span class="at">model =</span> <span class="st">&quot;Sph&quot;</span>, <span class="at">anis =</span> <span class="fu">c</span>(<span class="dv">90</span>, <span class="fl">0.5</span>))</span>
+<span id="cb49-3"><a href="spatial-r.html#cb49-3" aria-hidden="true" tabindex="-1"></a>Nin_vgm3a <span class="ot">&lt;-</span> <span class="fu">vgm</span>(<span class="at">model =</span> <span class="st">&quot;Gau&quot;</span>, <span class="at">anis =</span> <span class="fu">c</span>(<span class="dv">90</span>, <span class="fl">0.5</span>))</span>
+<span id="cb49-4"><a href="spatial-r.html#cb49-4" aria-hidden="true" tabindex="-1"></a>Nin_vgm4a <span class="ot">&lt;-</span> <span class="fu">vgm</span>(<span class="at">model =</span> <span class="st">&quot;Mat&quot;</span>, <span class="at">anis =</span> <span class="fu">c</span>(<span class="dv">90</span>, <span class="fl">0.5</span>))</span></code></pre></div>
 <p>Fit the variograms to the data:</p>
-<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="spatial-r.html#cb49-1" aria-hidden="true" tabindex="-1"></a>Nin_variofit1a <span class="ot">&lt;-</span> <span class="fu">fit.variogram</span>(resid_var1, Nin_vgm1a)</span>
-<span id="cb49-2"><a href="spatial-r.html#cb49-2" aria-hidden="true" tabindex="-1"></a>Nin_variofit2a <span class="ot">&lt;-</span> <span class="fu">fit.variogram</span>(resid_var1, Nin_vgm2a)</span>
-<span id="cb49-3"><a href="spatial-r.html#cb49-3" aria-hidden="true" tabindex="-1"></a>Nin_variofit3a <span class="ot">&lt;-</span> <span class="fu">fit.variogram</span>(resid_var1, Nin_vgm3a)</span>
-<span id="cb49-4"><a href="spatial-r.html#cb49-4" aria-hidden="true" tabindex="-1"></a>Nin_variofit4a <span class="ot">&lt;-</span> <span class="fu">fit.variogram</span>(resid_var1, Nin_vgm4a, <span class="at">fit.kappa =</span> T)</span>
-<span id="cb49-5"><a href="spatial-r.html#cb49-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb49-6"><a href="spatial-r.html#cb49-6" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">&quot;Exponential&quot;</span>); <span class="fu">attr</span>(Nin_variofit1a, <span class="st">&quot;SSErr&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="spatial-r.html#cb50-1" aria-hidden="true" tabindex="-1"></a>Nin_variofit1a <span class="ot">&lt;-</span> <span class="fu">fit.variogram</span>(resid_var1, Nin_vgm1a)</span>
+<span id="cb50-2"><a href="spatial-r.html#cb50-2" aria-hidden="true" tabindex="-1"></a>Nin_variofit2a <span class="ot">&lt;-</span> <span class="fu">fit.variogram</span>(resid_var1, Nin_vgm2a)</span>
+<span id="cb50-3"><a href="spatial-r.html#cb50-3" aria-hidden="true" tabindex="-1"></a>Nin_variofit3a <span class="ot">&lt;-</span> <span class="fu">fit.variogram</span>(resid_var1, Nin_vgm3a)</span>
+<span id="cb50-4"><a href="spatial-r.html#cb50-4" aria-hidden="true" tabindex="-1"></a>Nin_variofit4a <span class="ot">&lt;-</span> <span class="fu">fit.variogram</span>(resid_var1, Nin_vgm4a, <span class="at">fit.kappa =</span> T)</span>
+<span id="cb50-5"><a href="spatial-r.html#cb50-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-6"><a href="spatial-r.html#cb50-6" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">&quot;Exponential&quot;</span>); <span class="fu">attr</span>(Nin_variofit1a, <span class="st">&quot;SSErr&quot;</span>)</span></code></pre></div>
 <pre><code>## [1] &quot;Exponential&quot;</code></pre>
 <pre><code>## [1] 8387.429</code></pre>
-<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="spatial-r.html#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">&quot;Spherical&quot;</span>); <span class="fu">attr</span>(Nin_variofit2a, <span class="st">&quot;SSErr&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="spatial-r.html#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">&quot;Spherical&quot;</span>); <span class="fu">attr</span>(Nin_variofit2a, <span class="st">&quot;SSErr&quot;</span>)</span></code></pre></div>
 <pre><code>## [1] &quot;Spherical&quot;</code></pre>
 <pre><code>## [1] 9448.75</code></pre>
-<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="spatial-r.html#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">&quot;Gaussian&quot;</span>); <span class="fu">attr</span>(Nin_variofit3a, <span class="st">&quot;SSErr&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="spatial-r.html#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">&quot;Gaussian&quot;</span>); <span class="fu">attr</span>(Nin_variofit3a, <span class="st">&quot;SSErr&quot;</span>)</span></code></pre></div>
 <pre><code>## [1] &quot;Gaussian&quot;</code></pre>
 <pre><code>## [1] 19319.19</code></pre>
-<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="spatial-r.html#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">&quot;Matern&quot;</span>); <span class="fu">attr</span>(Nin_variofit4a, <span class="st">&quot;SSErr&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="spatial-r.html#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">&quot;Matern&quot;</span>); <span class="fu">attr</span>(Nin_variofit4a, <span class="st">&quot;SSErr&quot;</span>)</span></code></pre></div>
 <pre><code>## [1] &quot;Matern&quot;</code></pre>
 <pre><code>## [1] 7253.594</code></pre>
 <p>Error terms are considerably higher than in the isotropic model.</p>
-<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb61-1"><a href="spatial-r.html#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(resid_var1, Nin_variofit1a, <span class="at">main =</span> <span class="st">&quot;Exponential model&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb62-1"><a href="spatial-r.html#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(resid_var1, Nin_variofit1a, <span class="at">main =</span> <span class="st">&quot;Exponential model&quot;</span>)</span></code></pre></div>
 <p><img src="Field-Trial-Spatial-Analysis-Guide_files/figure-html/unnamed-chunk-24-1.png" width="672" /></p>
 <p>Hmm, that plot is not very convincing.</p>
 <p>In this field trial, there is evidence of spatial correlation as a function of distance, but there is not evidence this spatial correlation is impacted by direction.</p>
@@ -516,6 +556,12 @@ Figure 4.1: Rook adjacency plot for the NIN data
 <p>It’s important to remember these methods are intended to describe localised spatial correlation. Field-wide spatial gradients, such as position on a slope, should be modelled as a separate trend.</p>
 
 </div>
+</div>
+</div>
+<h3>References</h3>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-stroup1994" class="csl-entry">
+Stroup, Walter W., Stephen B. Baenziger, and Dieter K. Mulitze. 1994. <span>“Removing Spatial Variation from Wheat Yield Trials: A Comparison of Methods.”</span> <em>Crop Science</em> 34: 62–66.
 </div>
 </div>
             </section>
@@ -547,6 +593,7 @@ gitbook.start({
 "weibo": false,
 "instapaper": false,
 "vk": false,
+"whatsapp": false,
 "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {
@@ -567,6 +614,10 @@ gitbook.start({
 "text": null
 },
 "download": null,
+"search": {
+"engine": "lunr",
+"options": null
+},
 "toc": {
 "collapse": "section",
 "scroll_highlight": true

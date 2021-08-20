@@ -28,6 +28,7 @@ This data set actually has no missing data -- this is a balanced trial. However,
 Plot raw yield data as it appeared in the field: 
 ```{r message=FALSE, warning=FALSE}
 library(ggplot2)
+library(desplot)
 ```
 
 ```{r Nin-yield-layout-fig, out.width="100%",fig.asp=.7,message=FALSE, warning=FALSE}

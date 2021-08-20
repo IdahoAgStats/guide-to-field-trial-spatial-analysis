@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Section 2 Introduction | Incorporating Spatial Analysis into Agricultural Field Experiments.</title>
+  <title>Section 8 Other Models - SAS | Incorporating Spatial Analysis into Agricultural Field Experiments.</title>
   <meta name="description" content="Instructions for identifying spatial autocorrelation in agricultural field trials and incorporating spatial variation into analysis of trial using R and SAS." />
   <meta name="generator" content="bookdown 0.23.1 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Section 2 Introduction | Incorporating Spatial Analysis into Agricultural Field Experiments." />
+  <meta property="og:title" content="Section 8 Other Models - SAS | Incorporating Spatial Analysis into Agricultural Field Experiments." />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Section 2 Introduction | Incorporating Spatial Analysis into Agricultural Field Experiments." />
+  <meta name="twitter:title" content="Section 8 Other Models - SAS | Incorporating Spatial Analysis into Agricultural Field Experiments." />
   
   <meta name="twitter:description" content="Instructions for identifying spatial autocorrelation in agricultural field trials and incorporating spatial variation into analysis of trial using R and SAS." />
   
@@ -32,8 +32,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="index.html"/>
-<link rel="next" href="background.html"/>
+<link rel="prev" href="model-extension-r.html"/>
+<link rel="next" href="the-end.html"/>
 <script src="libs/header-attrs-2.10/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -318,49 +318,100 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="intro" class="section level1" number="2">
-<h1><span class="header-section-number">Section 2</span> Introduction</h1>
-<div id="why-care-about-spatial-variation" class="section level2" number="2.1">
-<h2><span class="header-section-number">2.1</span> Why care about spatial variation?</h2>
-<p>The goal of variety testing programs is to provide the agricultural industry reliable information about regional crop variety performance. Crop variety trials employ common experimental designs such as randomized complete block design to account for environmental heterogeneity. However, those techniques are quite often inadequate to fully account for spatial heterogeneity that arises due to field position, soil conditions, disease, wildlife impacts and more.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="intro.html#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># need to insert image</span></span></code></pre></div>
-<p>As a result, the assumption of ANOVA are violated, invalidating the analysis, and variety estimates themselves are incorrect. Incorporating spatial correlation between experimental plots can improve the overall accuracy and precision of these estimates.</p>
+<div id="model-extension-sas" class="section level1" number="8">
+<h1><span class="header-section-number">Section 8</span> Other Models - SAS</h1>
+<div id="other-experimental-and-treatment-designs-1" class="section level2" number="8.1">
+<h2><span class="header-section-number">8.1</span> Other Experimental and Treatment Designs</h2>
+<p>Spatial models can be extended to fit other experimental designs such as CRD, Lattice, and split plot or treatment designs such as factorials.</p>
+<p>Below are minimal examples that omit several steps conducted in section <a href="rcbd-sas.html#rcbd-sas">6</a> (e.g. fitting the empirical variogram) for brevity. Also, although spatial variance is incorporated into each example, we have not made an effort to ensure that each is the best fitting model for the data. The examples are intended to illustrate the correct syntax rather than the complete process of proper model fitting.</p>
+<p>Unless indicated otherwise, these data are adapted from the R package agridat. Specific links to csv data files are given in the examples.</p>
+<div id="completely-randomized-design-crd" class="section level3" number="8.1.1">
+<h3><span class="header-section-number">8.1.1</span> Completely randomized design (CRD)</h3>
+<p>Data: <a href="https://raw.githubusercontent.com/IdahoAgStats/guide-to-field-trial-spatial-analysis/master/data/cochran_crd.csv">cochran_crd.csv</a><br><br></p>
+<p>This study investigated the effect of sulfur on controlling scab disease in potatoes and had seven treatments (trt) measuring the percent surface area infected (inf). Row and column indices are also given. The design was a completely randomized design with 8 control replications and 4 treatment replications.</p>
+<p>Two possible methods of adjustment are shown: row column trend adjustment (as suggested in agridat), and a spline adjustment.</p>
+<pre class="sashtml"><code>
+ods html close;
+proc format;
+invalue has_NA
+ &#39;NA&#39; = .;
+run;
+
+data CRD;
+    infile &#39;.\data\cochran_crd.csv&#39; firstobs=2 delimiter=&#39;,&#39;;
+    input inf trt$ row col;
+    informat inf has_NA.;
+    if inf=. then delete;
+run;
+
+proc mixed data=crd;
+    class trt;
+    model inf=trt row col;
+run;
+
+proc glimmix data=crd;
+    class trt;
+    effect sp_r = spline(row col);
+    model inf=trt sp_r;
+    random row col/type=rsmooth;
+run;
+ 
+ods html; </code></pre>
 </div>
-<div id="diagnosing-spatial-auto-correlation" class="section level2" number="2.2">
-<h2><span class="header-section-number">2.2</span> Diagnosing spatial auto-correlation</h2>
-<p>Spatial correlation is similarity of plots that are close to one another. That correlation is expected to decline with distance. This is different from experiment-wide gradients, such as a salinity gradient or position on a slope.</p>
-<div id="morans-i" class="section level3" number="2.2.1">
-<h3><span class="header-section-number">2.2.1</span> Moran’s I</h3>
-<p>Moran’s I, sometimes called “Global Moran’s I” is similar like a correlation coefficient. It is a test for correlation between units (plots in our case).</p>
-<p><span class="math display">\[ I = \frac{N}{W}\frac{\sum_i \sum_j w_{ij} (x_i - \bar{x})(x_j - \bar{x})}{\sum_i(x_i - \bar{x})^2} 
-\qquad i \neq j\]</span></p>
-<p>Where N is total number of spatial locations indexed by <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span>, x is the variable of interest, <span class="math inline">\(w_{ij}\)</span> are a spatial weights between each <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span>, and W is the sum of all weights. The expected values of Moran’s I is <span class="math inline">\(-1/(N-1)\)</span>. Values greater than that indicate positive spatial correlation (areas close to each other are similar), while values less than the expected Moran’s I indicate dissimilarity as spatial distance between points decreases.</p>
-<p>There are several options for defining adjacent neighbors and how to weight each neighbor’s influence. The two common configurations for defining neighbors are the rook and queen configurations. These are exactly what their chess analogy suggest: “rook” defines neighbors in an row/column fashion, while “queen” defines neighbors in a row/column configuration an also neighbors located diagonally at a 45 degree angle from the row/column neighbors. Determining this can be somewhat complicated when working with irregularly-placed data (e.g. county seats), but is quite unambiguous for lattice data common in planned field experiments:</p>
-<p><img src="Field-Trial-Spatial-Analysis-Guide_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
-<p>Another test for diagnosing spatial correlation is Geary’s C:</p>
-<p><span class="math display">\[ I = \frac{(N -1)}{2W}\frac{\sum_i \sum_j w_{ij} (x_i - x_j)^2}{\sum_i(x_i - \bar{x})^2} \qquad i \neq j\]</span></p>
-<p>These terms have the same meaning in Moran’s I. The expected value of Geary’s C is 1. Values higher than 1 indicate positive spatial correlation and less than 1 indicate negative spatial correlation.</p>
+<div id="multi-way-factorials-1" class="section level3" number="8.1.2">
+<h3><span class="header-section-number">8.1.2</span> Multi-way Factorials</h3>
+<p>Data: <a href="https://raw.githubusercontent.com/IdahoAgStats/guide-to-field-trial-spatial-analysis/master/data/chinloy_fractionalfactorial.csv">chinloy_fractionalfactorial.csv</a><br><br></p>
+<p>Factorial experiments consider multiple treatments and their combinations. The study here evaluated the effect of 5 different fertilizer treatments (nitrogen, phosphorus, potassium, bagasse, and a filter mud press), each at various concentrations, on sugarcane yield. The levels of {0,1,2} indicate the relative concentrations of each fertilizer. Because all possible treatment combinations were too numerous, only a subset were used (fractional factorial) and only 2-way interactions with nitrogen are evaluated in the model. The treatments were laid out in a randomized complete block design (block).</p>
+<p>A guassian spatial model is used below.</p>
+<pre class="sashtml"><code>
+ods html close;
+
+proc format;
+invalue has_NA
+ &#39;NA&#39; = .;
+run;
+
+data Factorial;
+    infile &#39;.\data\chinloy_fractionalfactorial.csv&#39; firstobs=2 delimiter=&#39;,&#39;;
+    input yield block$ row col trt N P K B F;
+    informat yield has_NA.;
+    if yield=. then delete;
+run;
+ 
+proc mixed data=Factorial maxiter=150;
+    class block N P K B F;
+    model yield = N P K B F N*P N*K N*B N*F/ ddfm=kr;
+    random block;
+    repeated/subject=intercept type=sp(gau) (row col) local;
+    parms (6) (.25) (.21) (.1);
+run;
+
+ods html;
+</code></pre>
 </div>
-<div id="empirical-variogram-semivariance" class="section level3" number="2.2.2">
-<h3><span class="header-section-number">2.2.2</span> Empirical variogram &amp; semivariance</h3>
-<p>An empirical variogram is a visual tool for understanding how error terms are related to each other over spatial distance. It relies on semivariance (<span class="math inline">\(\gamma\)</span>), a statistic expressing variance as a function of pairwise distances between data points at points <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span>.</p>
-<p><span class="math display">\[\gamma(h) = \frac{1}{2|N(h)|}\sum_{N(h)}(x_i - x_j)^2\]</span></p>
-<p>Semivariances are binned for distance intervals. The average values for semivariance and distance interval can be fit to correlated error models such a exponential, spherical, Gaussian and Matérn. How to do this is explored further in <a href="background.html#background">3</a> of this guide.</p>
-<p>Three important concepts of an empirical variogram are <em>nugget</em>, <em>sill</em> and <em>range</em></p>
-<div class="figure">
-<img src="img/Sadoti2014_spherical.jpg" alt="" />
-<p class="caption">Example Empirical Variogram</p>
+<div id="alpha-lattice-1" class="section level3" number="8.1.3">
+<h3><span class="header-section-number">8.1.3</span> Alpha lattice</h3>
+<p>The <em>burgueno.alpha</em> data set uses an incomplete block alpha design with 16 treatment levels, 12 blocks and 3 reps.</p>
 </div>
-<ul>
-<li>range = distance up to which is there is spatial correlation</li>
-<li>sill = uncorrelated variance of the variable of interest</li>
-<li>nugget = measurement error, or short-distance spatial variance and other unaccounted for variance</li>
-</ul>
-<p><strong>2 other concepts:</strong></p>
-<ul>
-<li>partial sill = sill - nugget</li>
-<li>nugget effect = the nugget/sill ratio, interpreted opposite of <span class="math inline">\(r^2\)</span></li>
-</ul>
+<div id="latin-square-1" class="section level3" number="8.1.4">
+<h3><span class="header-section-number">8.1.4</span> Latin square</h3>
+<p>Latin is a special example of a lattice experiment where each treatment occurs in each row and in each column. As a result, the row and column effects are used to model spatial effects.</p>
+<p>The *cochran.latin** data set examines the effect of an “operator” (a person) on the difference between the true plot height and operator-measured height (of wheat plots).</p>
+</div>
+<div id="split-plot-1" class="section level3" number="8.1.5">
+<h3><span class="header-section-number">8.1.5</span> Split plot</h3>
+<p>The <em>durban.splitplot</em> data set looks at the effect of fungicide on barley varieties. The main plot is fungicide (2 levels), and the sub plot is variety (70 levels). There are 4 blocks.</p>
+</div>
+<div id="split-split-plot-1" class="section level3" number="8.1.6">
+<h3><span class="header-section-number">8.1.6</span> Split-split plot</h3>
+<p>The <em>archbold.apple</em> data set of apple trees is examining the impact of spacing (the main plot), root stock (the split plot) and variety (the split-split plot) on fruit yield. There are 5 blocks.</p>
+</div>
+<div id="split-block-1" class="section level3" number="8.1.7">
+<h3><span class="header-section-number">8.1.7</span> Split block</h3>
+<p>also, over-dispersed count data</p>
+</div>
+<div id="augmented-1" class="section level3" number="8.1.8">
+<h3><span class="header-section-number">8.1.8</span> Augmented</h3>
 
 </div>
 </div>
@@ -370,8 +421,8 @@ div.csl-indent {
           </div>
         </div>
       </div>
-<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="background.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="model-extension-r.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="the-end.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -403,7 +454,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/IdahoAgStats/Guide-to-Field-Trial-Spatial-Analysis/edit/master/02-intro.Rmd",
+"link": "https://github.com/IdahoAgStats/Guide-to-Field-Trial-Spatial-Analysis/edit/master/08-model-extension-SAS.Rmd",
 "text": "Edit"
 },
 "history": {

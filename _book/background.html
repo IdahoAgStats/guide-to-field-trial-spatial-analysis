@@ -5,27 +5,27 @@
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Section 3 Spatial Models | Incorporating Spatial Analysis into Agricultural Field Experiments.</title>
-  <meta name="description" content="Instructions for identifying spatial autocorrelation in agricultural field trials and incorporating spatial variation into analysis of trial using R and SAS."" />
-  <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
+  <meta name="description" content="Instructions for identifying spatial autocorrelation in agricultural field trials and incorporating spatial variation into analysis of trial using R and SAS." />
+  <meta name="generator" content="bookdown 0.23.1 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Section 3 Spatial Models | Incorporating Spatial Analysis into Agricultural Field Experiments." />
   <meta property="og:type" content="book" />
   
   
-  <meta property="og:description" content="Instructions for identifying spatial autocorrelation in agricultural field trials and incorporating spatial variation into analysis of trial using R and SAS."" />
+  <meta property="og:description" content="Instructions for identifying spatial autocorrelation in agricultural field trials and incorporating spatial variation into analysis of trial using R and SAS." />
   
 
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Section 3 Spatial Models | Incorporating Spatial Analysis into Agricultural Field Experiments." />
   
-  <meta name="twitter:description" content="Instructions for identifying spatial autocorrelation in agricultural field trials and incorporating spatial variation into analysis of trial using R and SAS."" />
+  <meta name="twitter:description" content="Instructions for identifying spatial autocorrelation in agricultural field trials and incorporating spatial variation into analysis of trial using R and SAS." />
   
 
 <meta name="author" content="Julia Piaskowski" />
 <meta name="author" content="William Price" />
 
 
-<meta name="date" content="2021-08-17" />
+<meta name="date" content="2021-08-20" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -34,8 +34,8 @@
   
 <link rel="prev" href="intro.html"/>
 <link rel="next" href="spatial-r.html"/>
-<script src="libs/header-attrs-2.7/header-attrs.js"></script>
-<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<script src="libs/header-attrs-2.10/header-attrs.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -52,6 +52,8 @@
 
 
 
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
 
 
 <style type="text/css">
@@ -117,6 +119,29 @@ code span.st { color: #4070a0; } /* String */
 code span.va { color: #19177c; } /* Variable */
 code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
 </style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
@@ -194,22 +219,22 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="5.2.1" data-path="rcbd-r.html"><a href="rcbd-r.html#exponential-1"><i class="fa fa-check"></i><b>5.2.1</b> Exponential</a></li>
 <li class="chapter" data-level="5.2.2" data-path="rcbd-r.html"><a href="rcbd-r.html#spherical-1"><i class="fa fa-check"></i><b>5.2.2</b> Spherical</a></li>
-<li class="chapter" data-level="5.2.3" data-path="rcbd-r.html"><a href="rcbd-r.html#power-1"><i class="fa fa-check"></i><b>5.2.3</b> Power</a></li>
-<li class="chapter" data-level="5.2.4" data-path="rcbd-r.html"><a href="rcbd-r.html#matérn-1"><i class="fa fa-check"></i><b>5.2.4</b> Matérn</a></li>
+<li class="chapter" data-level="5.2.3" data-path="rcbd-r.html"><a href="rcbd-r.html#matérn-1"><i class="fa fa-check"></i><b>5.2.3</b> Matérn</a></li>
 </ul></li>
 <li class="chapter" data-level="5.3" data-path="rcbd-r.html"><a href="rcbd-r.html#rowcolumn-trends"><i class="fa fa-check"></i><b>5.3</b> Row/Column Trends:</a></li>
 <li class="chapter" data-level="5.4" data-path="rcbd-r.html"><a href="rcbd-r.html#splines-1"><i class="fa fa-check"></i><b>5.4</b> Splines</a></li>
-<li class="chapter" data-level="5.5" data-path="rcbd-r.html"><a href="rcbd-r.html#bayesian-ar1xar1"><i class="fa fa-check"></i><b>5.5</b> Bayesian AR1xAR1</a></li>
-<li class="chapter" data-level="5.6" data-path="rcbd-r.html"><a href="rcbd-r.html#model-selection"><i class="fa fa-check"></i><b>5.6</b> Model Selection</a>
+<li class="chapter" data-level="5.5" data-path="rcbd-r.html"><a href="rcbd-r.html#ar1xar1"><i class="fa fa-check"></i><b>5.5</b> AR1xAR1</a></li>
+<li class="chapter" data-level="5.6" data-path="rcbd-r.html"><a href="rcbd-r.html#bayesian-ar1xar1"><i class="fa fa-check"></i><b>5.6</b> Bayesian AR1xAR1</a></li>
+<li class="chapter" data-level="5.7" data-path="rcbd-r.html"><a href="rcbd-r.html#model-selection"><i class="fa fa-check"></i><b>5.7</b> Model Selection</a>
 <ul>
-<li class="chapter" data-level="5.6.1" data-path="rcbd-r.html"><a href="rcbd-r.html#spatial-dependence-of-residuals"><i class="fa fa-check"></i><b>5.6.1</b> Spatial dependence of residuals</a></li>
-<li class="chapter" data-level="5.6.2" data-path="rcbd-r.html"><a href="rcbd-r.html#compare-model-fit"><i class="fa fa-check"></i><b>5.6.2</b> Compare Model Fit</a></li>
-<li class="chapter" data-level="5.6.3" data-path="rcbd-r.html"><a href="rcbd-r.html#experiment-wide-error"><i class="fa fa-check"></i><b>5.6.3</b> Experiment-wide error</a></li>
-<li class="chapter" data-level="5.6.4" data-path="rcbd-r.html"><a href="rcbd-r.html#post-hoc-power"><i class="fa fa-check"></i><b>5.6.4</b> Post-hoc power</a></li>
-<li class="chapter" data-level="5.6.5" data-path="rcbd-r.html"><a href="rcbd-r.html#standard-error-of-treatment-means"><i class="fa fa-check"></i><b>5.6.5</b> Standard error of treatment means</a></li>
-<li class="chapter" data-level="5.6.6" data-path="rcbd-r.html"><a href="rcbd-r.html#treatment-means"><i class="fa fa-check"></i><b>5.6.6</b> Treatment means</a></li>
+<li class="chapter" data-level="5.7.1" data-path="rcbd-r.html"><a href="rcbd-r.html#spatial-dependence-of-residuals"><i class="fa fa-check"></i><b>5.7.1</b> Spatial dependence of residuals</a></li>
+<li class="chapter" data-level="5.7.2" data-path="rcbd-r.html"><a href="rcbd-r.html#compare-model-fit"><i class="fa fa-check"></i><b>5.7.2</b> Compare Model Fit</a></li>
+<li class="chapter" data-level="5.7.3" data-path="rcbd-r.html"><a href="rcbd-r.html#experiment-wide-error"><i class="fa fa-check"></i><b>5.7.3</b> Experiment-wide error</a></li>
+<li class="chapter" data-level="5.7.4" data-path="rcbd-r.html"><a href="rcbd-r.html#post-hoc-power"><i class="fa fa-check"></i><b>5.7.4</b> Post-hoc power</a></li>
+<li class="chapter" data-level="5.7.5" data-path="rcbd-r.html"><a href="rcbd-r.html#standard-error-of-treatment-means"><i class="fa fa-check"></i><b>5.7.5</b> Standard error of treatment means</a></li>
+<li class="chapter" data-level="5.7.6" data-path="rcbd-r.html"><a href="rcbd-r.html#treatment-means"><i class="fa fa-check"></i><b>5.7.6</b> Treatment means</a></li>
 </ul></li>
-<li class="chapter" data-level="5.7" data-path="rcbd-r.html"><a href="rcbd-r.html#making-decisions"><i class="fa fa-check"></i><b>5.7</b> Making decisions</a></li>
+<li class="chapter" data-level="5.8" data-path="rcbd-r.html"><a href="rcbd-r.html#making-decisions"><i class="fa fa-check"></i><b>5.8</b> Making decisions</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="rcbd-sas.html"><a href="rcbd-sas.html"><i class="fa fa-check"></i><b>6</b> RCBD Example: SAS</a>
 <ul>
@@ -222,42 +247,56 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="6.2.1" data-path="rcbd-sas.html"><a href="rcbd-sas.html#examine-the-number-of-distance-pairs-and-maximum-lags-between-residuals"><i class="fa fa-check"></i><b>6.2.1</b> Examine the Number of Distance Pairs and Maximum Lags between Residuals</a></li>
 <li class="chapter" data-level="6.2.2" data-path="rcbd-sas.html"><a href="rcbd-sas.html#compute-morans-i-and-gearys-c."><i class="fa fa-check"></i><b>6.2.2</b> Compute Moran’s I and Geary’s C.</a></li>
 </ul></li>
-<li class="chapter" data-level="6.3" data-path="rcbd-sas.html"><a href="rcbd-sas.html#estimation-and-modeling-of-semivariance"><i class="fa fa-check"></i><b>6.3</b> 4.3 Estimation and Modeling of Semivariance</a>
+<li class="chapter" data-level="6.3" data-path="rcbd-sas.html"><a href="rcbd-sas.html#estimation-and-modeling-of-semivariance"><i class="fa fa-check"></i><b>6.3</b> Estimation and Modeling of Semivariance</a>
 <ul>
-<li class="chapter" data-level="6.3.1" data-path="rcbd-sas.html"><a href="rcbd-sas.html#estimating-empirical-semivariance"><i class="fa fa-check"></i><b>6.3.1</b> 4.3.1 Estimating Empirical Semivariance</a></li>
+<li class="chapter" data-level="6.3.1" data-path="rcbd-sas.html"><a href="rcbd-sas.html#estimating-empirical-semivariance"><i class="fa fa-check"></i><b>6.3.1</b> Estimating Empirical Semivariance</a></li>
 <li class="chapter" data-level="6.3.2" data-path="rcbd-sas.html"><a href="rcbd-sas.html#fitting-an-empirical-variogram-model"><i class="fa fa-check"></i><b>6.3.2</b> Fitting an Empirical Variogram Model</a></li>
 </ul></li>
 <li class="chapter" data-level="6.4" data-path="rcbd-sas.html"><a href="rcbd-sas.html#using-the-estimated-variogram-in-an-adjusted-analysis"><i class="fa fa-check"></i><b>6.4</b> Using the Estimated variogram in an Adjusted Analysis</a>
 <ul>
-<li class="chapter" data-level="6.4.1" data-path="rcbd-sas.html"><a href="rcbd-sas.html#unadjusted-rcbd-model"><i class="fa fa-check"></i><b>6.4.1</b> Unadjusted RCBD Model</a></li>
-<li class="chapter" data-level="6.4.2" data-path="rcbd-sas.html"><a href="rcbd-sas.html#rcbd-model-with-spatial-covariates"><i class="fa fa-check"></i><b>6.4.2</b> RCBD Model with Spatial Covariates</a></li>
+<li class="chapter" data-level="6.4.1" data-path="rcbd-sas.html"><a href="rcbd-sas.html#unadjusted-rcb-model"><i class="fa fa-check"></i><b>6.4.1</b> Unadjusted RCB Model</a></li>
+<li class="chapter" data-level="6.4.2" data-path="rcbd-sas.html"><a href="rcbd-sas.html#rcb-model-with-spatial-covariance"><i class="fa fa-check"></i><b>6.4.2</b> RCB Model with Spatial Covariance</a></li>
+<li class="chapter" data-level="6.4.3" data-path="rcbd-sas.html"><a href="rcbd-sas.html#other-spatial-adjustments"><i class="fa fa-check"></i><b>6.4.3</b> Other Spatial Adjustments</a></li>
 </ul></li>
 <li class="chapter" data-level="6.5" data-path="rcbd-sas.html"><a href="rcbd-sas.html#compare-estimated-means"><i class="fa fa-check"></i><b>6.5</b> Compare Estimated Means</a></li>
 </ul></li>
-<li class="chapter" data-level="7" data-path="model-extension.html"><a href="model-extension.html"><i class="fa fa-check"></i><b>7</b> Other Models</a>
+<li class="chapter" data-level="7" data-path="model-extension-r.html"><a href="model-extension-r.html"><i class="fa fa-check"></i><b>7</b> Other Models - R</a>
 <ul>
-<li class="chapter" data-level="7.1" data-path="model-extension.html"><a href="model-extension.html#other-experimental-designs"><i class="fa fa-check"></i><b>7.1</b> Other Experimental Designs</a>
+<li class="chapter" data-level="7.1" data-path="model-extension-r.html"><a href="model-extension-r.html#other-experimental-and-treatment-designs"><i class="fa fa-check"></i><b>7.1</b> Other Experimental and Treatment Designs</a>
 <ul>
-<li class="chapter" data-level="7.1.1" data-path="model-extension.html"><a href="model-extension.html#factorials-rcbd"><i class="fa fa-check"></i><b>7.1.1</b> 2+ Factorials (RCBD)</a></li>
-<li class="chapter" data-level="7.1.2" data-path="model-extension.html"><a href="model-extension.html#alpha-lattice"><i class="fa fa-check"></i><b>7.1.2</b> Alpha lattice</a></li>
-<li class="chapter" data-level="7.1.3" data-path="model-extension.html"><a href="model-extension.html#latin-square"><i class="fa fa-check"></i><b>7.1.3</b> Latin square</a></li>
-<li class="chapter" data-level="7.1.4" data-path="model-extension.html"><a href="model-extension.html#augmented"><i class="fa fa-check"></i><b>7.1.4</b> Augmented</a></li>
-<li class="chapter" data-level="7.1.5" data-path="model-extension.html"><a href="model-extension.html#split-plot"><i class="fa fa-check"></i><b>7.1.5</b> Split plot</a></li>
-<li class="chapter" data-level="7.1.6" data-path="model-extension.html"><a href="model-extension.html#split-split-plot"><i class="fa fa-check"></i><b>7.1.6</b> Split-split plot</a></li>
-<li class="chapter" data-level="7.1.7" data-path="model-extension.html"><a href="model-extension.html#split-block"><i class="fa fa-check"></i><b>7.1.7</b> Split block</a></li>
-</ul></li>
-<li class="chapter" data-level="7.2" data-path="model-extension.html"><a href="model-extension.html#traits-with-non-gaussian-distributions"><i class="fa fa-check"></i><b>7.2</b> Traits with non-gaussian distributions</a>
-<ul>
-<li class="chapter" data-level="7.2.1" data-path="model-extension.html"><a href="model-extension.html#count-traits"><i class="fa fa-check"></i><b>7.2.1</b> Count traits:</a></li>
-<li class="chapter" data-level="7.2.2" data-path="model-extension.html"><a href="model-extension.html#percent-traits"><i class="fa fa-check"></i><b>7.2.2</b> Percent traits</a></li>
-<li class="chapter" data-level="7.2.3" data-path="model-extension.html"><a href="model-extension.html#ordinal-traits"><i class="fa fa-check"></i><b>7.2.3</b> Ordinal traits</a></li>
-<li class="chapter" data-level="7.2.4" data-path="model-extension.html"><a href="model-extension.html#binomial-traits"><i class="fa fa-check"></i><b>7.2.4</b> Binomial traits</a></li>
+<li class="chapter" data-level="7.1.1" data-path="model-extension-r.html"><a href="model-extension-r.html#completely-randomized-design"><i class="fa fa-check"></i><b>7.1.1</b> Completely randomized design</a></li>
+<li class="chapter" data-level="7.1.2" data-path="model-extension-r.html"><a href="model-extension-r.html#multi-way-factorials"><i class="fa fa-check"></i><b>7.1.2</b> Multi-way Factorials</a></li>
+<li class="chapter" data-level="7.1.3" data-path="model-extension-r.html"><a href="model-extension-r.html#alpha-lattice"><i class="fa fa-check"></i><b>7.1.3</b> Alpha lattice</a></li>
+<li class="chapter" data-level="7.1.4" data-path="model-extension-r.html"><a href="model-extension-r.html#latin-square"><i class="fa fa-check"></i><b>7.1.4</b> Latin square</a></li>
+<li class="chapter" data-level="7.1.5" data-path="model-extension-r.html"><a href="model-extension-r.html#split-plot"><i class="fa fa-check"></i><b>7.1.5</b> Split plot</a></li>
+<li class="chapter" data-level="7.1.6" data-path="model-extension-r.html"><a href="model-extension-r.html#split-split-plot"><i class="fa fa-check"></i><b>7.1.6</b> Split-split plot</a></li>
+<li class="chapter" data-level="7.1.7" data-path="model-extension-r.html"><a href="model-extension-r.html#split-block"><i class="fa fa-check"></i><b>7.1.7</b> Split block</a></li>
+<li class="chapter" data-level="7.1.8" data-path="model-extension-r.html"><a href="model-extension-r.html#augmented"><i class="fa fa-check"></i><b>7.1.8</b> Augmented</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="8" data-path="the-end.html"><a href="the-end.html"><i class="fa fa-check"></i><b>8</b> Conclusion</a>
+<li class="chapter" data-level="8" data-path="model-extension-sas.html"><a href="model-extension-sas.html"><i class="fa fa-check"></i><b>8</b> Other Models - SAS</a>
 <ul>
-<li class="chapter" data-level="8.1" data-path="the-end.html"><a href="the-end.html#other-packages"><i class="fa fa-check"></i><b>8.1</b> Other packages</a></li>
-<li class="chapter" data-level="8.2" data-path="the-end.html"><a href="the-end.html#final-recommendations"><i class="fa fa-check"></i><b>8.2</b> Final recommendations</a></li>
+<li class="chapter" data-level="8.1" data-path="model-extension-sas.html"><a href="model-extension-sas.html#other-experimental-and-treatment-designs-1"><i class="fa fa-check"></i><b>8.1</b> Other Experimental and Treatment Designs</a>
+<ul>
+<li class="chapter" data-level="8.1.1" data-path="model-extension-sas.html"><a href="model-extension-sas.html#completely-randomized-design-crd"><i class="fa fa-check"></i><b>8.1.1</b> Completely randomized design (CRD)</a></li>
+<li class="chapter" data-level="8.1.2" data-path="model-extension-sas.html"><a href="model-extension-sas.html#multi-way-factorials-1"><i class="fa fa-check"></i><b>8.1.2</b> Multi-way Factorials</a></li>
+<li class="chapter" data-level="8.1.3" data-path="model-extension-sas.html"><a href="model-extension-sas.html#alpha-lattice-1"><i class="fa fa-check"></i><b>8.1.3</b> Alpha lattice</a></li>
+<li class="chapter" data-level="8.1.4" data-path="model-extension-sas.html"><a href="model-extension-sas.html#latin-square-1"><i class="fa fa-check"></i><b>8.1.4</b> Latin square</a></li>
+<li class="chapter" data-level="8.1.5" data-path="model-extension-sas.html"><a href="model-extension-sas.html#split-plot-1"><i class="fa fa-check"></i><b>8.1.5</b> Split plot</a></li>
+<li class="chapter" data-level="8.1.6" data-path="model-extension-sas.html"><a href="model-extension-sas.html#split-split-plot-1"><i class="fa fa-check"></i><b>8.1.6</b> Split-split plot</a></li>
+<li class="chapter" data-level="8.1.7" data-path="model-extension-sas.html"><a href="model-extension-sas.html#split-block-1"><i class="fa fa-check"></i><b>8.1.7</b> Split block</a></li>
+<li class="chapter" data-level="8.1.8" data-path="model-extension-sas.html"><a href="model-extension-sas.html#augmented-1"><i class="fa fa-check"></i><b>8.1.8</b> Augmented</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="the-end.html"><a href="the-end.html"><i class="fa fa-check"></i><b>9</b> Conclusion</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="the-end.html"><a href="the-end.html#other-packages"><i class="fa fa-check"></i><b>9.1</b> Other packages</a></li>
+<li class="chapter" data-level="9.2" data-path="the-end.html"><a href="the-end.html#final-recommendations"><i class="fa fa-check"></i><b>9.2</b> Final recommendations</a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="flotsam-jetsam.html"><a href="flotsam-jetsam.html"><i class="fa fa-check"></i><b>10</b> Flotsam &amp; Jetsam</a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="flotsam-jetsam.html"><a href="flotsam-jetsam.html#r-session-info"><i class="fa fa-check"></i><b>10.1</b> R Session Info</a></li>
+<li class="chapter" data-level="10.2" data-path="flotsam-jetsam.html"><a href="flotsam-jetsam.html#references"><i class="fa fa-check"></i><b>10.2</b> References</a></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -281,7 +320,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="background" class="section level1" number="3">
 <h1><span class="header-section-number">Section 3</span> Spatial Models</h1>
-<p>This section contains some of the background behind why spatial models are used and how they work. Understanding this section is not essential, but it is extremely helpful. This section relies on information introduced in <a href="intro.html#intro">2</a>, so please make sure you have read that section if you are new to empirical variograms and spatial statistics.</p>
+<p>This section contains some of the statistical background behind why spatial models are used and how they work. Understanding this section is not essential, but it is extremely helpful. This section relies on information introduced in <a href="intro.html#intro">2</a>, so please make sure you have read that section if you are new to empirical variograms and spatial statistics.</p>
 <p>General linear statistical models are commonly modeled as thus:</p>
 <p><span class="math display">\[Y_i = \beta_0 + X_i\beta_1 + \epsilon_i\]</span>
 <span class="math inline">\(\beta_1\)</span> is a slope describing the relationship between a continuous variable and the dependent variable, <span class="math inline">\(Y_i\)</span>. If <span class="math inline">\(X_i\)</span> is a categorical variable, such as a crop variety, then there will be <span class="math inline">\(p-1\)</span> slopes estimated, where p is the number of unique treatments levels in <span class="math inline">\(X\)</span>.</p>
@@ -306,7 +345,7 @@ The error terms, or residuals, are assumed to be <em>identically</em> and <em>in
 <p><span class="math display">\[ \gamma (h)\left\{ {\begin{array}{cc} 0 &amp; h = 0\\ C_0+C_1 \left [ 1-e^{-(\frac{h}{r})} \right] &amp; h &gt; 0 \end{array} } \right. \]</span>
 where</p>
 <p><span class="math display">\[ C_0 = nugget \\ C_1 = partial \: sill \\ r = range\]</span></p>
-<div class="figure" style="text-align: center"><span id="fig:Exp-CE-fig"></span>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:Exp-CE-fig"></span>
 <img src="Field-Trial-Spatial-Analysis-Guide_files/figure-html/Exp-CE-fig-1.png" alt="Exponential Model" width="70%" />
 <p class="caption">
 Figure 3.1: Exponential Model
@@ -320,7 +359,7 @@ Figure 3.1: Exponential Model
 <p><span class="math display">\[ \gamma (h)\left\{ {\begin{array}{cc} 0 &amp; h = 0\\ C_0+C_1 \left [ 1-e^{-(\frac{h}{r})^2} \right] &amp; h &gt; 0 \end{array} } \right. \]</span>
 where</p>
 <p><span class="math display">\[ C_0 = nugget \\ C_1 = partial \: sill \\ r = range\]</span></p>
-<div class="figure" style="text-align: center"><span id="fig:Gau-CE-fig"></span>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:Gau-CE-fig"></span>
 <img src="Field-Trial-Spatial-Analysis-Guide_files/figure-html/Gau-CE-fig-1.png" alt="Gaussian Model" width="70%" />
 <p class="caption">
 Figure 3.2: Gaussian Model
@@ -334,7 +373,7 @@ Figure 3.2: Gaussian Model
 C_0 + C_1 &amp; h &gt; r \end{array} } \right. \]</span>
 where</p>
 <p><span class="math display">\[ C_0 = nugget \\ C_1 = partial \: sill \\ r = range\]</span></p>
-<div class="figure" style="text-align: center"><span id="fig:Sph-CE-fig"></span>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:Sph-CE-fig"></span>
 <img src="Field-Trial-Spatial-Analysis-Guide_files/figure-html/Sph-CE-fig-1.png" alt="Spherical Model" width="70%" />
 <p class="caption">
 Figure 3.3: Spherical Model
@@ -351,7 +390,7 @@ Figure 3.3: Spherical Model
 <p><span class="math display">\[ \gamma (h)=\left\{ {\begin{array}{cc} 0 &amp; h = 0\\ C_0+C_1h &amp; h &gt; 0 \end{array} } \right. \]</span>
 where</p>
 <p><span class="math display">\[ C_0 = nugget \\ C_1 = slope \]</span></p>
-<div class="figure" style="text-align: center"><span id="fig:linear-CE-fig"></span>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:linear-CE-fig"></span>
 <img src="Field-Trial-Spatial-Analysis-Guide_files/figure-html/linear-CE-fig-1.png" alt="Linear Error Model" width="70%" />
 <p class="caption">
 Figure 3.4: Linear Error Model
@@ -364,7 +403,7 @@ Figure 3.4: Linear Error Model
 <p><span class="math display">\[ \gamma (h)=\left\{ {\begin{array}{cc} 0 &amp; h = 0\\ C_0+C_1h^\lambda &amp; h &gt; 0 \end{array} } \right. \]</span>
 where</p>
 <span class="math display">\[ 0 \leq \lambda &lt;\leq 2 \\ C_0 = nugget \\ C_1 = scaling \: factor \]</span>
-<div class="figure" style="text-align: center"><span id="fig:power-CE-fig"></span>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:power-CE-fig"></span>
 <img src="Field-Trial-Spatial-Analysis-Guide_files/figure-html/power-CE-fig-1.png" alt="Power Model" width="70%" />
 <p class="caption">
 Figure 3.5: Power Model
@@ -484,6 +523,7 @@ gitbook.start({
 "weibo": false,
 "instapaper": false,
 "vk": false,
+"whatsapp": false,
 "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {
@@ -504,6 +544,10 @@ gitbook.start({
 "text": null
 },
 "download": null,
+"search": {
+"engine": "lunr",
+"options": null
+},
 "toc": {
 "collapse": "section",
 "scroll_highlight": true

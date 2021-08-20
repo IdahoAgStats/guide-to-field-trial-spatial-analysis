@@ -10,18 +10,18 @@ sasopts <- "-nosplash -ls 200"
 
 These data are from a winter wheat variety trial in Alliance, Nebraska [@stroup1994] and are commonly used to demonstrate spatial adjustment in linear modeling. The data represent yields of 56 varieties originally layed out in a randomized complete block design (RCB). The local topography combined with winter kill, however, induced spatial variability that did not correspond to the RCB design [@stroup2013] which produced biased estimates in a standard unadjusted analysis. <br><br>
 
-The code below reads the data from a CSV file where missing values for yield are denoted as 'NA'. These values are not actually missing, but represent blank plots in the original design of the study. The **PROC FORMAT** section converts these to numeric missing values in SAS (defined as a single period).  They are then removed from the data before proceeding to analyses. Also note that row and column indices are multiplied by constants to convert them to the meter dimensions of the plots. This CSV data file can be downloaded [here](https://raw.githubusercontent.com/IdahoAgStats/guide-to-field-trial-spatial-analysis/master/data/Stroup_NIN_wheat.csv). <br><br>
+The code below reads the data from a CSV file where missing values for yield are denoted as 'NA'. These values are not actually missing, but represent blank plots in the original design of the study. The **PROC FORMAT** section converts these to numeric missing values in SAS (defined as a single period).  They are then removed from the data before proceeding to analyses. Also note that row and column indices are multiplied by constants to convert them to the meter dimensions of the plots. This CSV data file can be downloaded [here](https://raw.githubusercontent.com/IdahoAgStats/guide-to-field-trial-spatial-analysis/master/data/stroup_nin_wheat.csv). <br><br>
 
 The first six observations are displayed. The data contains variables for variety (gen), replication (rep), yield, and column and row identifiers.<br><br> Last, a map of the 4 replications (blocks) from the original experimental design is shown.
 
-```{r SAS1, engine="sashtml", collectcode=TRUE, engine.path=saspath, include=TRUE, engine.opts=sasopts, comment=""}
+```{r SAS6_1, engine="sashtml", collectcode=TRUE, engine.path=saspath, include=TRUE, engine.opts=sasopts, comment=""}
 proc format;
   invalue has_NA
   'NA' = .;
 ;
 
  data alliance;
-    infile '.\data\stroup_nin.csv' firstobs=2 delimiter=',';
+    infile '.\data\stroup_nin_wheat.csv' firstobs=2 delimiter=',';
   	informat yield has_NA.;
     input entry $	rep $	yield	col	row;
     Row  = 4.3*Row;
@@ -46,7 +46,7 @@ run;
 
 A first step in assessing spatial variability is to plot the data to visually assess any trends or patterns. This code uses the **SGPLOT** procedure to examine spatial patterns through a heat map of yields, as well as potential trends across replications, columns, and rows using box plots.
 
-```{r SAS2, engine="sashtml",  engine.path=saspath, engine.opts=sasopts, include=TRUE, comment=""}
+```{r SAS6_2, engine="sashtml",  engine.path=saspath, engine.opts=sasopts, include=TRUE, comment=""}
 ODS html GPATH = ".\img\" ;
 
 proc sgplot data=alliance;
@@ -74,7 +74,7 @@ In the heat map, there is a notable region where yield dips in the north west co
 
 The process of modeling spatial variability begins by obtaining the residuals from the original RCB analysis. Here **PROC MIXED** is used to fit the RCB model and output the model residuals to the SAS data set "residuals".<br><br>
 
-```{r SAS3, engine="sashtml", collectcode=TRUE, engine.path=saspath, include=TRUE, engine.opts=sasopts, comment=""}
+```{r SAS6_3, engine="sashtml", collectcode=TRUE, engine.path=saspath, include=TRUE, engine.opts=sasopts, comment=""}
 
 ods html close;
 proc mixed data=alliance;
@@ -87,7 +87,7 @@ ods html;
 
 Examining and estimating spatial variability typically proceeds in several steps. In SAS, these can all be accomplished using **PROC VARIOGRAM**. In this first step, we summarize the potential distances (lags) between row/column positions. The **nhclasses** option sets a value for the number of lag classes or bins to try. Some trial and error here may be necessary in order to find a good setting, however, this value should be big enough to cover the range of possible distances between data row and column coordinates. Setting this initially to 40 was found to be a reasonable choice here. The **novariogram** option tells SAS to only look at these distances and not compute the empirical semivariance values yet.<br><br>
 
-```{r SAS4, engine="sashtml",  engine.path=saspath, engine.opts=sasopts, include=TRUE, comment=""}
+```{r SAS6_4, engine="sashtml",  engine.path=saspath, engine.opts=sasopts, include=TRUE, comment=""}
 
 /* Examine lag distance & maxlag */
 ODS html GPATH = ".\img\" ;
@@ -105,7 +105,7 @@ This output indicates that, with 40 bins, the minimum lag distance is approximat
 
 Two common metrics of spatial correlation are Moran's I and Geary's c. Both these measures are essentially weighted correlations between pairs of observations and measure global and local variability, respectively. If no spatial correlation is present, Moran's I has an expected value close to 0.0 while Geary's C will be close to 1.0. The estimates for I and C can be computed and tested against these null values with the **PROC VARIOGRAM** code below. <br><br>
 
-```{r SAS5, engine="sashtml",  engine.path=saspath, engine.opts=sasopts, include=TRUE, comment=""}
+```{r SAS6_5, engine="sashtml",  engine.path=saspath, engine.opts=sasopts, include=TRUE, comment=""}
 ODS html GPATH = ".\img\" ;
 
 proc variogram data=residuals plots(only)=moran ;
@@ -122,7 +122,7 @@ Both Moran's I and Geary's C are significant here, indicating the presence of sp
 
 Using the lag distance and maximum lag values obtained in the previous steps, we can now use the **compute** statement to estimate an empirical variogram as described in Section \@ref(intro)
 
-```{r SAS6, engine="sashtml", engine.path=saspath, include=TRUE, engine.opts=sasopts, comment=""}
+```{r SAS6_6, engine="sashtml", engine.path=saspath, include=TRUE, engine.opts=sasopts, comment=""}
 ODS html GPATH = ".\img\" ;
 
 proc variogram data=residuals plots(only)=(semivar);
@@ -137,7 +137,7 @@ In the plot, the semi-variance increases as distance between points increases up
 
 In Section \@ref(background), several theoretical variogram models were described. We can use **PROC VARIOGRAM** to fit and compare any number of these models. In the code below, the Gaussian, Exponential, Power, and Spherical models are fit using the **model** statement. By default when several models are listed, SAS will carry out a more sophisticated spatial modeling approach that uses combinations of these models. We, however, just want to focus on single model scenarios. Hence, the **nest=1** option is given which restricts the variogram modeling to single models only.<br><br>
 
-```{r SAS7, engine="sashtml", engine.path=saspath, include=TRUE, engine.opts=sasopts, comment=""}
+```{r SAS6_7, engine="sashtml", engine.path=saspath, include=TRUE, engine.opts=sasopts, comment=""}
 ODS html GPATH = ".\img\" ;
 
 proc variogram data=residuals plots(only)=(fitplot);
@@ -161,7 +161,7 @@ As an initial step, for comparison purposes, the unadjusted RCB model is run fir
 
 ### Unadjusted RCB Model
 
-```{r SAS8, engine="sashtml", collectcode=TRUE, engine.path=saspath, include=TRUE, engine.opts=sasopts, comment=""}
+```{r SAS6_8, engine="sashtml", collectcode=TRUE, engine.path=saspath, include=TRUE, engine.opts=sasopts, comment=""}
 
 /** Fit unadjusted RCBD model **/
 ODS html GPATH = ".\img\" ;
@@ -180,9 +180,9 @@ The F-statistic and accompanying large p-value for 'gen' indicate no differences
 
 The next step is to try a spatially-adjusted model. This is done by adding a **repeated** statement specifying the spatial model form (Gaussian, **type=sp(gau)**) and the variables related to spatial positions in the study (row, col). The **local** option tells SAS to use a nugget parameter in the Gaussian variogram model. The second additional statement is **parms**. This gives SAS a starting place for estimating the range, sill, and nugget parameters. The values given here are taken from the **PROC VARIOGRAM** output above. While this step can be omitted, it is recommended not to do so because, on its own, **PROC MIXED** can often have trouble narrowing in on reasonable parameter estimates. One reason for the preceding variogram steps was to obtain these parameter values so **PROC MIXED** has a good starting place for estimation. As before, the estimated means (adjusted now) are saved, this time in data set "NIN_Spatial_means".<br>
 
-### RCB Model with Spatial Covariates
+### RCB Model with Spatial Covariance
 
-```{r SAS9, engine="sashtml", collectcode=TRUE, engine.path=saspath, include=TRUE, engine.opts=sasopts, comment=""}
+```{r SAS6_9, engine="sashtml", collectcode=TRUE, engine.path=saspath, include=TRUE, engine.opts=sasopts, comment=""}
 
 /** Fit Gaussian adjusted model **/
 /** Parms statement order: Range, Sill, Nugget **/
@@ -200,16 +200,18 @@ proc mixed data=alliance maxiter=150;
 run;
 
 ```
+
 From this output, we see the AIC value is now 1073.1. This is substantially lower than the AIC=1221.7 from the unadjusted model indicating a better model fit. Additionally, the gen effect in the model now has a low p-value (p=0.0024) giving evidence for differences among genotypes where we did not see them previously. Lastly, the standard errors for the means are now lower than those of the unadjusted model indicating an increased precision in mean estimation.<br>
 
-### RCB Model with Row and Column Covariates
+### Other Spatial Adjustments
+#### RCB Model with Row and Column Covariates
 
 Spatial variability might also be addressed by including covariates in the model for row and/or column trends. The following script fits this model where rows and columns enter the model as continuous effects (not in the class statement).
 
-```{r SAS10, engine="sashtml", collectcode=TRUE, engine.path=saspath, include=TRUE, engine.opts=sasopts, comment=""}
+```{r SAS6_10, engine="sashtml", collectcode=TRUE, engine.path=saspath, include=TRUE, engine.opts=sasopts, comment=""}
 
 /** Row column model **/
-ODS html GPATH = ".\img\" ;
+ods html close;
 
 proc mixed data=alliance ;
 	class entry rep;
@@ -219,17 +221,39 @@ proc mixed data=alliance ;
 	ods output LSMeans=NIN_row_col_means;
 	title1 'NIN data: RCBD';
 run;
+ods html;
 
 ```
 
-In the ANOVA section (*Type 3 Tests of Fixed Effects*), we find that columns show a strong effect (p<0.0001) while rows are more moderate (p=0.0448). The AIC for this model falls between that of the unadjusted RCB design and the Spatially adjusted model. That is, it is better than no adjustment, but not as good as the spatially adjusted covariance model. It is also notable that entry has a large p-value (p=0.3583) suggesting not differences in the entries.<br><br>
+#### RCB with Spline Adjustment
 
+Polynomial splines are an additional method for spatial adjustment and represent a more non-parametric method that does not rely on estimation or modeling of variograms. Instead, it uses the raw data and residuals to fit a surface to the spatial data and adjust the variance covariance matrix accordingly. **PROC MIXED**, however, does not have an option for this, so the code below moves to **PROC GLIMMIX**, the generalized Linear Mixed Model procedure in SAS. The syntax for the two procedures are very similar, so, in this example adapted from [@stroup2013], only a few changes are required. First, a random statement is added for rows and columns with a "type=rsmooth" option. This fits a spline to the residuals over the row and column axes of the study area. Second, an "effect" statement is given defining a new covariate, sm_r, which is a splined surface for raw yields over the study area. When entered into the model as a continuous covariate, this centers the data such that the resulting model residuals will have a mean of zero.
 
-Presence of spatial variability can also bias the mean estimates. In this data, this would result in the means ranking incorrectly relative to one another under the unadjusted model. The steps below combine the saved means from the unadjusted and spatially adjusted models above so that we can see how the ranking changes.<br><br>
+```{r SAS6_11, engine="sashtml", collectcode=TRUE, engine.path=saspath, include=TRUE, engine.opts=sasopts, comment=""}
+
+ods html close;
+/** Fit  RCBD model with Spline **/
+
+proc glimmix data=alliance ;
+	class entry rep;
+	effect sp_r = spline(row col);
+	model yield = entry  sp_r/ddfm=kr;
+	random row col/type=rsmooth;
+	lsmeans entry/cl;
+	ods output LSMeans=NIN_smooth_means;
+	title1 'NIN data: RCBD';
+run;
+
+ods html;
+
+```
+
 
 ## Compare Estimated Means
 
-```{r SAS11, engine="sashtml", engine.path=saspath, include=TRUE, engine.opts=sasopts, comment=""}
+Presence of spatial variability can also bias the mean estimates. In this data, this would result in the means ranking incorrectly relative to one another under the unadjusted model. The steps below combine the saved means from the unadjusted and spatially adjusted models above so that we can see how the ranking changes.<br><br>
+
+```{r SAS6_12, engine="sashtml", engine.path=saspath, include=TRUE, engine.opts=sasopts, comment=""}
 
 data NIN_RCBD_means (drop=tvalue probt alpha estimate stderr lower upper df);
 	set NIN_RCBD_means;
