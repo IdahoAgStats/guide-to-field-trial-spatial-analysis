@@ -9,7 +9,7 @@ documentclass: book
 bibliography: [book.bib, packages.bib, extra.bib]
 biblio-style: apalike
 link-citations: yes
-description: Instructions for identifying spatial autocorrelation in agricultural field trials and incorporating spatial variation into analysis of trial using R and SAS."
+description: "Instructions for identifying spatial autocorrelation in agricultural field trials and incorporating spatial variation into analysis of trial using R and SAS."
 ---
 
 # Preface
@@ -33,7 +33,7 @@ Current educational resources are focused largely on geospatial applications tha
 
 In order to run the scripts in this demonstration, you will to download R, available free through the [Comprehensive R Archive Network](https://cran.r-project.org/) (CRAN). While this is sufficient for running R scripts, You may also find it hepful to use RStudio, which provides a nice graphical user interface for R. RStudio can be downloaded [here](https://www.rstudio.com/products/rstudio/download/).
 
-If you already have R installed, please make sure you have version 3.5.0 or newer. 
+If you already have R installed, please make sure you have version 4.0.0 or newer. 
 
 This demonstration is not intended to provide instructions on general R usage. However, There are numerous web resources for learning the Basics of R. [Software carpentry](https://software-carpentry.org/lessons/) offers several lesson plans covering the foundation of R.  
 
@@ -51,13 +51,18 @@ This tutorial was built using R version 4.1 ("Camp Pontanezen"). R session infor
 | sp, sf | standard manipulation of spatial objects | 
 |spdep | spatial dependence functions | 
 |gstat | empirical variogram estimation | 
-|nlme | mixed model analysis | 
-|emmeans| extracts treatments means |
-|spANOVA | spatial lag models for field trials |
+|nlme, lme4 | mixed model analysis | 
+|emmeans| extract treatments means |
+| spaMM | Matérn covariance structure |
 |SpATS | spatial splines for field trials |
-|inla | Bayesian modeling with AR1xAR1 estimation |
+|INLA| Bayesian modeling with AR1xAR1 estimation |
+|breedR | mixed modelling with AR1xAR1 estimation |
 
-All packages aside from **[inla]((https://www.r-inla.org)** are available on CRAN. Download instructions for **inla** can be found [here](https://www.r-inla.org/download-install). 
+All packages aside from **[inla]((https://www.r-inla.org)** and **breedR** are available on CRAN. Download instructions for **inla** can be found [here](https://www.r-inla.org/download-install). The package **breedR**, availabe on GitHub can be installed within R with the following code:
+
+```
+remotes::install_github("famuvie/breedR")
+```
 
 ## SAS Requirements
 
@@ -92,8 +97,7 @@ knitr::include_graphics(c("img/CC-by-nc.png"))
 ```{r include=FALSE}
 # automatically create a bib database for R packages
 knitr::write_bib(c(
-  .packages(), 'bookdown', 'knitr', 'rmarkdown', 'gstat',
-  'dplyr','ggplot2', 'nlme', 'car', 'sf', 'spdep', 'spreg',
-  'sommer'
-), 'packages.bib')
+  .packages(), 'bookdown', 'knitr', 'tidyr', 'rmarkdown', 'gstat', 'sf',
+  'dplyr','ggplot2', 'purrr', 'nlme', 'lme4', 'emmeans','spaMM', 'sp', 'spdep', 'spreg',
+  'INLA', 'breedR', 'agridat', 'desplot', 'SpATS', 'psych'), 'packages.bib')
 ```

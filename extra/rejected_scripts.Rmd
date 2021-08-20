@@ -1,5 +1,7 @@
 # rejected scripts
 
+## Theory
+
 ### Spatial error model (SEM)
 
 This is also refered to as the "moving average model" and is quite similar to auto-regressive model. SAR models the spatial dependence of the variable of interest. SEM models the spatial dependence of the error terms. 
@@ -13,11 +15,13 @@ Where $\mathbf{u}$ incorporates both the normally-distributed iid error and spat
 The AR1 and MA1 models can be combine into one: 
 
 $$ y = X\beta + \rho W_1y+u \\ u = \lambda W_2 + \nu $$
-### AR1xAR1
 
+## Applied Examples
+
+### AR1xAR1 w/sommer)
 
 ```{r eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
-library(sommer) 
+#library(sommer) 
 
 Nin$colF <- as.factor(Nin$col)
 Nin$rowF <- as.factor(Nin$row)
@@ -30,12 +34,13 @@ nin_ar1ar1 <- mmer(yield ~ gen,
 
 preds_ar1ar1 <- predict(nin_ar1ar1, classify = 'gen')$pvals 
 ```
-
-
+This is not being used because the $\rho$ parameters are not estimated in the analysis. It's otherwise a very powerful and useful package and would be fine to use if the $\rho$ parameters were known in advance. 
 
 ### Spatial error model
 
+(to use this, we need to define more neighbors)
 ```{r}
+#library(spdep)
 nin.sem <- errorsarlm(yield ~ gen + rep,
                        listw = nb2listw(xy.rook),
                        data = Nin, na.action = na.exclude)
@@ -44,7 +49,8 @@ mat.preds <- coef
 ```
 
 ### Combined spatial lag and error model (ARMA)
-
+ 
+ (also uses the spdep package)
 ```{r}
 nin.arma <- sacsarlm(yield ~ gen + rep,
                        listw = nb2listw(xy.rook),
@@ -53,10 +59,12 @@ nin.arma <- sacsarlm(yield ~ gen + rep,
 
 ```
 
-Obtaining predictions from the objects of `lagsarlm()`, `errorsarlm()`, and `sacsarlm()` is a challenging task not covered here. 
+Obtaining predictions from the objects of `lagsarlm()`, `errorsarlm()`, and `sacsarlm()` is a challenging task. 
 
+### spAMM
+
+results comparable with nlme, but it's easier to just keep using nlme
 ```{r eval=FALSE, include=FALSE}
-# comparable with nlme
 # from the package spAMM
 
 nin.matern <- fitme(yield ~ gen + (1|rep) +
@@ -71,18 +79,14 @@ matern.preds <- data.frame(gen = attributes(preds)$frame,
                            emmeans = preds,
                            var = attributes(preds)$fixefVar) %>%
   distinct() %>% mutate(SE = sqrt(var))
-
 ```
 
 
-# doesn't work, treatments have to be numberic (what?)
-```{r}
-library(spANOVA)
-model <- aovSar.rcbd(Nin$yield, Nin$gen, Nin$rep)
-```
+### rayshader exploration
 
+(conclusion: it's very slow to render and the final plot underwhelming)
 ```{r eval=FALSE, include=FALSE}
-library(rayshader)
+#library(rayshader)
 options(cores = 3)
 ```
 
@@ -113,13 +117,93 @@ These models are not being used further because:
 (also called the Spatial lag model or SAR)
 This requires the package **spANOVA** which is large and may take a few seconds to load. 
 ```{r, message=FALSE, warning=FALSE, include=FALSE}
-library(spANOVA)
+#library(spANOVA)
 ## get that model in here!!
 
-library(agridat); data("stroup.nin")
+#library(agridat); data("stroup.nin")
 nin_sar <- aovSar.rcbd(resp = as.vector(stroup.nin$yield), 
                                  treat = as.vector(stroup.nin$gen), 
                                  block = as.vector(stroup.nin$rep), 
                                  coord = cbind(stroup.nin$col, stroup.nin$row))
 ```
                     
+## Traits with non-gaussian distributions
+
+(decided to cut this and consider building a separate guide for GLMMs in the future)
+
+Here is where things start to get a bit crazy. Generalized linear models with spatial covariates are more difficult to fit and hence that functionality is not available in **nlme** except for log-normal models. **lme4** can still fit the latin square model using a spat of link functions. 
+
+### Count traits: 
+
+Count traits are discrete rather than continuous and often follow a poisson distribution or in the case of over-dispersed data, a negative binomial distribution. 
+
+The *cochran.wireworms* data set reports wireworms counts after a fumigation treatment. There are 5 treatment levels, "K", "M", "N", "O", and "P", and 5 replicates. It is arranged in a latin square. 
+```{r}
+data(cochran.wireworms)
+stem(cochran.wireworms$worms)
+
+ggdesplot(cochran.wireworms, worms ~ col*row,
+        text=trt, cex=1, col.regions = vir, 
+        xlab = "col", ylab = "row",
+        main="cochran wireworms")
+
+cochran.wireworms <- transform(cochran.wireworms, colf = as.factor(col), rowf = as.factor(row))
+
+m_count1 <- glmer(worms ~ trt + (1|colf) + (1|rowf),
+                  family = poisson(link = "log"),
+                  data = cochran.wireworms)
+```
+
+This warning message `boundary (singular) fit: see ?isSingular` indicates the one of the random effects is at the edge of parameter space, or in other words, near zero. Let's check it out:
+
+```{r}
+VarCorr(m_count1)
+```
+Since `colf` is effectively zero, the model could be refit without it. 
+
+### Another Count Example
+
+Here's an example using a RCB design, *cochran.eelworms*, which looks at eelworms counts before and after different fumigation treatments. 
+```{r}
+data(cochran.eelworms)
+
+desplot(cochran.eelworms, initial ~ col*row,
+        flip=TRUE, col.regions = vir, 
+        main="cochran eelworms")
+
+# might need inla for this, or gams
+```
+
+
+### Percent variables 
+
+These are variables that are bounded between 0 and 100 (e.g. percent germination, percent infection, percent survival). These can behave like continuous variables, especially when they are not reported only in discrete increments (e.g. 10, 20, 30). Percent variables heavily skewed towards their bounds of 0 and 100 are difficult to model. Percent variables that exceed 100 (e.g. relative yield expressed as a percentage) can quite often be treated as continuous. But, as always, it depends on the actual distribution of the variable.
+
+If the data are bound between zero and 100 and have no values exactly equal to zero or one, the beta distribution can be used on proportion data, which is percentage divided by 100. 
+
+The example below reuses a data set loaded earlier, *cochran.crd*, that is looking at percent infection of scab among potatoes clones after sulfur treatments of varying concentrations.  
+```{r}
+data(cochran.crd)
+
+range(cochran.crd$inf)
+hist(cochran.crd$inf)
+
+# needs gams
+# library(mgcv)
+# mod <- gam(inf ~ x1 + x2 + s(latitude, longitude, bs = "gp", m = 2), # change m
+#            family = betar(link='logit'), 
+#            data = data)
+```
+
+### Ordinal variables 
+(e.g. disease scores)
+
+```{r}
+data(lee.potatoblight)
+```
+
+### Binomial traits
+(e.g. )
+```{r}
+data(gotway.hessianfly)
+```

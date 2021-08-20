@@ -1,0 +1,34 @@
+# Conclusion {#the-end}
+
+## Other packages
+There are several other packages for exploring and modeling spatial variability in field trials. 
+
+|package |usage |
+|-------------|-------------|
+| [Mcspatial] | nonparametric spatial analysis |
+|[ngspatial] | spatial models with a focus on generalized linear models |
+|[inla]  | Bayesian modelling with options for spatial covariance structure |
+| [sommer] | mixed models, including an AR1xAr1 model |
+| [spatialreg] | spatial functions for areal data |
+|[spANOVA] | spatial lag models for field trials |
+
+The package **sommer** implements a version of the AR1xAR1 covariance structure. However, it does not estimate the parameter $\rho$. The user must specify the $\rho$ and that value is not optimized in the restricted maximum likelihood estimation. There may be another way to implement the AR1xAR1 spatial model using the package **TMB**. Both SAS and the software [asreml](https://asreml.kb.vsni.co.uk/) can implement a mixed model with this covariance structure.
+
+
+
+A [spAMM tutorial](https://raw.githubusercontent.com/f-rousset/spaMM-ref/master/vignettePlus/MixedModels_useR2021.pdf) is available for exploring this package more. 
+
+## Final recommendations
+
+Spatial analysis is a big topic, but I think it is worth the effort to learn and implement in analysis of field trials. This guide provides some minimal recipes for how to incorporate spatial information into field trial statistical analysis. 
+
+There is no denying that work is needed to develop scripts that automate this process so researchers can routinely incorporate spatial covariance into field trial analysis. Many current R tools are unwieldy to use and have insufficient options to support variety trial analysis.
+
+Until this situation is improved, it is probably wisest to focus on using spatial models that are well-supported at this time. Any of the options implemented in the **nlme** package (or that work with that package) are decent choices with excellent support for extracting least-squares means, running ANOVA, and standard model diagnostics. Furthermore, **nlme** supports generalized linear models. **INLA** is established is supported by a large and growing user base, and **breedR** is likewise well established. 
+
+Although these options may appear overwhelming, investigating spatial correlation in a field trial and controlling for it if necessary using any of the methods previously described is recommended over doing nothing. 
+
+```{r}
+sessionInfo()
+```
+

@@ -1,6 +1,6 @@
 # Spatial Models {#background}
 
-This section contains some of the background behind why spatial models are used and how they work. Understanding this section is not essential, but it is extremely helpful. This section relies on information introduced in \@ref(intro), so please make sure you have read that section if you are new to empirical variograms and spatial statistics.  
+This section contains some of the statistical background behind why spatial models are used and how they work. Understanding this section is not essential, but it is extremely helpful. This section relies on information introduced in \@ref(intro), so please make sure you have read that section if you are new to empirical variograms and spatial statistics.  
 
 General linear statistical models are commonly modeled as thus:
 
