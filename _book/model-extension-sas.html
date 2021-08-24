@@ -25,7 +25,7 @@
 <meta name="author" content="William Price" />
 
 
-<meta name="date" content="2021-08-20" />
+<meta name="date" content="2021-08-24" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -329,7 +329,7 @@ div.csl-indent {
 <h3><span class="header-section-number">8.1.1</span> Completely randomized design (CRD)</h3>
 <p>Data: <a href="https://raw.githubusercontent.com/IdahoAgStats/guide-to-field-trial-spatial-analysis/master/data/cochran_crd.csv">cochran_crd.csv</a><br><br></p>
 <p>This study investigated the effect of sulfur on controlling scab disease in potatoes and had seven treatments (trt) measuring the percent surface area infected (inf). Row and column indices are also given. The design was a completely randomized design with 8 control replications and 4 treatment replications.</p>
-<p>Two possible methods of adjustment are shown: row column trend adjustment (as suggested in agridat), and a spline adjustment.</p>
+<p>Two possible methods of adjustment are shown: row column trend adjustment (as suggested in agridat), and a spline adjustment.<br><br></p>
 <pre class="sashtml"><code>
 ods html close;
 proc format;
@@ -337,8 +337,10 @@ invalue has_NA
  &#39;NA&#39; = .;
 run;
 
+filename CRD url &quot;https://raw.githubusercontent.com/IdahoAgStats/guide-to-field-trial-spatial-analysis/master/data/cochran_crd.csv&quot;;
+
 data CRD;
-    infile &#39;.\data\cochran_crd.csv&#39; firstobs=2 delimiter=&#39;,&#39;;
+    infile CRD firstobs=2 delimiter=&#39;,&#39;;
     input inf trt$ row col;
     informat inf has_NA.;
     if inf=. then delete;
@@ -362,7 +364,7 @@ ods html; </code></pre>
 <h3><span class="header-section-number">8.1.2</span> Multi-way Factorials</h3>
 <p>Data: <a href="https://raw.githubusercontent.com/IdahoAgStats/guide-to-field-trial-spatial-analysis/master/data/chinloy_fractionalfactorial.csv">chinloy_fractionalfactorial.csv</a><br><br></p>
 <p>Factorial experiments consider multiple treatments and their combinations. The study here evaluated the effect of 5 different fertilizer treatments (nitrogen, phosphorus, potassium, bagasse, and a filter mud press), each at various concentrations, on sugarcane yield. The levels of {0,1,2} indicate the relative concentrations of each fertilizer. Because all possible treatment combinations were too numerous, only a subset were used (fractional factorial) and only 2-way interactions with nitrogen are evaluated in the model. The treatments were laid out in a randomized complete block design (block).</p>
-<p>A guassian spatial model is used below.</p>
+<p>A guassian spatial model is used below.<br><br></p>
 <pre class="sashtml"><code>
 ods html close;
 
@@ -371,8 +373,10 @@ invalue has_NA
  &#39;NA&#39; = .;
 run;
 
+filename FACT url &quot;https://raw.githubusercontent.com/IdahoAgStats/guide-to-field-trial-spatial-analysis/master/data/chinloy_fractionalfactorial.csv&quot;;
+
 data Factorial;
-    infile &#39;.\data\chinloy_fractionalfactorial.csv&#39; firstobs=2 delimiter=&#39;,&#39;;
+    infile FACT firstobs=2 delimiter=&#39;,&#39;;
     input yield block$ row col trt N P K B F;
     informat yield has_NA.;
     if yield=. then delete;
@@ -391,24 +395,186 @@ ods html;
 </div>
 <div id="alpha-lattice-1" class="section level3" number="8.1.3">
 <h3><span class="header-section-number">8.1.3</span> Alpha lattice</h3>
-<p>The <em>burgueno.alpha</em> data set uses an incomplete block alpha design with 16 treatment levels, 12 blocks and 3 reps.</p>
+<p>The <em>burgueno.alpha</em> data set is set up as an incomplete block alpha design with 16 treatment levels (gen). There are 12 blocks, 2 each within 3 reps. The code below illustrates the layout of the reps and blocks. Two examples of spatial adjustment are shown: 1) assuming a Gaussian spatial adjustment, and 2) utilizing a spline adjustment.<br><br></p>
+<pre class="sashtml"><code>
+proc format;
+invalue has_NA
+ &#39;NA&#39; = .;
+run;
+
+filename ALPHA url &quot;https://raw.githubusercontent.com/IdahoAgStats/guide-to-field-trial-spatial-analysis/master/data/burgueno_alpha.csv&quot;;
+
+data Lattice;
+    infile ALPHA firstobs=2 delimiter=&#39;,&#39;;
+    input rep$ block$ row col gen$ yield;
+    informat yield has_NA.;
+    if yield=. then delete;
+run;
+
+proc sgplot data=Lattice;
+    styleattrs datacolors=(cx990F26 cx99600F cx54990F);
+    HEATMAPPARM y=row x=col COLORgroup=rep/ outline; 
+    refline 2.5 4.5/axis=y LINEATTRS=(color=black thickness=4) ;
+title1 &#39;Lattice: Layout of Reps&#39;;
+
+run; 
+
+proc sgplot data=Lattice;
+    styleattrs datacolors=(cx990F26 cxCC7A88 cxB33E52 cxE6B8BF
+                           cx99600F cxCCAA7A cxB3823E cxE6D2B8 
+                           cx54990F cxA3CC7A cx78B33E cxCFE6B8);
+    HEATMAPPARM y=row x=col COLORgroup=block/ outline; 
+    refline 2.5 4.5/axis=y LINEATTRS=(color=black thickness=4) ;
+    refline 4.5/axis=x LINEATTRS=(color=black thickness=4);
+title1 &#39;Lattice: Layout of Blocks&#39;;
+run;</code></pre>
+<div class="branch">
+<a name="IDX"></a>
+<div>
+<div class="c">
+<p><img alt="The SGPlot Procedure" src="SAS8_3.png" style=" height: 480px; width: 640px;" border="0" class="c"></p>
+</div>
+</div>
+<p><br></p>
+</div>
+<div class="branch">
+<p style="page-break-after: always;">
+<br/>
+</p>
+<hr size="3"/>
+<a name="IDX1"></a>
+<div>
+<div class="c">
+<p><img alt="The SGPlot Procedure" src="SAS8_31.png" style=" height: 480px; width: 640px;" border="0" class="c"></p>
+</div>
+</div>
+<br>
+</div>
+<pre class="sashtml"><code>ods html close;
+
+proc mixed data=Lattice ;
+    class block rep gen;
+    model yield = gen/ ddfm=kr;
+    random rep block(rep);
+    repeated/subject=intercept type=sp(gau) (row col) local;
+    parms (4)(30711) (57790)(86861) (133229);
+run;
+
+proc glimmix data=Lattice ;
+    class block rep gen;
+    effect sp_r = spline(row col);
+    model yield = gen sp_r/ ddfm=kr;
+    random row col/type=rsmooth;
+run;
+
+ods html;
+</code></pre>
 </div>
 <div id="latin-square-1" class="section level3" number="8.1.4">
 <h3><span class="header-section-number">8.1.4</span> Latin square</h3>
-<p>Latin is a special example of a lattice experiment where each treatment occurs in each row and in each column. As a result, the row and column effects are used to model spatial effects.</p>
-<p>The *cochran.latin** data set examines the effect of an “operator” (a person) on the difference between the true plot height and operator-measured height (of wheat plots).</p>
+<p>Latin is a special example of a lattice experiment where each treatment occurs once in each row and in each column. As a result, the row and column effects are used to model spatial effects intrinsically.</p>
+<p>The *cochran.latin** data set examines the effect of an 6 “operators” (persons) on the difference between the true plot height and operator-measured shoot height from 6 wheat plots. Each person measured the plots in a different order according to a Latin Square design. While this example is not strictly spatial in nature, it illustrates the setup for analysis.<br><br></p>
+<pre class="sashtml"><code>
+ods html close;
+
+proc format;
+invalue has_NA
+ &#39;NA&#39; = .;
+run;
+
+filename LAT url &quot;https://raw.githubusercontent.com/IdahoAgStats/guide-to-field-trial-spatial-analysis/master/data/cochran_latin.csv&quot;;
+
+data Latin;
+    infile LAT firstobs=2 delimiter=&#39;,&#39;;
+    input row col operator$ diff;
+    informat diff has_NA.;
+    if diff=. then delete;
+run;
+
+proc mixed data=latin;
+    class row col operator;
+    model diff = operator;
+    random row col;
+run;
+
+ods html;
+</code></pre>
 </div>
 <div id="split-plot-1" class="section level3" number="8.1.5">
 <h3><span class="header-section-number">8.1.5</span> Split plot</h3>
-<p>The <em>durban.splitplot</em> data set looks at the effect of fungicide on barley varieties. The main plot is fungicide (2 levels), and the sub plot is variety (70 levels). There are 4 blocks.</p>
+<p>A split plot is a factorial treatment design with a restriction on the randomization of the factors. In this example, the <em>durban.splitplot</em> data looks at the effect of two factors: fungicide and barley varieties. The study is set up with 4 blocks. Within each block, 2 fungicides are randomized as whole or main plots. Within each fungicide treatment, 70 barley varieties are then randomized separately as subplots. The resulting analysis then breaks out separate error terms for the whole plots and the subplots. The plots are arranged into 10 rows x 56 columns (beds). Spatial adjustment can then be introduced on top of this structure, if needed. The examples below illustrate a spherical spatial model adjustment and a spline adjustment.<br><br></p>
+<pre class="sashtml"><code>
+ods html close;
+
+proc format;
+invalue has_NA
+ &#39;NA&#39; = .;
+run;
+
+filename SPLIT url &quot;https://raw.githubusercontent.com/IdahoAgStats/guide-to-field-trial-spatial-analysis/master/data/durban_splitplot.csv&quot;;
+
+data splitplot;
+    infile SPLIT firstobs=2 delimiter=&#39;,&#39;;
+    input yield block$ gen$ fung$ row bed;
+    informat yield has_NA.;
+    if yield=. then delete;
+run;
+
+proc mixed data=splitplot;
+    class block gen fung row bed;
+    model yield = fung gen fung*gen/outp=residuals;
+    random block block*fung;
+    repeated/subject=intercept type=sp(sph) (row bed) local;
+    parms (7)(0.03)(0.03)(0.03) (0.01);
+run;
+
+proc glimmix data=splitplot;
+    class block gen fung;
+    effect sp_r = spline(row bed);
+    model yield = fung gen fung*gen sp_r;
+    random block block*fung;
+    random row bed/type=rsmooth;
+run;
+
+ods html;</code></pre>
 </div>
 <div id="split-split-plot-1" class="section level3" number="8.1.6">
 <h3><span class="header-section-number">8.1.6</span> Split-split plot</h3>
-<p>The <em>archbold.apple</em> data set of apple trees is examining the impact of spacing (the main plot), root stock (the split plot) and variety (the split-split plot) on fruit yield. There are 5 blocks.</p>
+<p>Like the Split-Plot above, the Split-Split-Plot is a factorial design, this time with an additional restriction on the randomization. The <em>archbold.apple</em> data used here describes the yield of apple trees under the impact of tree spacing (the whole or main plot), tree root stock (the split plot), and tree variety (the split-split plot). That is, 3 tree spacings are randomized in each block. Within those spacings, 4 root stocks are randomized separately, and then within each of those 2 varieties (gen) are randomized. There are 5 blocks (rep) and separate error terms for spacing, root stock, and variety are broken out in the analysis. In addition, we have row and column (pos) information for the plots. This example uses a spline spatial adjustment.<br><br></p>
+<pre class="sashtml"><code>
+ods html close;
+
+proc format;
+invalue has_NA
+ &#39;NA&#39; = .;
+run;
+
+filename SPLIT url &quot;https://raw.githubusercontent.com/IdahoAgStats/guide-to-field-trial-spatial-analysis/master/data/archbold_apple.csv&quot;;
+
+data sp_sp_plot;
+    infile SPLIT firstobs=2 delimiter=&#39;,&#39;;
+    input rep$ row pos spacing$ stock$ gen$ yield trt;
+    informat yield has_NA.;
+    if yield=. then delete;
+run;
+
+proc glimmix data=sp_sp_plot;
+    class rep spacing stock gen;
+    effect sp_r = spline(row pos);
+    model yield = spacing stock spacing*stock gen gen*spacing gen*stock gen*spacing*stock sp_r;
+    random rep rep*spacing rep*stock*spacing;
+    random row pos/type=rsmooth;
+run;
+ 
+ ods html;</code></pre>
 </div>
 <div id="split-block-1" class="section level3" number="8.1.7">
 <h3><span class="header-section-number">8.1.7</span> Split block</h3>
 <p>also, over-dispersed count data</p>
+<pre class="sashtml"><code>
+ods html close;
+
+ods html;</code></pre>
 </div>
 <div id="augmented-1" class="section level3" number="8.1.8">
 <h3><span class="header-section-number">8.1.8</span> Augmented</h3>

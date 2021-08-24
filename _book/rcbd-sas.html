@@ -25,7 +25,7 @@
 <meta name="author" content="William Price" />
 
 
-<meta name="date" content="2021-08-20" />
+<meta name="date" content="2021-08-24" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -323,15 +323,17 @@ div.csl-indent {
 <div id="load-and-explore-data" class="section level2" number="6.1">
 <h2><span class="header-section-number">6.1</span> Load and Explore Data</h2>
 <p>These data are from a winter wheat variety trial in Alliance, Nebraska <span class="citation">(<a href="#ref-stroup1994" role="doc-biblioref">Stroup, Baenziger, and Mulitze 1994</a>)</span> and are commonly used to demonstrate spatial adjustment in linear modeling. The data represent yields of 56 varieties originally layed out in a randomized complete block design (RCB). The local topography combined with winter kill, however, induced spatial variability that did not correspond to the RCB design <span class="citation">(<a href="#ref-stroup2013" role="doc-biblioref">Stroup 2013</a>)</span> which produced biased estimates in a standard unadjusted analysis. <br><br></p>
-<p>The code below reads the data from a CSV file where missing values for yield are denoted as ‘NA.’ These values are not actually missing, but represent blank plots in the original design of the study. The <strong>PROC FORMAT</strong> section converts these to numeric missing values in SAS (defined as a single period). They are then removed from the data before proceeding to analyses. Also note that row and column indices are multiplied by constants to convert them to the meter dimensions of the plots. This CSV data file can be downloaded <a href="https://raw.githubusercontent.com/IdahoAgStats/guide-to-field-trial-spatial-analysis/master/data/stroup_nin_wheat.csv">here</a>. <br><br></p>
+<p>The code below reads the data from a CSV file located the IdahoAgStats server. If desired, the data file can be accessed independently <a href="https://raw.githubusercontent.com/IdahoAgStats/guide-to-field-trial-spatial-analysis/master/data/stroup_nin_wheat.csv">here</a>. In this file, missing values for yield are denoted as ‘NA.’ These values are not actually missing, but represent blank plots in the original design of the study. The <strong>PROC FORMAT</strong> section converts these to numeric missing values in SAS (defined as a single period). They are then removed from the data before proceeding to analyses. Also note that row and column indices are multiplied by constants to convert them to the meter dimensions of the plots. . <br><br></p>
 <p>The first six observations are displayed. The data contains variables for variety (gen), replication (rep), yield, and column and row identifiers.<br><br> Last, a map of the 4 replications (blocks) from the original experimental design is shown.</p>
 <pre class="sashtml"><code>proc format;
   invalue has_NA
   &#39;NA&#39; = .;
 ;
 
- data alliance;
-    infile &#39;.\data\stroup_nin_wheat.csv&#39; firstobs=2 delimiter=&#39;,&#39;;
+filename NIN url &quot;https://raw.githubusercontent.com/IdahoAgStats/guide-to-field-trial-spatial-analysis/master/data/stroup_nin_wheat.csv&quot;;
+
+data alliance;
+    infile NIN firstobs=2 delimiter=&#39;,&#39;;
     informat yield has_NA.;
     input entry $   rep $   yield   col row;
     Row  = 4.3*Row;

@@ -20,7 +20,7 @@ Data: [cochran_crd.csv](https://raw.githubusercontent.com/IdahoAgStats/guide-to-
 
 This study investigated the effect of sulfur on controlling scab disease in potatoes and had seven treatments (trt) measuring the percent surface area infected (inf). Row and column indices are also given. The design was a completely randomized design  with 8 control replications  and 4 treatment replications.
 
-Two possible methods of adjustment are shown: row column trend adjustment (as suggested in agridat), and a spline adjustment.
+Two possible methods of adjustment are shown: row column trend adjustment (as suggested in agridat), and a spline adjustment.<br><br>
 
 ```{r SAS8_1, engine="sashtml", collectcode=TRUE, engine.path=saspath, include=TRUE, engine.opts=sasopts, comment=""}
 
@@ -30,8 +30,10 @@ invalue has_NA
  'NA' = .;
 run;
 
+filename CRD url "https://raw.githubusercontent.com/IdahoAgStats/guide-to-field-trial-spatial-analysis/master/data/cochran_crd.csv";
+
 data CRD;
-    infile '.\data\cochran_crd.csv' firstobs=2 delimiter=',';
+    infile CRD firstobs=2 delimiter=',';
     input inf trt$ row col;
   	informat inf has_NA.;
     if inf=. then delete;
@@ -58,7 +60,7 @@ Data: [chinloy_fractionalfactorial.csv](https://raw.githubusercontent.com/IdahoA
 
 Factorial experiments consider multiple treatments and their combinations. The study here evaluated the effect of 5 different fertilizer treatments (nitrogen, phosphorus, potassium, bagasse, and a filter mud press), each at various concentrations, on sugarcane yield. The levels of {0,1,2} indicate the relative concentrations of each fertilizer. Because all possible treatment combinations were too numerous, only a subset were used (fractional factorial) and only 2-way interactions with nitrogen are evaluated in the model. The treatments were laid out in a randomized complete block design (block).
 
-A guassian spatial model is used below.
+A guassian spatial model is used below.<br><br>
 
 ```{r SAS8_2, engine="sashtml", collectcode=TRUE, engine.path=saspath, include=TRUE, engine.opts=sasopts, comment=""}
 
@@ -69,8 +71,10 @@ invalue has_NA
  'NA' = .;
 run;
 
+filename FACT url "https://raw.githubusercontent.com/IdahoAgStats/guide-to-field-trial-spatial-analysis/master/data/chinloy_fractionalfactorial.csv";
+
 data Factorial;
-    infile '.\data\chinloy_fractionalfactorial.csv' firstobs=2 delimiter=',';
+    infile FACT firstobs=2 delimiter=',';
     input yield block$ row col trt N P K B F;
   	informat yield has_NA.;
     if yield=. then delete;
@@ -90,24 +94,186 @@ ods html;
 
 ### Alpha lattice
 
-The *burgueno.alpha* data set uses an incomplete block alpha design with 16 treatment levels, 12 blocks and 3 reps. 
+The *burgueno.alpha* data set is set up as an incomplete block alpha design with 16 treatment levels (gen). There are 12 blocks, 2 each within 3 reps. The code below illustrates the layout of the reps and blocks. Two examples of spatial adjustment are shown: 1) assuming a Gaussian spatial adjustment, and 2) utilizing a spline adjustment.<br><br>
+
+```{r SAS8_3, engine="sashtml", collectcode=TRUE, engine.path=saspath, include=TRUE, engine.opts=sasopts, comment=""}
+
+proc format;
+invalue has_NA
+ 'NA' = .;
+run;
+
+filename ALPHA url "https://raw.githubusercontent.com/IdahoAgStats/guide-to-field-trial-spatial-analysis/master/data/burgueno_alpha.csv";
+
+data Lattice;
+    infile ALPHA firstobs=2 delimiter=',';
+    input rep$ block$ row col gen$ yield;
+  	informat yield has_NA.;
+    if yield=. then delete;
+run;
+
+proc sgplot data=Lattice;
+	styleattrs datacolors=(cx990F26 cx99600F cx54990F);
+	HEATMAPPARM y=row x=col COLORgroup=rep/ outline; 
+	refline 2.5 4.5/axis=y LINEATTRS=(color=black thickness=4) ;
+title1 'Lattice: Layout of Reps';
+
+run; 
+
+proc sgplot data=Lattice;
+	styleattrs datacolors=(cx990F26 cxCC7A88 cxB33E52 cxE6B8BF
+						   cx99600F cxCCAA7A cxB3823E cxE6D2B8 
+						   cx54990F cxA3CC7A cx78B33E cxCFE6B8);
+	HEATMAPPARM y=row x=col COLORgroup=block/ outline; 
+	refline 2.5 4.5/axis=y LINEATTRS=(color=black thickness=4) ;
+	refline 4.5/axis=x LINEATTRS=(color=black thickness=4);
+title1 'Lattice: Layout of Blocks';
+run;
+```
+ 
+```{r SAS8_3_1, engine="sashtml", collectcode=TRUE, engine.path=saspath, include=TRUE, engine.opts=sasopts, comment=""}
+ods html close;
+
+proc mixed data=Lattice ;
+	class block rep gen;
+	model yield = gen/ ddfm=kr;
+	random rep block(rep);
+	repeated/subject=intercept type=sp(gau) (row col) local;
+	parms (4)(30711) (57790)(86861) (133229);
+run;
+
+proc glimmix data=Lattice ;
+	class block rep gen;
+	effect sp_r = spline(row col);
+	model yield = gen sp_r/ ddfm=kr;
+	random row col/type=rsmooth;
+run;
+
+ods html;
+
+```
+
+
 
 ### Latin square
 
-Latin is a special example of a lattice experiment where each treatment occurs in each row and in each column. As a result, the row and column effects are used to model spatial effects. 
+Latin is a special example of a lattice experiment where each treatment occurs once in each row and in each column. As a result, the row and column effects are used to model spatial effects intrinsically. 
 
-The *cochran.latin** data set examines the effect of an "operator" (a person) on the difference between the true plot height and operator-measured height (of wheat plots). 
+The *cochran.latin** data set examines the effect of an 6 "operators" (persons) on the difference between the true plot height and operator-measured shoot height from 6 wheat plots. Each person measured the plots in a different order according to a Latin Square design. While this example is not strictly spatial in nature, it illustrates the setup for analysis.<br><br>
+
+```{r SAS8_4, engine="sashtml", collectcode=TRUE, engine.path=saspath, include=TRUE, engine.opts=sasopts, comment=""}
+
+ods html close;
+
+proc format;
+invalue has_NA
+ 'NA' = .;
+run;
+
+filename LAT url "https://raw.githubusercontent.com/IdahoAgStats/guide-to-field-trial-spatial-analysis/master/data/cochran_latin.csv";
+
+data Latin;
+    infile LAT firstobs=2 delimiter=',';
+    input row col operator$ diff;
+  	informat diff has_NA.;
+    if diff=. then delete;
+run;
+
+proc mixed data=latin;
+	class row col operator;
+	model diff = operator;
+	random row col;
+run;
+
+ods html;
+
+```
 
 ### Split plot
 
-The *durban.splitplot* data set looks at the effect of fungicide on barley varieties. The main plot is fungicide (2 levels), and the sub plot is variety (70 levels). There are 4 blocks. 
+A split plot is a factorial treatment design with a restriction on the randomization of the factors. In this example, the *durban.splitplot* data looks at the effect of two factors: fungicide and barley varieties. The study is set up with 4 blocks. Within each block, 2 fungicides are randomized as whole or main plots. Within each fungicide treatment, 70 barley varieties are then randomized separately as subplots. The resulting analysis then breaks out separate error terms for the whole plots and the subplots. The plots are arranged into 10 rows x 56 columns (beds). Spatial adjustment can then be introduced on top of this structure, if needed. The examples below illustrate a spherical spatial model adjustment and a spline adjustment.<br><br>
+
+```{r SAS8_5, engine="sashtml", collectcode=TRUE, engine.path=saspath, include=TRUE, engine.opts=sasopts, comment=""}
+
+ods html close;
+
+proc format;
+invalue has_NA
+ 'NA' = .;
+run;
+
+filename SPLIT url "https://raw.githubusercontent.com/IdahoAgStats/guide-to-field-trial-spatial-analysis/master/data/durban_splitplot.csv";
+
+data splitplot;
+    infile SPLIT firstobs=2 delimiter=',';
+    input yield block$ gen$ fung$ row bed;
+  	informat yield has_NA.;
+    if yield=. then delete;
+run;
+
+proc mixed data=splitplot;
+	class block gen fung row bed;
+	model yield = fung gen fung*gen/outp=residuals;
+	random block block*fung;
+	repeated/subject=intercept type=sp(sph) (row bed) local;
+	parms (7)(0.03)(0.03)(0.03) (0.01);
+run;
+
+proc glimmix data=splitplot;
+	class block gen fung;
+	effect sp_r = spline(row bed);
+	model yield = fung gen fung*gen sp_r;
+	random block block*fung;
+	random row bed/type=rsmooth;
+run;
+
+ods html;
+```
+
 
 ### Split-split plot
 
-The *archbold.apple* data set of apple trees is examining the impact of spacing (the main plot), root stock (the split plot) and variety (the split-split plot) on fruit yield. There are 5 blocks. 
+Like the Split-Plot above, the Split-Split-Plot is a factorial design, this time with an additional restriction on the randomization. The *archbold.apple* data used here describes the yield of apple trees under the impact of tree spacing (the whole or main plot), tree root stock (the split plot), and tree variety (the split-split plot). That is, 3 tree spacings are randomized in each block. Within those spacings, 4 root stocks are randomized separately, and then within each of those 2 varieties (gen) are randomized. There are 5 blocks (rep) and separate error terms for spacing, root stock, and variety are broken out in the analysis. In addition, we have row and column (pos) information for the plots. This example uses a spline spatial adjustment.<br><br>
+
+```{r SAS8_6, engine="sashtml", collectcode=TRUE, engine.path=saspath, include=TRUE, engine.opts=sasopts, comment=""}
+
+ods html close;
+
+proc format;
+invalue has_NA
+ 'NA' = .;
+run;
+
+filename SPLIT url "https://raw.githubusercontent.com/IdahoAgStats/guide-to-field-trial-spatial-analysis/master/data/archbold_apple.csv";
+
+data sp_sp_plot;
+    infile SPLIT firstobs=2 delimiter=',';
+    input rep$ row pos spacing$ stock$ gen$ yield trt;
+  	informat yield has_NA.;
+    if yield=. then delete;
+run;
+
+proc glimmix data=sp_sp_plot;
+	class rep spacing stock gen;
+	effect sp_r = spline(row pos);
+	model yield = spacing stock spacing*stock gen gen*spacing gen*stock gen*spacing*stock sp_r;
+	random rep rep*spacing rep*stock*spacing;
+	random row pos/type=rsmooth;
+run;
+ 
+ ods html;
+```
 
 ### Split block
 also, over-dispersed count data
+
+```{r SAS8_7, engine="sashtml", collectcode=TRUE, engine.path=saspath, include=TRUE, engine.opts=sasopts, comment=""}
+
+ods html close;
+
+ods html;
+```
+
 
 ### Augmented
 

@@ -66,7 +66,7 @@ remotes::install_github("famuvie/breedR")
 
 ## SAS Requirements
 
-In order to run the SAS portion of this tutorial, a valid copy of SAS Base and Stat products and a current SAS license are required. This tutorial was built using SAS 9.4 (TS1M5). Although older versions of SAS may also work, we have not evaluated this. Users can also consider downloading and using a free version of [SAS Studio](https://support.sas.com/downloads/package.htm?pid=1924). The SAS scripts in this tutorial have not been tested on SAS Studio. 
+In order to run the SAS portion of this tutorial, a valid copy of SAS Base and Stat products and a current SAS license are required. This tutorial was built using SAS 9.4 (TS1M5). Although older versions of SAS may also work, we have not evaluated this. Users can also consider downloading and using a free version of [SAS® On Demand for Academics: Studio](https://www.sas.com/en_us/software/on-demand-for-academics/references/getting-started-with-sas-ondemand-for-academics-studio.html). 
 
 **SAS procedures used in this tutorial**  
 

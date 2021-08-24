@@ -10,7 +10,7 @@ sasopts <- "-nosplash -ls 200"
 
 These data are from a winter wheat variety trial in Alliance, Nebraska [@stroup1994] and are commonly used to demonstrate spatial adjustment in linear modeling. The data represent yields of 56 varieties originally layed out in a randomized complete block design (RCB). The local topography combined with winter kill, however, induced spatial variability that did not correspond to the RCB design [@stroup2013] which produced biased estimates in a standard unadjusted analysis. <br><br>
 
-The code below reads the data from a CSV file where missing values for yield are denoted as 'NA'. These values are not actually missing, but represent blank plots in the original design of the study. The **PROC FORMAT** section converts these to numeric missing values in SAS (defined as a single period).  They are then removed from the data before proceeding to analyses. Also note that row and column indices are multiplied by constants to convert them to the meter dimensions of the plots. This CSV data file can be downloaded [here](https://raw.githubusercontent.com/IdahoAgStats/guide-to-field-trial-spatial-analysis/master/data/stroup_nin_wheat.csv). <br><br>
+The code below reads the data from a CSV file located the IdahoAgStats server. If desired, the data file can be accessed independently [here](https://raw.githubusercontent.com/IdahoAgStats/guide-to-field-trial-spatial-analysis/master/data/stroup_nin_wheat.csv). In this file, missing values for yield are denoted as 'NA'. These values are not actually missing, but represent blank plots in the original design of the study. The **PROC FORMAT** section converts these to numeric missing values in SAS (defined as a single period).  They are then removed from the data before proceeding to analyses. Also note that row and column indices are multiplied by constants to convert them to the meter dimensions of the plots. . <br><br>
 
 The first six observations are displayed. The data contains variables for variety (gen), replication (rep), yield, and column and row identifiers.<br><br> Last, a map of the 4 replications (blocks) from the original experimental design is shown.
 
@@ -20,10 +20,12 @@ proc format;
   'NA' = .;
 ;
 
- data alliance;
-    infile '.\data\stroup_nin_wheat.csv' firstobs=2 delimiter=',';
-  	informat yield has_NA.;
-    input entry $	rep $	yield	col	row;
+filename NIN url "https://raw.githubusercontent.com/IdahoAgStats/guide-to-field-trial-spatial-analysis/master/data/stroup_nin_wheat.csv";
+
+data alliance;
+    infile NIN firstobs=2 delimiter=',';
+    informat yield has_NA.;
+    input entry $   rep $   yield   col row;
     Row  = 4.3*Row;
     Col = 1.2*Col;
     if yield=. then delete;
