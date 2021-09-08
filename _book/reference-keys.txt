@@ -98,7 +98,7 @@ alpha-lattice-1
 latin-square-1
 split-plot-1
 split-split-plot-1
-split-block-1
+split-block-or-strip-plot
 augmented-1
 the-end
 other-packages

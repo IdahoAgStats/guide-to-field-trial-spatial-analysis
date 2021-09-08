@@ -264,17 +264,158 @@ run;
  ods html;
 ```
 
-### Split block
-also, over-dispersed count data
+### Split block or Strip plot
+This study (*little.splitblock*) investigated the effects of nitrogen rates (4) and harvest dates (5) on sugarbeet yields using 4 blocks. Similar to a Latin square, the split block design has two main factors defined in rows and columns. Within each block the rows and columns, each representing one of the factors, are independently randomized. The effect of this in the analysis of variance is to break out separate error terms and DF for each main effect as well as their interaction. In this example the spline spatial adjustment is demonstrated.
 
 ```{r SAS8_7, engine="sashtml", collectcode=TRUE, engine.path=saspath, include=TRUE, engine.opts=sasopts, comment=""}
 
 ods html close;
 
+proc format;
+invalue has_NA
+ 'NA' = .;
+run;
+
+filename SPLITB url "https://raw.githubusercontent.com/IdahoAgStats/guide-to-field-trial-spatial-analysis/master/data/little_splitblock.csv";
+
+data sb;
+    infile SPLITB firstobs=2 delimiter=',';
+    input row col yield harvest nitro block$;
+  	informat yield has_NA.;
+    if yield=. then delete;
+run;
+
+proc glimmix data=sb;
+	class harvest nitro block;
+	effect sp_r = spline(row col);
+	model yield = harvest nitro harvest*nitro sp_r;
+	random block harvest*block nitro*block harvest*nitro*block;
+	random row col/type=rsmooth;
+run;
+ 
 ods html;
 ```
 
 
 ### Augmented
 
+The augmented experimental design occurs most commonly, if not exclusively, in plant breeding studies. It can be useful when the number of treatments is very large and the primary goal of the study is to rank or select genotypes that perform to a specified level. The number of treatments and/or limited materials often preclude complete replication of all treatments. To adjust for this, only a select set of genotypes, usually of known performance, are replicated in the design. The error estimated from these select genotypes is then utilized in the analysis to evaluate the remaining genotypes. @Burgueno2018 have a very good discussion of this design and it's analysis. The example below uses their 'P2' model and the reader is referred to @Burgueno2018 for more details.
 
+The data used here refer to a wheat genotype evaluation study carried out near Lind Washington. The study looked at 922 lines (name), of which, 8 were replicated known varieties. The P2 model, mentioned above, compares the averages of replicated lines to unreplicated lines. The data steps and procedures used below define these groups in an indicator variable named d2. The response variable, yieldg, is converted to kilograms (yieldkg) to facilitate computations and avoid numeric overflow errors due to large values. <br><br>
+
+
+
+```{r SAS8_8, engine="sashtml", collectcode=TRUE, engine.path=saspath, include=TRUE, engine.opts=sasopts, comment=""}
+
+filename AUG url "https://raw.githubusercontent.com/IdahoAgStats/guide-to-field-trial-spatial-analysis/master/data/AB19F5_LIND.csv";
+
+PROC IMPORT OUT= WORK.augmented
+     DATAFILE= AUG
+     DBMS=CSV REPLACE;
+     GETNAMES=YES;
+     DATAROW=2; 
+RUN;
+
+data augmented;
+	set augmented;
+	if yieldg = 999999 or yieldg=. then delete; /* Remove missing values */
+	prow=prow*11.7; /*convert row and column indices to feet */
+	pcol=pcol*5.5;
+run;
+
+proc freq noprint data=augmented;
+	tables name/out=controls;
+run;
+
+data controls;
+	set controls;
+	if count >1;
+run;
+
+proc sort data=controls;
+	by name;
+run;
+     
+proc sort data=augmented;
+	by name;
+run;
+
+data augmented;
+	merge augmented controls;
+	by name;
+	if count=. then d2=2; /* Unreplicated */
+	else d2=1;            /* Replicated */
+	yieldkg=yieldg/1000;
+run;
+
+```
+
+Following the steps described earlier, we first fit a base model, yieldkg = d2, to obtain residuals. Note: We cannot use a base model of yieldkg = name because all the unreplicated lines will produce residual values of 0. <br><br>
+
+The residuals are then plotted in a heat map. This map shows evidence of spatial patterns and variability across the field. <br><br>
+
+```{r SAS8_9, engine="sashtml", collectcode=TRUE, engine.path=saspath, include=TRUE, engine.opts=sasopts, comment=""}
+
+PROC mixed data=augmented;
+	class name d2;
+	model yieldkg = d2/noint outp=residuals ddf=229 229;
+	lsmeans d2;
+	*lsmeans name(d2)/slice = d2;
+run;
+
+proc sgplot data=residuals;
+	HEATMAPPARM y=pRow x=pCol COLORRESPONSE=resid/ colormodel=(cx014458 cx1E8C6E cxE1FE01); 
+title1 'Field Map';
+run;
+
+
+```
+
+The  spatial variability evident in the residuals is then modeled as before. Only one model (power) is applicable to this data.<br><br>
+
+```{r SAS8_10, engine="sashtml", collectcode=TRUE, engine.path=saspath, include=TRUE, engine.opts=sasopts, comment=""}
+
+/*
+proc variogram data=residuals plots=pairs(thr=50) ;
+   compute novariogram nhclasses=60;
+   coordinates xc=prow yc=pcol;
+   var resid;
+run;
+
+proc variogram data=residuals plots(only)=(semivar);
+   compute lagd=6.6 maxlags=20;
+   coordinates xc=prow yc=pcol;
+   var resid;
+run;
+
+*/
+proc variogram data=residuals plots(only)=(fitplot);
+   where yieldkg ^= .;
+   coordinates xc=pcol yc=pRow;
+   compute lagd=6.6 maxlags=25;
+   model form=auto(mlist=(gau, exp, pow, sph) nest=1);
+  var resid;
+run;
+
+```
+
+Using the variogram model parameters estimated above, an adjusted model is then fit to the P2 hypothesis of @Burgueno2018. The residuals from this model show little, if any, spatial variability remains after adjustment. Note: the lsmeans or adjusted means are commented out here for brevity.<br><br>
+
+```{r SAS8_11, engine="sashtml", collectcode=TRUE, engine.path=saspath, include=TRUE, engine.opts=sasopts, comment=""}
+
+PROC mixed data=augmented;
+	class name d2;
+	model yieldkg = d2 name(d2)/outp=adjresiduals ddf=229 229;
+	lsmeans d2;
+	repeated/subject=intercept type=sp(pow)(prow pcol) local;
+	ods output SolutionR =parms;
+	parms (0.074) (0.0051)(0.475)  ;
+	*lsmeans name(d2)/slice = d2;
+run;
+
+proc sgplot data=adjresiduals;
+	HEATMAPPARM y=pRow x=pCol COLORRESPONSE=resid/ colormodel=(cx014458 cx1E8C6E cxE1FE01); 
+title1 'Field Map';
+run;
+
+```
