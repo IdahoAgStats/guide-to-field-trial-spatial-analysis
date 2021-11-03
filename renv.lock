@@ -28,7 +28,7 @@
       "Version": "1.8.4",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "84322b30c31c687b263420f8939fd4e1"
+      "Hash": "722e8bb5ef42efbdb283c85dde4a98fe"
     },
     "KernSmooth": {
       "Package": "KernSmooth",
@@ -93,6 +93,13 @@
       "Repository": "CRAN",
       "Hash": "ddfa72a87fdf4c80466a20818be91d00"
     },
+    "SASmarkdown": {
+      "Package": "SASmarkdown",
+      "Version": "0.4.3",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "61b95e3af01241099ae1f92d6a3731c1"
+    },
     "SpATS": {
       "Package": "SpATS",
       "Version": "1.0-15",
@@ -143,7 +150,7 @@
       "RemoteUsername": "famuvie",
       "RemoteRef": "HEAD",
       "RemoteSha": "ff33c6a2af0f211eb5d4ab7c1713d66ab1132896",
-      "Hash": "f94ad3f0420738cbbbf6102dbde5f188"
+      "Hash": "200680a71729657c81e8fb7ba52902a9"
     },
     "class": {
       "Package": "class",
@@ -693,10 +700,10 @@
     },
     "rmarkdown": {
       "Package": "rmarkdown",
-      "Version": "2.10",
+      "Version": "2.11",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "1fb097f233ee98968f8e5d0bcd42df6d"
+      "Hash": "320017b52d05a943981272b295750388"
     },
     "s2": {
       "Package": "s2",

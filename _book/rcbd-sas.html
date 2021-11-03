@@ -25,7 +25,7 @@
 <meta name="author" content="William Price" />
 
 
-<meta name="date" content="2021-09-08" />
+<meta name="date" content="2021-11-03" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -34,7 +34,7 @@
   
 <link rel="prev" href="rcbd-r.html"/>
 <link rel="next" href="model-extension-r.html"/>
-<script src="libs/header-attrs-2.10/header-attrs.js"></script>
+<script src="libs/header-attrs-2.11/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -164,8 +164,8 @@ div.csl-indent {
 <ul>
 <li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#tutorial-goal"><i class="fa fa-check"></i><b>1.1</b> Tutorial goal</a></li>
 <li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#prerequisites"><i class="fa fa-check"></i><b>1.2</b> Prerequisites</a></li>
-<li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#r-requirements"><i class="fa fa-check"></i><b>1.3</b> R Requirements</a></li>
-<li class="chapter" data-level="1.4" data-path="index.html"><a href="index.html#sas-requirements"><i class="fa fa-check"></i><b>1.4</b> SAS Requirements</a></li>
+<li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#r-requirements"><i class="fa fa-check"></i><b>1.3</b> R requirements</a></li>
+<li class="chapter" data-level="1.4" data-path="index.html"><a href="index.html#sas-requirements"><i class="fa fa-check"></i><b>1.4</b> SAS requirements</a></li>
 <li class="chapter" data-level="1.5" data-path="index.html"><a href="index.html#contributors"><i class="fa fa-check"></i><b>1.5</b> Contributors</a></li>
 <li class="chapter" data-level="1.6" data-path="index.html"><a href="index.html#license"><i class="fa fa-check"></i><b>1.6</b> License</a></li>
 </ul></li>
@@ -254,7 +254,7 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="6.4" data-path="rcbd-sas.html"><a href="rcbd-sas.html#using-the-estimated-variogram-in-an-adjusted-analysis"><i class="fa fa-check"></i><b>6.4</b> Using the Estimated variogram in an Adjusted Analysis</a>
 <ul>
-<li class="chapter" data-level="6.4.1" data-path="rcbd-sas.html"><a href="rcbd-sas.html#unadjusted-rcb-model"><i class="fa fa-check"></i><b>6.4.1</b> Unadjusted RCB Model</a></li>
+<li class="chapter" data-level="6.4.1" data-path="rcbd-sas.html"><a href="rcbd-sas.html#unadjusted-rcbd-model"><i class="fa fa-check"></i><b>6.4.1</b> Unadjusted RCBD Model</a></li>
 <li class="chapter" data-level="6.4.2" data-path="rcbd-sas.html"><a href="rcbd-sas.html#rcb-model-with-spatial-covariance"><i class="fa fa-check"></i><b>6.4.2</b> RCB Model with Spatial Covariance</a></li>
 <li class="chapter" data-level="6.4.3" data-path="rcbd-sas.html"><a href="rcbd-sas.html#other-spatial-adjustments"><i class="fa fa-check"></i><b>6.4.3</b> Other Spatial Adjustments</a></li>
 </ul></li>
@@ -285,7 +285,7 @@ div.csl-indent {
 <li class="chapter" data-level="8.1.5" data-path="model-extension-sas.html"><a href="model-extension-sas.html#split-plot-1"><i class="fa fa-check"></i><b>8.1.5</b> Split plot</a></li>
 <li class="chapter" data-level="8.1.6" data-path="model-extension-sas.html"><a href="model-extension-sas.html#split-split-plot-1"><i class="fa fa-check"></i><b>8.1.6</b> Split-split plot</a></li>
 <li class="chapter" data-level="8.1.7" data-path="model-extension-sas.html"><a href="model-extension-sas.html#split-block-or-strip-plot"><i class="fa fa-check"></i><b>8.1.7</b> Split block or Strip plot</a></li>
-<li class="chapter" data-level="8.1.8" data-path="model-extension-sas.html"><a href="model-extension-sas.html#augmented-1"><i class="fa fa-check"></i><b>8.1.8</b> Augmented</a></li>
+<li class="chapter" data-level="8.1.8" data-path="model-extension-sas.html"><a href="model-extension-sas.html#augmented-design"><i class="fa fa-check"></i><b>8.1.8</b> Augmented design</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="9" data-path="the-end.html"><a href="the-end.html"><i class="fa fa-check"></i><b>9</b> Conclusion</a>
@@ -322,8 +322,8 @@ div.csl-indent {
 <h1><span class="header-section-number">Section 6</span> RCBD Example: SAS</h1>
 <div id="load-and-explore-data" class="section level2" number="6.1">
 <h2><span class="header-section-number">6.1</span> Load and Explore Data</h2>
-<p>These data are from a winter wheat variety trial in Alliance, Nebraska <span class="citation">(<a href="#ref-stroup1994" role="doc-biblioref">Stroup, Baenziger, and Mulitze 1994</a>)</span> and are commonly used to demonstrate spatial adjustment in linear modeling. The data represent yields of 56 varieties originally layed out in a randomized complete block design (RCB). The local topography combined with winter kill, however, induced spatial variability that did not correspond to the RCB design <span class="citation">(<a href="#ref-stroup2013" role="doc-biblioref">Stroup 2013</a>)</span> which produced biased estimates in a standard unadjusted analysis. <br><br></p>
-<p>The code below reads the data from a CSV file located the IdahoAgStats server. If desired, the data file can be accessed independently <a href="https://raw.githubusercontent.com/IdahoAgStats/guide-to-field-trial-spatial-analysis/master/data/stroup_nin_wheat.csv">here</a>. In this file, missing values for yield are denoted as ‘NA.’ These values are not actually missing, but represent blank plots in the original design of the study. The <strong>PROC FORMAT</strong> section converts these to numeric missing values in SAS (defined as a single period). They are then removed from the data before proceeding to analyses. Also note that row and column indices are multiplied by constants to convert them to the meter dimensions of the plots. . <br><br></p>
+<p>These data are from a winter wheat variety trial in Alliance, Nebraska <span class="citation">(<a href="#ref-stroup1994" role="doc-biblioref">Stroup, Baenziger, and Mulitze 1994</a>)</span> and are commonly used to demonstrate spatial adjustment in linear modeling. The data represent yields of 56 varieties originally laid out in a randomized complete block design (RCB). The local topography combined with winter kill, however, induced spatial variability that did not correspond to the RCB design <span class="citation">(<a href="#ref-stroup2013" role="doc-biblioref">Stroup 2013</a>)</span> which produced biased estimates in a standard unadjusted analysis. <br><br></p>
+<p>The code below reads the data from a CSV file located the GitHub repo for this book. The data file can be downloaded from <a href="https://raw.githubusercontent.com/IdahoAgStats/guide-to-field-trial-spatial-analysis/master/data/stroup_nin_wheat.csv">here</a>. In this file, missing values for yield are denoted as ‘NA.’ These values are not actually missing, but represent blank plots separating blocks in the original design of the study. The <strong>PROC FORMAT</strong> section converts these to numeric missing values in SAS (defined as a single period). They are then removed from the data before proceeding to analyses. Also note that row and column indices are multiplied by constants to convert them to the meter dimensions of the plots. . <br><br></p>
 <p>The first six observations are displayed. The data contains variables for variety (gen), replication (rep), yield, and column and row identifiers.<br><br> Last, a map of the 4 replications (blocks) from the original experimental design is shown.</p>
 <pre class="sashtml"><code>proc format;
   invalue has_NA
@@ -3444,8 +3444,8 @@ Dependent Variable: Resid
 2. Identified and estimated the a model to describe the variability<br></p>
 <p>The last step is to utilize this information in a statistical analysis as outlined at the beginning of Section <a href="background.html#background">3</a>. To do this, the linear mixed model procedure <strong>PROC MIXED</strong> will be used to incorporate the spatial variability into the linear model variance-covariance matrix, assuming the variogram model identified above.<br></p>
 <p>As an initial step, for comparison purposes, the unadjusted RCB model is run first and the means saved in data set “NIN_RCBD_means.”<br><br></p>
-<div id="unadjusted-rcb-model" class="section level3" number="6.4.1">
-<h3><span class="header-section-number">6.4.1</span> Unadjusted RCB Model</h3>
+<div id="unadjusted-rcbd-model" class="section level3" number="6.4.1">
+<h3><span class="header-section-number">6.4.1</span> Unadjusted RCBD Model</h3>
 <pre class="sashtml"><code>
 /** Fit unadjusted RCBD model **/
 ODS html GPATH = &quot;.\img\&quot; ;
@@ -5825,7 +5825,7 @@ Vona
 </div>
 <br>
 </div>
-<p>The F-statistic and accompanying large p-value for ‘gen’ indicate no differences between genotypes. This is surprising for a variety trial. The fit statistics (e.g. AIC) are helpful for model comparison, although on their own, these metrics do not have much meaning. The AIC value for this standard RCB analysis is 1221.7; let’s compare that number to that for the spatially-adjusted models (in the case of AIC, smaller numbers indicate a better fitting model). Another point of comparison is the standard error of the means: 3.8557.<br></p>
+<p>The F-statistic and accompanying large p-value for ‘gen’ indicate no differences between cultivars. This is surprising for a variety trial. The fit statistics (e.g. AIC) are helpful for model comparison, although on their own, these metrics do not have much meaning. The AIC value for this standard RCB analysis is 1221.7; let’s compare that number to that for the spatially-adjusted models (in the case of AIC, smaller numbers indicate a better fitting model). Another point of comparison is the standard error of the means: 3.8557.<br></p>
 <p>The next step is to try a spatially-adjusted model. This is done by adding a <strong>repeated</strong> statement specifying the spatial model form (Gaussian, <strong>type=sp(gau)</strong>) and the variables related to spatial positions in the study (row, col). The <strong>local</strong> option tells SAS to use a nugget parameter in the Gaussian variogram model. The second additional statement is <strong>parms</strong>. This gives SAS a starting place for estimating the range, sill, and nugget parameters. The values given here are taken from the <strong>PROC VARIOGRAM</strong> output above. While this step can be omitted, it is recommended not to do so because, on its own, <strong>PROC MIXED</strong> can often have trouble narrowing in on reasonable parameter estimates. One reason for the preceding variogram steps was to obtain these parameter values so <strong>PROC MIXED</strong> has a good starting place for estimation. As before, the estimated means (adjusted now) are saved, this time in data set “NIN_Spatial_means.”<br></p>
 </div>
 <div id="rcb-model-with-spatial-covariance" class="section level3" number="6.4.2">
@@ -8414,7 +8414,7 @@ Vona
 </div>
 <br>
 </div>
-<p>From this output, we see the AIC value is now 1073.1. This is substantially lower than the AIC=1221.7 from the unadjusted model indicating a better model fit. Additionally, the gen effect in the model now has a low p-value (p=0.0024) giving evidence for differences among genotypes where we did not see them previously. Lastly, the standard errors for the means are now lower than those of the unadjusted model indicating an increased precision in mean estimation.<br></p>
+<p>From this output, we see the AIC value is now 1073.1. This is substantially lower than the AIC=1221.7 from the unadjusted model indicating a better model fit. Additionally, the gen effect in the model now has a low p-value (p=0.0024) giving evidence for differences among cultivars where we did not see them previously. Lastly, the standard errors for the means are now lower than those of the unadjusted model indicating an increased precision in mean estimation.<br></p>
 </div>
 <div id="other-spatial-adjustments" class="section level3" number="6.4.3">
 <h3><span class="header-section-number">6.4.3</span> Other Spatial Adjustments</h3>

@@ -73,7 +73,7 @@ estimation-and-modeling-of-semivariance
 estimating-empirical-semivariance
 fitting-an-empirical-variogram-model
 using-the-estimated-variogram-in-an-adjusted-analysis
-unadjusted-rcb-model
+unadjusted-rcbd-model
 rcb-model-with-spatial-covariance
 other-spatial-adjustments
 rcb-model-with-row-and-column-covariates
@@ -99,7 +99,7 @@ latin-square-1
 split-plot-1
 split-split-plot-1
 split-block-or-strip-plot
-augmented-1
+augmented-design
 the-end
 other-packages
 final-recommendations
