@@ -8,9 +8,9 @@ sasopts <- "-nosplash -ls 200"
 
 ## Load and Explore Data
 
-These data are from a winter wheat variety trial in Alliance, Nebraska [@stroup1994] and are commonly used to demonstrate spatial adjustment in linear modeling. The data represent yields of 56 varieties originally layed out in a randomized complete block design (RCB). The local topography combined with winter kill, however, induced spatial variability that did not correspond to the RCB design [@stroup2013] which produced biased estimates in a standard unadjusted analysis. <br><br>
+These data are from a winter wheat variety trial in Alliance, Nebraska [@stroup1994] and are commonly used to demonstrate spatial adjustment in linear modeling. The data represent yields of 56 varieties originally laid out in a randomized complete block design (RCB). The local topography combined with winter kill, however, induced spatial variability that did not correspond to the RCB design [@stroup2013] which produced biased estimates in a standard unadjusted analysis. <br><br>
 
-The code below reads the data from a CSV file located the IdahoAgStats server. If desired, the data file can be accessed independently [here](https://raw.githubusercontent.com/IdahoAgStats/guide-to-field-trial-spatial-analysis/master/data/stroup_nin_wheat.csv). In this file, missing values for yield are denoted as 'NA'. These values are not actually missing, but represent blank plots in the original design of the study. The **PROC FORMAT** section converts these to numeric missing values in SAS (defined as a single period).  They are then removed from the data before proceeding to analyses. Also note that row and column indices are multiplied by constants to convert them to the meter dimensions of the plots. . <br><br>
+The code below reads the data from a CSV file located the GitHub repo for this book. The data file can be downloaded from [here](https://raw.githubusercontent.com/IdahoAgStats/guide-to-field-trial-spatial-analysis/master/data/stroup_nin_wheat.csv). In this file, missing values for yield are denoted as 'NA'. These values are not actually missing, but represent blank plots separating blocks in the original design of the study. The **PROC FORMAT** section converts these to numeric missing values in SAS (defined as a single period). They are then removed from the data before proceeding to analyses. Also note that row and column indices are multiplied by constants to convert them to the meter dimensions of the plots. . <br><br>
 
 The first six observations are displayed. The data contains variables for variety (gen), replication (rep), yield, and column and row identifiers.<br><br> Last, a map of the 4 replications (blocks) from the original experimental design is shown.
 
@@ -161,7 +161,7 @@ The last step is to utilize this information in a statistical analysis as outlin
 
 As an initial step, for comparison purposes, the unadjusted RCB model is run first and the means saved in data set "NIN_RCBD_means".<br><br>
 
-### Unadjusted RCB Model
+### Unadjusted RCBD Model
 
 ```{r SAS6_8, engine="sashtml", collectcode=TRUE, engine.path=saspath, include=TRUE, engine.opts=sasopts, comment=""}
 
@@ -178,7 +178,7 @@ proc mixed data=alliance ;
 run;
 ```
 
-The F-statistic and accompanying large p-value for 'gen' indicate no differences between genotypes. This is surprising for a variety trial. The fit statistics (e.g. AIC) are helpful for model comparison, although on their own, these metrics do not have much meaning. The AIC value for this standard RCB analysis is 1221.7; let's compare that number to that for the spatially-adjusted models (in the case of AIC, smaller numbers indicate a better fitting model).  Another point of comparison is the standard error of the means: 3.8557.<br>
+The F-statistic and accompanying large p-value for 'gen' indicate no differences between cultivars. This is surprising for a variety trial. The fit statistics (e.g. AIC) are helpful for model comparison, although on their own, these metrics do not have much meaning. The AIC value for this standard RCB analysis is 1221.7; let's compare that number to that for the spatially-adjusted models (in the case of AIC, smaller numbers indicate a better fitting model).  Another point of comparison is the standard error of the means: 3.8557.<br>
 
 The next step is to try a spatially-adjusted model. This is done by adding a **repeated** statement specifying the spatial model form (Gaussian, **type=sp(gau)**) and the variables related to spatial positions in the study (row, col). The **local** option tells SAS to use a nugget parameter in the Gaussian variogram model. The second additional statement is **parms**. This gives SAS a starting place for estimating the range, sill, and nugget parameters. The values given here are taken from the **PROC VARIOGRAM** output above. While this step can be omitted, it is recommended not to do so because, on its own, **PROC MIXED** can often have trouble narrowing in on reasonable parameter estimates. One reason for the preceding variogram steps was to obtain these parameter values so **PROC MIXED** has a good starting place for estimation. As before, the estimated means (adjusted now) are saved, this time in data set "NIN_Spatial_means".<br>
 
@@ -203,7 +203,7 @@ run;
 
 ```
 
-From this output, we see the AIC value is now 1073.1. This is substantially lower than the AIC=1221.7 from the unadjusted model indicating a better model fit. Additionally, the gen effect in the model now has a low p-value (p=0.0024) giving evidence for differences among genotypes where we did not see them previously. Lastly, the standard errors for the means are now lower than those of the unadjusted model indicating an increased precision in mean estimation.<br>
+From this output, we see the AIC value is now 1073.1. This is substantially lower than the AIC=1221.7 from the unadjusted model indicating a better model fit. Additionally, the gen effect in the model now has a low p-value (p=0.0024) giving evidence for differences among cultivars where we did not see them previously. Lastly, the standard errors for the means are now lower than those of the unadjusted model indicating an increased precision in mean estimation.<br>
 
 ### Other Spatial Adjustments
 #### RCB Model with Row and Column Covariates

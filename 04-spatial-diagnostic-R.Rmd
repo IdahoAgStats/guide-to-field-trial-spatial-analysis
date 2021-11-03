@@ -180,7 +180,7 @@ plot(resid_var1, Nin_variofit3, main = "Gaussian model")
 plot(resid_var1, Nin_variofit4, main = "Matern model")
 ```
 
-How to pick the best one mdoel? The attribute "SSError" indicates how well each model was able to predict the binned error terms as a function of distance. However, it's important to look at the model as well to see if the model was able to fit the data.  
+How to pick the best one model? The attribute "SSError" indicates how well each model was able to predict the binned error terms as a function of distance. However, it's important to look at the model as well to see if the model was able to fit the data.  
 
 ```{r}
 print("Exponential"); attr(Nin_variofit1, "SSErr")

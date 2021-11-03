@@ -15,11 +15,12 @@ description: "Instructions for identifying spatial autocorrelation in agricultur
 # Preface
 
 ```{r, echo=FALSE,out.width="90%",fig.align='center'}
-knitr::include_graphics("img/road-auvers-after-rain-6_2840.jpg")
+#knitr::include_graphics("img/road-auvers-after-rain-6_2840.jpg")
+knitr::include_graphics("img/wheat_field_van_gogh.jpg")
 ```
 <center>
 
-Vincent Van Gogh, *A Road in Auvers After the Rain*
+Vincent Van Gogh
 
 </center>
 
@@ -27,19 +28,19 @@ Vincent Van Gogh, *A Road in Auvers After the Rain*
 
 *To help people conducting planned agricultural field trials understand and incorporate spatial variation routinely into analysis of field trials.*
 
-Current educational resources are focused largely on geospatial applications that typically require a a moderate to deep understanding of  mapping tools and spatial analytical techniques. Furthermore, there is not a comprehensive resources for spatial analytical techniques for field experiments that is also freely available. This tutorial is intended to fill that gap. 
+Current educational resources are focused largely on geospatial applications that typically require a a moderate to deep understanding of  mapping tools and spatial analytic techniques. Furthermore, there is not a comprehensive resources for spatial analytic techniques for field experiments that is also freely available. This tutorial is intended to fill that gap. 
 
 ## Prerequisites
 
-In order to run the scripts in this demonstration, you will to download R, available free through the [Comprehensive R Archive Network](https://cran.r-project.org/) (CRAN). While this is sufficient for running R scripts, You may also find it hepful to use RStudio, which provides a nice graphical user interface for R. RStudio can be downloaded [here](https://www.rstudio.com/products/rstudio/download/).
+In order to run the scripts in this demonstration, you will to download R, available free through the [Comprehensive R Archive Network](https://cran.r-project.org/) (CRAN). While this is sufficient for running R scripts, You may also find it helpful to use RStudio, which provides a nice graphical user interface for R. RStudio can be downloaded [here](https://www.rstudio.com/products/rstudio/download/).
 
 If you already have R installed, please make sure you have version 4.0.0 or newer. 
 
 This demonstration is not intended to provide instructions on general R usage. However, There are numerous web resources for learning the Basics of R. [Software carpentry](https://software-carpentry.org/lessons/) offers several lesson plans covering the foundation of R.  
 
-## R Requirements
+## R requirements
 
-This tutorial was built using R version 4.1 ("Camp Pontanezen"). R session information is provided in \@ref(the-end). 
+This tutorial was built using R version 4.1 ("Camp Pontanezen"). R session information is provided in section \@ref(the-end). 
 
 **R Packages used in this tutorial**  
 
@@ -55,16 +56,15 @@ This tutorial was built using R version 4.1 ("Camp Pontanezen"). R session infor
 |emmeans| extract treatments means |
 | spaMM | Matérn covariance structure |
 |SpATS | spatial splines for field trials |
-|INLA| Bayesian modeling with AR1xAR1 estimation |
 |breedR | mixed modelling with AR1xAR1 estimation |
 
-All packages aside from **[inla]((https://www.r-inla.org)** and **breedR** are available on CRAN. Download instructions for **inla** can be found [here](https://www.r-inla.org/download-install). The package **breedR**, availabe on GitHub can be installed within R with the following code:
+All packages aside from **breedR** are available on CRAN. The package **breedR**, is available on GitHub can be installed within R with the following code:
 
 ```
 remotes::install_github("famuvie/breedR")
 ```
 
-## SAS Requirements
+## SAS requirements
 
 In order to run the SAS portion of this tutorial, a valid copy of SAS Base and Stat products and a current SAS license are required. This tutorial was built using SAS 9.4 (TS1M5). Although older versions of SAS may also work, we have not evaluated this. Users can also consider downloading and using a free version of [SAS® On Demand for Academics: Studio](https://www.sas.com/en_us/software/on-demand-for-academics/references/getting-started-with-sas-ondemand-for-academics-studio.html). 
 

@@ -134,7 +134,7 @@ preds_sph <- as.data.frame(emmeans(nin_sph, "gen"))
 
 ### Matérn
 
-A Matern error function is not available in **nlme**, but the packge **spaMM** has written an extension implementing the Matérn, Cauchy and other covariance structures. The Matérn is demonstrated below. 
+A Matérn error function is not available in **nlme**, but the package **spaMM** has written an extension implementing the Matérn, Cauchy and other covariance structures. The Matérn is demonstrated below. 
 
 
 ```{r message=FALSE, warning=FALSE}
@@ -211,7 +211,7 @@ nin_ar1ar1  <- remlf90(fixed  = yield ~ gen,
 
 ```
 
-The estimates for $\rho$ are determined via a grid search. The default grid searches the entire space, ([-1, 1] for rows and columns) We can narrow down the grid search to the area most impactful based on log liklihood. 
+The estimates for $\rho$ are determined via a grid search. The default grid searches the entire space, ([-1, 1] for rows and columns) We can narrow down the grid search to the area most impactful based on log likelihood. 
 ```{r}
 qplot(rho_r, rho_c, fill = loglik, geom = 'tile', data = nin_ar1ar1$rho)
 
@@ -242,10 +242,10 @@ colnames(preds_ar1ar1)[2] <- "emmean"
 
 ## Model Selection
 
-Now that we have built these spatial models, how do we pick the right one? Unfortunately, there is no one model that works best in all circumstances. In addition, there is no single way for choosing the best model! Some appraoches include:
+Now that we have built these spatial models, how do we pick the right one? Unfortunately, there is no one model that works best in all circumstances. In addition, there is no single way for choosing the best model! Some approaches include:
 
 1. comparing model fitness (e.g. AIC, BIC, log likelihood) 
-1. comparing posthoc power (that is, the p-values for the treatments)
+1. comparing post-hoc power (that is, the p-values for the treatments)
 1. comparing standard error of the estimates
 
 In order to make comparisons, the code below assembles all the model objects into one list. They are generated from different processes, as shown by the `class` attribute of each one, so this takes some data conditioning.  
