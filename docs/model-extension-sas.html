@@ -1,0 +1,2949 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Section 8 Other Models - SAS | Incorporating Spatial Analysis into Agricultural Field Experiments.</title>
+  <meta name="description" content="Instructions for identifying spatial autocorrelation in agricultural field trials and incorporating spatial variation into analysis of trial using R and SAS." />
+  <meta name="generator" content="bookdown 0.23.1 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Section 8 Other Models - SAS | Incorporating Spatial Analysis into Agricultural Field Experiments." />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="Instructions for identifying spatial autocorrelation in agricultural field trials and incorporating spatial variation into analysis of trial using R and SAS." />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Section 8 Other Models - SAS | Incorporating Spatial Analysis into Agricultural Field Experiments." />
+  
+  <meta name="twitter:description" content="Instructions for identifying spatial autocorrelation in agricultural field trials and incorporating spatial variation into analysis of trial using R and SAS." />
+  
+
+<meta name="author" content="Julia Piaskowski" />
+<meta name="author" content="William Price" />
+
+
+<meta name="date" content="2021-11-05" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="model-extension-r.html"/>
+<link rel="next" href="the-end.html"/>
+<script src="libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Incorporating Spatial Analysis into Agricultural Field Experiments</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Preface</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#tutorial-goal"><i class="fa fa-check"></i><b>1.1</b> Tutorial goal</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#prerequisites"><i class="fa fa-check"></i><b>1.2</b> Prerequisites</a></li>
+<li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#r-requirements"><i class="fa fa-check"></i><b>1.3</b> R requirements</a></li>
+<li class="chapter" data-level="1.4" data-path="index.html"><a href="index.html#sas-requirements"><i class="fa fa-check"></i><b>1.4</b> SAS requirements</a></li>
+<li class="chapter" data-level="1.5" data-path="index.html"><a href="index.html#contributors"><i class="fa fa-check"></i><b>1.5</b> Contributors</a></li>
+<li class="chapter" data-level="1.6" data-path="index.html"><a href="index.html#license"><i class="fa fa-check"></i><b>1.6</b> License</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>2</b> Introduction</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="intro.html"><a href="intro.html#why-care-about-spatial-variation"><i class="fa fa-check"></i><b>2.1</b> Why care about spatial variation?</a></li>
+<li class="chapter" data-level="2.2" data-path="intro.html"><a href="intro.html#diagnosing-spatial-auto-correlation"><i class="fa fa-check"></i><b>2.2</b> Diagnosing spatial auto-correlation</a>
+<ul>
+<li class="chapter" data-level="2.2.1" data-path="intro.html"><a href="intro.html#morans-i"><i class="fa fa-check"></i><b>2.2.1</b> Moran’s I</a></li>
+<li class="chapter" data-level="2.2.2" data-path="intro.html"><a href="intro.html#empirical-variogram-semivariance"><i class="fa fa-check"></i><b>2.2.2</b> Empirical variogram &amp; semivariance</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="background.html"><a href="background.html"><i class="fa fa-check"></i><b>3</b> Spatial Models</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="background.html"><a href="background.html#correlated-error-models"><i class="fa fa-check"></i><b>3.1</b> Correlated error models</a>
+<ul>
+<li class="chapter" data-level="3.1.1" data-path="background.html"><a href="background.html#distance-based-correlation-error-models"><i class="fa fa-check"></i><b>3.1.1</b> Distance-based correlation error models</a></li>
+<li class="chapter" data-level="3.1.2" data-path="background.html"><a href="background.html#correlated-error-model-for-gridded-data"><i class="fa fa-check"></i><b>3.1.2</b> Correlated error model for gridded data</a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="background.html"><a href="background.html#spatial-regression-methods"><i class="fa fa-check"></i><b>3.2</b> Spatial Regression methods</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="background.html"><a href="background.html#spatial-autoregressive-sar"><i class="fa fa-check"></i><b>3.2.1</b> Spatial autoregressive (SAR)</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="background.html"><a href="background.html#trend-analysis"><i class="fa fa-check"></i><b>3.3</b> Trend analysis</a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="background.html"><a href="background.html#row-and-column-trends"><i class="fa fa-check"></i><b>3.3.1</b> Row and column trends</a></li>
+<li class="chapter" data-level="3.3.2" data-path="background.html"><a href="background.html#splines"><i class="fa fa-check"></i><b>3.3.2</b> Splines</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="spatial-r.html"><a href="spatial-r.html"><i class="fa fa-check"></i><b>4</b> Identifying Spatial Variation: R</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="spatial-r.html"><a href="spatial-r.html#load-data"><i class="fa fa-check"></i><b>4.1</b> Load data</a>
+<ul>
+<li class="chapter" data-level="4.1.1" data-path="spatial-r.html"><a href="spatial-r.html#examine-data"><i class="fa fa-check"></i><b>4.1.1</b> Examine data</a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="spatial-r.html"><a href="spatial-r.html#test-for-spatial-autocorrelation"><i class="fa fa-check"></i><b>4.2</b> Test for spatial autocorrelation</a>
+<ul>
+<li class="chapter" data-level="4.2.1" data-path="spatial-r.html"><a href="spatial-r.html#morans-i-1"><i class="fa fa-check"></i><b>4.2.1</b> Moran’s I</a></li>
+<li class="chapter" data-level="4.2.2" data-path="spatial-r.html"><a href="spatial-r.html#note-on-gearys-c"><i class="fa fa-check"></i><b>4.2.2</b> Note on Geary’s C</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="spatial-r.html"><a href="spatial-r.html#empirical-variogram-fitting"><i class="fa fa-check"></i><b>4.3</b> Empirical variogram fitting</a>
+<ul>
+<li class="chapter" data-level="4.3.1" data-path="spatial-r.html"><a href="spatial-r.html#compare-variograms"><i class="fa fa-check"></i><b>4.3.1</b> Compare variograms</a></li>
+<li class="chapter" data-level="4.3.2" data-path="spatial-r.html"><a href="spatial-r.html#explore-anisotropy"><i class="fa fa-check"></i><b>4.3.2</b> Explore anisotropy</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="rcbd-r.html"><a href="rcbd-r.html"><i class="fa fa-check"></i><b>5</b> RCBD Example: R</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="rcbd-r.html"><a href="rcbd-r.html#prep-work"><i class="fa fa-check"></i><b>5.1</b> Prep work</a></li>
+<li class="chapter" data-level="5.2" data-path="rcbd-r.html"><a href="rcbd-r.html#correlated-errors"><i class="fa fa-check"></i><b>5.2</b> Correlated errors</a>
+<ul>
+<li class="chapter" data-level="5.2.1" data-path="rcbd-r.html"><a href="rcbd-r.html#exponential-1"><i class="fa fa-check"></i><b>5.2.1</b> Exponential</a></li>
+<li class="chapter" data-level="5.2.2" data-path="rcbd-r.html"><a href="rcbd-r.html#spherical-1"><i class="fa fa-check"></i><b>5.2.2</b> Spherical</a></li>
+<li class="chapter" data-level="5.2.3" data-path="rcbd-r.html"><a href="rcbd-r.html#matérn-1"><i class="fa fa-check"></i><b>5.2.3</b> Matérn</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="rcbd-r.html"><a href="rcbd-r.html#rowcolumn-trends"><i class="fa fa-check"></i><b>5.3</b> Row/Column Trends:</a></li>
+<li class="chapter" data-level="5.4" data-path="rcbd-r.html"><a href="rcbd-r.html#splines-1"><i class="fa fa-check"></i><b>5.4</b> Splines</a></li>
+<li class="chapter" data-level="5.5" data-path="rcbd-r.html"><a href="rcbd-r.html#ar1xar1"><i class="fa fa-check"></i><b>5.5</b> AR1xAR1</a></li>
+<li class="chapter" data-level="5.6" data-path="rcbd-r.html"><a href="rcbd-r.html#bayesian-ar1xar1"><i class="fa fa-check"></i><b>5.6</b> Bayesian AR1xAR1</a></li>
+<li class="chapter" data-level="5.7" data-path="rcbd-r.html"><a href="rcbd-r.html#model-selection"><i class="fa fa-check"></i><b>5.7</b> Model Selection</a>
+<ul>
+<li class="chapter" data-level="5.7.1" data-path="rcbd-r.html"><a href="rcbd-r.html#spatial-dependence-of-residuals"><i class="fa fa-check"></i><b>5.7.1</b> Spatial dependence of residuals</a></li>
+<li class="chapter" data-level="5.7.2" data-path="rcbd-r.html"><a href="rcbd-r.html#compare-model-fit"><i class="fa fa-check"></i><b>5.7.2</b> Compare Model Fit</a></li>
+<li class="chapter" data-level="5.7.3" data-path="rcbd-r.html"><a href="rcbd-r.html#experiment-wide-error"><i class="fa fa-check"></i><b>5.7.3</b> Experiment-wide error</a></li>
+<li class="chapter" data-level="5.7.4" data-path="rcbd-r.html"><a href="rcbd-r.html#post-hoc-power"><i class="fa fa-check"></i><b>5.7.4</b> Post-hoc power</a></li>
+<li class="chapter" data-level="5.7.5" data-path="rcbd-r.html"><a href="rcbd-r.html#standard-error-of-treatment-means"><i class="fa fa-check"></i><b>5.7.5</b> Standard error of treatment means</a></li>
+<li class="chapter" data-level="5.7.6" data-path="rcbd-r.html"><a href="rcbd-r.html#treatment-means"><i class="fa fa-check"></i><b>5.7.6</b> Treatment means</a></li>
+</ul></li>
+<li class="chapter" data-level="5.8" data-path="rcbd-r.html"><a href="rcbd-r.html#making-decisions"><i class="fa fa-check"></i><b>5.8</b> Making decisions</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="rcbd-sas.html"><a href="rcbd-sas.html"><i class="fa fa-check"></i><b>6</b> RCBD Example: SAS</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="rcbd-sas.html"><a href="rcbd-sas.html#load-and-explore-data"><i class="fa fa-check"></i><b>6.1</b> Load and Explore Data</a>
+<ul>
+<li class="chapter" data-level="6.1.1" data-path="rcbd-sas.html"><a href="rcbd-sas.html#plots-of-field-trends"><i class="fa fa-check"></i><b>6.1.1</b> Plots of Field Trends</a></li>
+</ul></li>
+<li class="chapter" data-level="6.2" data-path="rcbd-sas.html"><a href="rcbd-sas.html#estimating-and-testing-spatial-correlation"><i class="fa fa-check"></i><b>6.2</b> Estimating and Testing Spatial Correlation</a>
+<ul>
+<li class="chapter" data-level="6.2.1" data-path="rcbd-sas.html"><a href="rcbd-sas.html#examine-the-number-of-distance-pairs-and-maximum-lags-between-residuals"><i class="fa fa-check"></i><b>6.2.1</b> Examine the Number of Distance Pairs and Maximum Lags between Residuals</a></li>
+<li class="chapter" data-level="6.2.2" data-path="rcbd-sas.html"><a href="rcbd-sas.html#compute-morans-i-and-gearys-c."><i class="fa fa-check"></i><b>6.2.2</b> Compute Moran’s I and Geary’s C.</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="rcbd-sas.html"><a href="rcbd-sas.html#estimation-and-modeling-of-semivariance"><i class="fa fa-check"></i><b>6.3</b> Estimation and Modeling of Semivariance</a>
+<ul>
+<li class="chapter" data-level="6.3.1" data-path="rcbd-sas.html"><a href="rcbd-sas.html#estimating-empirical-semivariance"><i class="fa fa-check"></i><b>6.3.1</b> Estimating Empirical Semivariance</a></li>
+<li class="chapter" data-level="6.3.2" data-path="rcbd-sas.html"><a href="rcbd-sas.html#fitting-an-empirical-variogram-model"><i class="fa fa-check"></i><b>6.3.2</b> Fitting an Empirical Variogram Model</a></li>
+</ul></li>
+<li class="chapter" data-level="6.4" data-path="rcbd-sas.html"><a href="rcbd-sas.html#using-the-estimated-variogram-in-an-adjusted-analysis"><i class="fa fa-check"></i><b>6.4</b> Using the Estimated variogram in an Adjusted Analysis</a>
+<ul>
+<li class="chapter" data-level="6.4.1" data-path="rcbd-sas.html"><a href="rcbd-sas.html#unadjusted-rcbd-model"><i class="fa fa-check"></i><b>6.4.1</b> Unadjusted RCBD Model</a></li>
+<li class="chapter" data-level="6.4.2" data-path="rcbd-sas.html"><a href="rcbd-sas.html#rcb-model-with-spatial-covariance"><i class="fa fa-check"></i><b>6.4.2</b> RCB Model with Spatial Covariance</a></li>
+<li class="chapter" data-level="6.4.3" data-path="rcbd-sas.html"><a href="rcbd-sas.html#other-spatial-adjustments"><i class="fa fa-check"></i><b>6.4.3</b> Other Spatial Adjustments</a></li>
+</ul></li>
+<li class="chapter" data-level="6.5" data-path="rcbd-sas.html"><a href="rcbd-sas.html#compare-estimated-means"><i class="fa fa-check"></i><b>6.5</b> Compare Estimated Means</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="model-extension-r.html"><a href="model-extension-r.html"><i class="fa fa-check"></i><b>7</b> Other Models - R</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="model-extension-r.html"><a href="model-extension-r.html#other-experimental-and-treatment-designs"><i class="fa fa-check"></i><b>7.1</b> Other Experimental and Treatment Designs</a>
+<ul>
+<li class="chapter" data-level="7.1.1" data-path="model-extension-r.html"><a href="model-extension-r.html#completely-randomized-design"><i class="fa fa-check"></i><b>7.1.1</b> Completely randomized design</a></li>
+<li class="chapter" data-level="7.1.2" data-path="model-extension-r.html"><a href="model-extension-r.html#multi-way-factorials"><i class="fa fa-check"></i><b>7.1.2</b> Multi-way Factorials</a></li>
+<li class="chapter" data-level="7.1.3" data-path="model-extension-r.html"><a href="model-extension-r.html#alpha-lattice"><i class="fa fa-check"></i><b>7.1.3</b> Alpha lattice</a></li>
+<li class="chapter" data-level="7.1.4" data-path="model-extension-r.html"><a href="model-extension-r.html#latin-square"><i class="fa fa-check"></i><b>7.1.4</b> Latin square</a></li>
+<li class="chapter" data-level="7.1.5" data-path="model-extension-r.html"><a href="model-extension-r.html#split-plot"><i class="fa fa-check"></i><b>7.1.5</b> Split plot</a></li>
+<li class="chapter" data-level="7.1.6" data-path="model-extension-r.html"><a href="model-extension-r.html#split-split-plot"><i class="fa fa-check"></i><b>7.1.6</b> Split-split plot</a></li>
+<li class="chapter" data-level="7.1.7" data-path="model-extension-r.html"><a href="model-extension-r.html#split-block"><i class="fa fa-check"></i><b>7.1.7</b> Split block</a></li>
+<li class="chapter" data-level="7.1.8" data-path="model-extension-r.html"><a href="model-extension-r.html#augmented-design"><i class="fa fa-check"></i><b>7.1.8</b> Augmented design</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="model-extension-sas.html"><a href="model-extension-sas.html"><i class="fa fa-check"></i><b>8</b> Other Models - SAS</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="model-extension-sas.html"><a href="model-extension-sas.html#other-experimental-and-treatment-designs-1"><i class="fa fa-check"></i><b>8.1</b> Other Experimental and Treatment Designs</a>
+<ul>
+<li class="chapter" data-level="8.1.1" data-path="model-extension-sas.html"><a href="model-extension-sas.html#completely-randomized-design-crd"><i class="fa fa-check"></i><b>8.1.1</b> Completely randomized design (CRD)</a></li>
+<li class="chapter" data-level="8.1.2" data-path="model-extension-sas.html"><a href="model-extension-sas.html#multi-way-factorials-1"><i class="fa fa-check"></i><b>8.1.2</b> Multi-way Factorials</a></li>
+<li class="chapter" data-level="8.1.3" data-path="model-extension-sas.html"><a href="model-extension-sas.html#alpha-lattice-1"><i class="fa fa-check"></i><b>8.1.3</b> Alpha lattice</a></li>
+<li class="chapter" data-level="8.1.4" data-path="model-extension-sas.html"><a href="model-extension-sas.html#latin-square-1"><i class="fa fa-check"></i><b>8.1.4</b> Latin square</a></li>
+<li class="chapter" data-level="8.1.5" data-path="model-extension-sas.html"><a href="model-extension-sas.html#split-plot-1"><i class="fa fa-check"></i><b>8.1.5</b> Split plot</a></li>
+<li class="chapter" data-level="8.1.6" data-path="model-extension-sas.html"><a href="model-extension-sas.html#split-split-plot-1"><i class="fa fa-check"></i><b>8.1.6</b> Split-split plot</a></li>
+<li class="chapter" data-level="8.1.7" data-path="model-extension-sas.html"><a href="model-extension-sas.html#split-block-or-strip-plot"><i class="fa fa-check"></i><b>8.1.7</b> Split block or Strip plot</a></li>
+<li class="chapter" data-level="8.1.8" data-path="model-extension-sas.html"><a href="model-extension-sas.html#augmented-design-1"><i class="fa fa-check"></i><b>8.1.8</b> Augmented design</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="the-end.html"><a href="the-end.html"><i class="fa fa-check"></i><b>9</b> Conclusion</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="the-end.html"><a href="the-end.html#other-packages"><i class="fa fa-check"></i><b>9.1</b> Other packages</a></li>
+<li class="chapter" data-level="9.2" data-path="the-end.html"><a href="the-end.html#final-recommendations"><i class="fa fa-check"></i><b>9.2</b> Final recommendations</a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="flotsam-jetsam.html"><a href="flotsam-jetsam.html"><i class="fa fa-check"></i><b>10</b> Flotsam &amp; Jetsam</a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="flotsam-jetsam.html"><a href="flotsam-jetsam.html#r-session-info"><i class="fa fa-check"></i><b>10.1</b> R Session Info</a></li>
+<li class="chapter" data-level="10.2" data-path="flotsam-jetsam.html"><a href="flotsam-jetsam.html#references"><i class="fa fa-check"></i><b>10.2</b> References</a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Incorporating Spatial Analysis into Agricultural Field Experiments.</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="model-extension-sas" class="section level1" number="8">
+<h1><span class="header-section-number">Section 8</span> Other Models - SAS</h1>
+<div id="other-experimental-and-treatment-designs-1" class="section level2" number="8.1">
+<h2><span class="header-section-number">8.1</span> Other Experimental and Treatment Designs</h2>
+<p>Spatial models can be extended to fit other experimental designs such as CRD, Lattice, and split plot or treatment designs such as factorials.</p>
+<p>Below are minimal examples that omit several steps conducted in section <a href="rcbd-sas.html#rcbd-sas">6</a> (e.g. fitting the empirical variogram) for brevity. Also, although spatial variance is incorporated into each example, we have not made an effort to ensure that each is the best fitting model for the data. The examples are intended to illustrate the correct syntax rather than the complete process of proper model fitting.</p>
+<p>Unless indicated otherwise, these data are adapted from the R package agridat. Specific links to csv data files are given in the examples.</p>
+<div id="completely-randomized-design-crd" class="section level3" number="8.1.1">
+<h3><span class="header-section-number">8.1.1</span> Completely randomized design (CRD)</h3>
+<p>Data: <a href="https://raw.githubusercontent.com/IdahoAgStats/guide-to-field-trial-spatial-analysis/master/data/cochran_crd.csv">cochran_crd.csv</a><br><br></p>
+<p>This study investigated the effect of sulfur on controlling scab disease in potatoes and had seven treatments (trt) measuring the percent surface area infected (inf). Row and column indices are also given. The design was a completely randomized design with 8 control replications and 4 treatment replications.</p>
+<p>Two possible methods of adjustment are shown: row column trend adjustment (as suggested in agridat), and a spline adjustment.<br><br></p>
+<pre class="sashtml"><code>
+ods html close;
+proc format;
+invalue has_NA
+ &#39;NA&#39; = .;
+run;
+
+filename CRD url &quot;https://raw.githubusercontent.com/IdahoAgStats/guide-to-field-trial-spatial-analysis/master/data/cochran_crd.csv&quot;;
+
+data CRD;
+    infile CRD firstobs=2 delimiter=&#39;,&#39;;
+    input inf trt$ row col;
+    informat inf has_NA.;
+    if inf=. then delete;
+run;
+
+proc mixed data=crd;
+    class trt;
+    model inf=trt row col;
+run;
+
+proc glimmix data=crd;
+    class trt;
+    effect sp_r = spline(row col);
+    model inf=trt sp_r;
+    random row col/type=rsmooth;
+run;
+ 
+ods html; </code></pre>
+</div>
+<div id="multi-way-factorials-1" class="section level3" number="8.1.2">
+<h3><span class="header-section-number">8.1.2</span> Multi-way Factorials</h3>
+<p>Data: <a href="https://raw.githubusercontent.com/IdahoAgStats/guide-to-field-trial-spatial-analysis/master/data/chinloy_fractionalfactorial.csv">chinloy_fractionalfactorial.csv</a><br><br></p>
+<p>Factorial experiments consider multiple treatments and their combinations. The study here evaluated the effect of 5 different fertilizer treatments (nitrogen, phosphorus, potassium, bagasse, and a filter mud press), each at various concentrations, on sugarcane yield. The levels of {0,1,2} indicate the relative concentrations of each fertilizer. Because all possible treatment combinations were too numerous, only a subset were used (fractional factorial) and only 2-way interactions with nitrogen are evaluated in the model. The treatments were laid out in a randomized complete block design (block).</p>
+<p>A Gaussian spatial model is used below.<br><br></p>
+<pre class="sashtml"><code>ods html close;
+
+proc format;
+invalue has_NA
+ &#39;NA&#39; = .;
+run;
+
+filename FACT url &quot;https://raw.githubusercontent.com/IdahoAgStats/guide-to-field-trial-spatial-analysis/master/data/chinloy_fractionalfactorial.csv&quot;;
+
+data Factorial;
+    infile FACT firstobs=2 delimiter=&#39;,&#39;;
+    input yield block$ row col trt N P K B F;
+    informat yield has_NA.;
+    if yield=. then delete;
+run;
+ 
+proc mixed data=Factorial maxiter=150;
+    class block N P K B F;
+    model yield = N P K B F N*P N*K N*B N*F/ ddfm=kr;
+    random block;
+    repeated/subject=intercept type=sp(gau) (row col) local;
+    parms (6) (.25) (.21) (.1);
+run;
+
+ods html;</code></pre>
+</div>
+<div id="alpha-lattice-1" class="section level3" number="8.1.3">
+<h3><span class="header-section-number">8.1.3</span> Alpha lattice</h3>
+<p>The <em>burgueno.alpha</em> data set is set up as an incomplete block alpha design with 16 treatment levels (gen). There are 12 blocks, 2 each within 3 reps. The code below illustrates the layout of the reps and blocks. Two examples of spatial adjustment are shown: 1) assuming a Gaussian spatial adjustment, and 2) utilizing a spline adjustment.<br><br></p>
+<pre class="sashtml"><code>proc format;
+invalue has_NA
+ &#39;NA&#39; = .;
+run;
+
+filename ALPHA url &quot;https://raw.githubusercontent.com/IdahoAgStats/guide-to-field-trial-spatial-analysis/master/data/burgueno_alpha.csv&quot;;
+
+data Lattice;
+    infile ALPHA firstobs=2 delimiter=&#39;,&#39;;
+    input rep$ block$ row col gen$ yield;
+    informat yield has_NA.;
+    if yield=. then delete;
+run;
+
+proc sgplot data=Lattice;
+    styleattrs datacolors=(cx990F26 cx99600F cx54990F);
+    HEATMAPPARM y=row x=col COLORgroup=rep/ outline; 
+    refline 2.5 4.5/axis=y LINEATTRS=(color=black thickness=4) ;
+title1 &#39;Lattice: Layout of Reps&#39;;
+
+run; 
+
+proc sgplot data=Lattice;
+    styleattrs datacolors=(cx990F26 cxCC7A88 cxB33E52 cxE6B8BF
+                           cx99600F cxCCAA7A cxB3823E cxE6D2B8 
+                           cx54990F cxA3CC7A cx78B33E cxCFE6B8);
+    HEATMAPPARM y=row x=col COLORgroup=block/ outline; 
+    refline 2.5 4.5/axis=y LINEATTRS=(color=black thickness=4) ;
+    refline 4.5/axis=x LINEATTRS=(color=black thickness=4);
+title1 &#39;Lattice: Layout of Blocks&#39;;
+run;</code></pre>
+<div class="branch">
+<a name="IDX"></a>
+<div>
+<div class="c">
+<p><img alt="The SGPlot Procedure" src="SAS8_3.png" style=" height: 480px; width: 640px;" border="0" class="c"></p>
+</div>
+</div>
+<p><br></p>
+</div>
+<div class="branch">
+<p style="page-break-after: always;">
+<br/>
+</p>
+<hr size="3"/>
+<a name="IDX1"></a>
+<div>
+<div class="c">
+<p><img alt="The SGPlot Procedure" src="SAS8_31.png" style=" height: 480px; width: 640px;" border="0" class="c"></p>
+</div>
+</div>
+<br>
+</div>
+<pre class="sashtml"><code>ods html close;
+
+proc mixed data=Lattice ;
+    class block rep gen;
+    model yield = gen/ ddfm=kr;
+    random rep block(rep);
+    repeated/subject=intercept type=sp(gau) (row col) local;
+    parms (4)(30711) (57790)(86861) (133229);
+run;
+
+proc glimmix data=Lattice ;
+    class block rep gen;
+    effect sp_r = spline(row col);
+    model yield = gen sp_r/ ddfm=kr;
+    random row col/type=rsmooth;
+run;
+
+ods html;</code></pre>
+</div>
+<div id="latin-square-1" class="section level3" number="8.1.4">
+<h3><span class="header-section-number">8.1.4</span> Latin square</h3>
+<p>Latin is a special example of a lattice experiment where each treatment occurs once in each row and in each column. As a result, the row and column effects are used to model spatial effects intrinsically.</p>
+<p>The *cochran.latin** data set examines the effect of an 6 “operators” (persons) on the difference between the true plot height and operator-measured shoot height from 6 wheat plots. Each person measured the plots in a different order according to a Latin Square design. While this example is not strictly spatial in nature, it illustrates the setup for analysis.<br><br></p>
+<pre class="sashtml"><code>ods html close;
+
+proc format;
+invalue has_NA
+ &#39;NA&#39; = .;
+run;
+
+filename LAT url &quot;https://raw.githubusercontent.com/IdahoAgStats/guide-to-field-trial-spatial-analysis/master/data/cochran_latin.csv&quot;;
+
+data Latin;
+    infile LAT firstobs=2 delimiter=&#39;,&#39;;
+    input row col operator$ diff;
+    informat diff has_NA.;
+    if diff=. then delete;
+run;
+
+proc mixed data=latin;
+    class row col operator;
+    model diff = operator;
+    random row col;
+run;
+
+ods html;</code></pre>
+</div>
+<div id="split-plot-1" class="section level3" number="8.1.5">
+<h3><span class="header-section-number">8.1.5</span> Split plot</h3>
+<p>A split plot is a factorial treatment design with a restriction on the randomization of the factors. In this example, the <em>durban.splitplot</em> data looks at the effect of two factors: fungicide and barley varieties. The study is set up with 4 blocks. Within each block, 2 fungicides are randomized as whole or main plots. Within each fungicide treatment, 70 barley varieties are then randomized separately as subplots. The resulting analysis then breaks out separate error terms for the whole plots and the subplots. The plots are arranged into 10 rows x 56 columns (‘beds’). Spatial adjustment can then be introduced on top of this structure, if needed. The examples below illustrate a spherical spatial model adjustment and a spline adjustment.<br><br></p>
+<pre class="sashtml"><code>ods html close;
+
+proc format;
+invalue has_NA
+ &#39;NA&#39; = .;
+run;
+
+filename SPLIT url &quot;https://raw.githubusercontent.com/IdahoAgStats/guide-to-field-trial-spatial-analysis/master/data/durban_splitplot.csv&quot;;
+
+data splitplot;
+    infile SPLIT firstobs=2 delimiter=&#39;,&#39;;
+    input yield block$ gen$ fung$ row bed;
+    informat yield has_NA.;
+    if yield=. then delete;
+run;
+
+proc mixed data=splitplot;
+    class block gen fung row bed;
+    model yield = fung gen fung*gen/outp=residuals;
+    random block block*fung;
+    repeated/subject=intercept type=sp(sph) (row bed) local;
+    parms (7)(0.03)(0.03)(0.03) (0.01);
+run;
+
+proc glimmix data=splitplot;
+    class block gen fung;
+    effect sp_r = spline(row bed);
+    model yield = fung gen fung*gen sp_r;
+    random block block*fung;
+    random row bed/type=rsmooth;
+run;
+
+ods html;</code></pre>
+</div>
+<div id="split-split-plot-1" class="section level3" number="8.1.6">
+<h3><span class="header-section-number">8.1.6</span> Split-split plot</h3>
+<p>Like the Split-Plot above, the Split-Split-Plot is a factorial design, this time with an additional restriction on the randomization. The <em>archbold.apple</em> data used here describes the yield of apple trees under the impact of tree spacing (the whole or main plot), tree root stock (the split plot), and tree variety (the split-split plot). That is, 3 tree spacings are randomized in each block. Within those spacings, 4 root stocks are randomized separately, and then within each of those 2 varieties (‘gen’) are randomized. There are 5 blocks (‘rep’) and separate error terms for spacing, root stock, and variety are broken out in the analysis. In addition, we have row and column (‘pos’) information for the plots. This example uses a spline spatial adjustment.<br><br></p>
+<pre class="sashtml"><code>ods html close;
+
+proc format;
+invalue has_NA
+ &#39;NA&#39; = .;
+run;
+
+filename SPLIT url &quot;https://raw.githubusercontent.com/IdahoAgStats/guide-to-field-trial-spatial-analysis/master/data/archbold_apple.csv&quot;;
+
+data sp_sp_plot;
+    infile SPLIT firstobs=2 delimiter=&#39;,&#39;;
+    input rep$ row pos spacing$ stock$ gen$ yield trt;
+    informat yield has_NA.;
+    if yield=. then delete;
+run;
+
+proc glimmix data=sp_sp_plot;
+    class rep spacing stock gen;
+    effect sp_r = spline(row pos);
+    model yield = spacing stock spacing*stock gen gen*spacing gen*stock gen*spacing*stock sp_r;
+    random rep rep*spacing rep*stock*spacing;
+    random row pos/type=rsmooth;
+run;
+ 
+ ods html;</code></pre>
+</div>
+<div id="split-block-or-strip-plot" class="section level3" number="8.1.7">
+<h3><span class="header-section-number">8.1.7</span> Split block or Strip plot</h3>
+<p>This study (<em>little.splitblock</em>) investigated the effects of nitrogen rates (4 levels) and harvest dates (5 dates) on sugarbeet yields using 4 blocks. Similar to a Latin square, the split block design has two main factors defined in rows and columns. Within each block the rows and columns, each representing one of the factors, are independently randomized. The effect of this in the analysis of variance is to break out separate error terms and DF for each main effect as well as their interaction. In this example the spline spatial adjustment is demonstrated.</p>
+<pre class="sashtml"><code>ods html close;
+
+proc format;
+invalue has_NA
+ &#39;NA&#39; = .;
+run;
+
+filename SPLITB url &quot;https://raw.githubusercontent.com/IdahoAgStats/guide-to-field-trial-spatial-analysis/master/data/little_splitblock.csv&quot;;
+
+data sb;
+    infile SPLITB firstobs=2 delimiter=&#39;,&#39;;
+    input row col yield harvest nitro block$;
+    informat yield has_NA.;
+    if yield=. then delete;
+run;
+
+proc glimmix data=sb;
+    class harvest nitro block;
+    effect sp_r = spline(row col);
+    model yield = harvest nitro harvest*nitro sp_r;
+    random block harvest*block nitro*block harvest*nitro*block;
+    random row col/type=rsmooth;
+run;
+ 
+ods html;</code></pre>
+</div>
+<div id="augmented-design-1" class="section level3" number="8.1.8">
+<h3><span class="header-section-number">8.1.8</span> Augmented design</h3>
+<p>The augmented experimental design occurs most commonly, if not exclusively, in plant breeding studies. It can be useful when the number of treatments is very large and the primary goal of the study is to rank or select genotypes that perform to a specified level. The number of treatments and/or limited materials often preclude complete replication of all treatments. To adjust for this, only a select set of genotypes, usually of known performance, are replicated in the design. The error estimated from these select genotypes is then utilized in the analysis to evaluate the remaining genotypes. <span class="citation"><a href="#ref-Burgueno2018" role="doc-biblioref">Juan Burgueño</a> (<a href="#ref-Burgueno2018" role="doc-biblioref">2018</a>)</span> have a very good discussion of this design and analysis of it. The example below uses their ‘P2’ model and the reader is referred to <span class="citation"><a href="#ref-Burgueno2018" role="doc-biblioref">Juan Burgueño</a> (<a href="#ref-Burgueno2018" role="doc-biblioref">2018</a>)</span> for more details.</p>
+<p>The data used here refer to a wheat genotype evaluation study carried out near Lind Washington. The study looked at 922 lines (‘name’), of which, 8 were replicated known varieties. The P2 model, mentioned above, compares the averages of replicated lines to unreplicated lines. The data steps and procedures used below define these groups in an indicator variable named d2. The response variable, ‘yieldg,’ is converted to kilograms (‘yieldkg’) to facilitate computations and avoid numeric overflow errors due to large values. <br><br></p>
+<pre class="sashtml"><code>filename AUG url &quot;https://raw.githubusercontent.com/IdahoAgStats/guide-to-field-trial-spatial-analysis/master/data/AB19F5_LIND.csv&quot;;
+
+PROC IMPORT OUT= WORK.augmented
+     DATAFILE= AUG
+     DBMS=CSV REPLACE;
+     GETNAMES=YES;
+     DATAROW=2; 
+RUN;
+
+data augmented;
+    set augmented;
+    if yieldg = 999999 or yieldg=. then delete; /* Remove missing values */
+    prow=prow*11.7; /*convert row and column indices to feet */
+    pcol=pcol*5.5;
+run;
+
+proc freq noprint data=augmented;
+    tables name/out=controls;
+run;
+
+data controls;
+    set controls;
+    if count &gt;1;
+run;
+
+proc sort data=controls;
+    by name;
+run;
+     
+proc sort data=augmented;
+    by name;
+run;
+
+data augmented;
+    merge augmented controls;
+    by name;
+    if count=. then d2=2; /* Unreplicated */
+    else d2=1;            /* Replicated */
+    yieldkg=yieldg/1000;
+run;
+</code></pre>
+<p>Following the steps described earlier, we first fit a base model, yieldkg = d2, to obtain residuals. We cannot use a base model of <code>yieldkg = name</code> because all the unreplicated lines will produce residual values of 0. <br><br></p>
+<p>The residuals are then plotted in a heat map. This map shows evidence of spatial patterns and variability across the field. <br><br></p>
+<pre class="sashtml"><code>PROC mixed data=augmented;
+    class name d2;
+    model yieldkg = d2/noint outp=residuals ddf=229 229;
+    lsmeans d2;
+    *lsmeans name(d2)/slice = d2;
+run;
+
+proc sgplot data=residuals;
+    HEATMAPPARM y=pRow x=pCol COLORRESPONSE=resid/ colormodel=(cx014458 cx1E8C6E cxE1FE01); 
+title1 &#39;Field Map&#39;;
+run;</code></pre>
+<div class="branch">
+<a name="IDX"></a>
+<div>
+<div align="center">
+<!--BEGINTABLE-->
+<table class="table" style=" border-left-width: 0px; border-right-width: 0px;" cellspacing="0" cellpadding="7" rules="groups" frame="hsides" bordercolor="#C1C1C1" summary="Procedure Mixed: Model Information">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="c b header" colspan="2" scope="colgroup">
+Model Information
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th class="l rowheader" scope="row">
+Data Set
+</th>
+<td class="l data">
+WORK.AUGMENTED
+</td>
+</tr>
+<tr>
+<th class="l rowheader" scope="row">
+Dependent Variable
+</th>
+<td class="l data">
+yieldkg
+</td>
+</tr>
+<tr>
+<th class="l rowheader" scope="row">
+Covariance Structure
+</th>
+<td class="l data">
+Diagonal
+</td>
+</tr>
+<tr>
+<th class="l rowheader" scope="row">
+Estimation Method
+</th>
+<td class="l data">
+REML
+</td>
+</tr>
+<tr>
+<th class="l rowheader" scope="row">
+Residual Variance Method
+</th>
+<td class="l data">
+Profile
+</td>
+</tr>
+<tr>
+<th class="l rowheader" scope="row">
+Fixed Effects SE Method
+</th>
+<td class="l data">
+Model-Based
+</td>
+</tr>
+<tr>
+<th class="l rowheader" scope="row">
+Degrees of Freedom Method
+</th>
+<td class="l data">
+Residual
+</td>
+</tr>
+</tbody>
+</table>
+<!--ENDTABLE-->
+</div>
+</div>
+<br>
+<a name="IDX1"></a>
+<div>
+<div align="center">
+<!--BEGINTABLE-->
+<table class="table" style=" border-left-width: 0px; border-right-width: 0px;" cellspacing="0" cellpadding="7" rules="groups" frame="hsides" bordercolor="#C1C1C1" summary="Procedure Mixed: Class Level Information">
+<colgroup>
+<col>
+</colgroup>
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="c b header" colspan="3" scope="colgroup">
+Class Level Information
+</th>
+</tr>
+<tr>
+<th class="l b header" scope="col">
+Class
+</th>
+<th class="r b header" scope="col">
+Levels
+</th>
+<th class="l b header" scope="col">
+Values
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th class="l rowheader" scope="row">
+name
+</th>
+<td class="r data">
+922
+</td>
+<td class="l data">
+13X0828-0-0-1 13X0828-0-0-102 13X0828-0-0-105 13X0828-0-0-108 13X0828-0-0-109 13X0828-0-0-110 13X0828-0-0-15 13X0828-0-0-17 13X0828-0-0-18 13X0828-0-0-2 13X0828-0-0-24 13X0828-0-0-27 13X0828-0-0-31 13X0828-0-0-33 13X0828-0-0-36 13X0828-0-0-37 13X0828-0-0-40 13X0828-0-0-41 13X0828-0-0-42 13X0828-0-0-48 13X0828-0-0-49 13X0828-0-0-5 13X0828-0-0-52 13X0828-0-0-55 13X0828-0-0-6 13X0828-0-0-61 13X0828-0-0-62 13X0828-0-0-63 13X0828-0-0-66 13X0828-0-0-68 13X0828-0-0-7 13X0828-0-0-80 13X0828-0-0-81 13X0828-0-0-83 13X0828-0-0-9 13X0828-0-0-90 13X0828-0-0-91 13X0828-0-0-92 13X0828-0-0-94 13X0828-0-0-95 13X0828-0-0-97 13X0828-0-0-99 14X1001-0-0-1 14X1001-0-0-105 14X1001-0-0-106 14X1001-0-0-109 14X1001-0-0-11 14X1001-0-0-115 14X1001-0-0-116 14X1001-0-0-119 14X1001-0-0-12 14X1001-0-0-121 14X1001-0-0-122 14X1001-0-0-127 14X1001-0-0-128 14X1001-0-0-13 14X1001-0-0-130 14X1001-0-0-132 14X1001-0-0-134 14X1001-0-0-140 14X1001-0-0-141 14X1001-0-0-144 14X1001-0-0-146 14X1001-0-0-150 14X1001-0-0-156 14X1001-0-0-157 14X1001-0-0-158 14X1001-0-0-16 14X1001-0-0-160 14X1001-0-0-162 14X1001-0-0-164 14X1001-0-0-166 14X1001-0-0-167 14X1001-0-0-168 14X1001-0-0-169 14X1001-0-0-17 14X1001-0-0-174 14X1001-0-0-175 14X1001-0-0-176 14X1001-0-0-177 14X1001-0-0-178 14X1001-0-0-179 14X1001-0-0-181 14X1001-0-0-183 14X1001-0-0-185 14X1001-0-0-188 14X1001-0-0-193 14X1001-0-0-196 14X1001-0-0-197 14X1001-0-0-199 14X1001-0-0-20 14X1001-0-0-200 14X1001-0-0-203 14X1001-0-0-204 14X1001-0-0-205 14X1001-0-0-206 14X1001-0-0-207 14X1001-0-0-208 14X1001-0-0-209 14X1001-0-0-210 14X1001-0-0-211 14X1001-0-0-212 14X1001-0-0-213 14X1001-0-0-214 14X1001-0-0-219 14X1001-0-0-22 14X1001-0-0-223 14X1001-0-0-224 14X1001-0-0-225 14X1001-0-0-24 14X1001-0-0-25 14X1001-0-0-31 14X1001-0-0-33 14X1001-0-0-36 14X1001-0-0-38 14X1001-0-0-4 14X1001-0-0-41 14X1001-0-0-42 14X1001-0-0-43 14X1001-0-0-46 14X1001-0-0-47 14X1001-0-0-48 14X1001-0-0-49 14X1001-0-0-56 14X1001-0-0-57 14X1001-0-0-6 14X1001-0-0-60 14X1001-0-0-61 14X1001-0-0-64 14X1001-0-0-67 14X1001-0-0-68 14X1001-0-0-69 14X1001-0-0-77 14X1001-0-0-8 14X1001-0-0-81 14X1001-0-0-82 14X1001-0-0-87 14X1001-0-0-89 14X1001-0-0-92 14X1001-0-0-93 14X1001-0-0-97 14X1001-0-0-99 14X1003-0-0-1 14X1003-0-0-10 14X1003-0-0-102 14X1003-0-0-105 14X1003-0-0-106 14X1003-0-0-108 14X1003-0-0-110 14X1003-0-0-115 14X1003-0-0-121 14X1003-0-0-122 14X1003-0-0-124 14X1003-0-0-125 14X1003-0-0-127 14X1003-0-0-13 14X1003-0-0-130 14X1003-0-0-133 14X1003-0-0-140 14X1003-0-0-141 14X1003-0-0-146 14X1003-0-0-147 14X1003-0-0-149 14X1003-0-0-16 14X1003-0-0-167 14X1003-0-0-172 14X1003-0-0-175 14X1003-0-0-176 14X1003-0-0-177 14X1003-0-0-178 14X1003-0-0-18 14X1003-0-0-180 14X1003-0-0-181 14X1003-0-0-182 14X1003-0-0-185 14X1003-0-0-186 14X1003-0-0-190 14X1003-0-0-194 14X1003-0-0-195 14X1003-0-0-196 14X1003-0-0-198 14X1003-0-0-2 14X1003-0-0-20 14X1003-0-0-204 14X1003-0-0-21 14X1003-0-0-24 14X1003-0-0-27 14X1003-0-0-28 14X1003-0-0-30 14X1003-0-0-38 14X1003-0-0-41 14X1003-0-0-42 14X1003-0-0-44 14X1003-0-0-46 14X1003-0-0-47 14X1003-0-0-48 14X1003-0-0-49 14X1003-0-0-5 14X1003-0-0-50 14X1003-0-0-51 14X1003-0-0-52 14X1003-0-0-53 14X1003-0-0-54 14X1003-0-0-55 14X1003-0-0-56 14X1003-0-0-6 14X1003-0-0-60 14X1003-0-0-65 14X1003-0-0-66 14X1003-0-0-67 14X1003-0-0-68 14X1003-0-0-70 14X1003-0-0-71 14X1003-0-0-72 14X1003-0-0-73 14X1003-0-0-77 14X1003-0-0-8 14X1003-0-0-83 14X1003-0-0-86 14X1003-0-0-88 14X1003-0-0-92 14X1007-0-0-100 14X1007-0-0-101 14X1007-0-0-104 14X1007-0-0-109 14X1007-0-0-11 14X1007-0-0-111 14X1007-0-0-114 14X1007-0-0-115 14X1007-0-0-120 14X1007-0-0-122 14X1007-0-0-13 14X1007-0-0-16 14X1007-0-0-17 14X1007-0-0-20 14X1007-0-0-21 14X1007-0-0-25 14X1007-0-0-27 14X1007-0-0-29 14X1007-0-0-3 14X1007-0-0-31 14X1007-0-0-33 14X1007-0-0-37 14X1007-0-0-41 14X1007-0-0-47 14X1007-0-0-5 14X1007-0-0-50 14X1007-0-0-53 14X1007-0-0-54 14X1007-0-0-55 14X1007-0-0-59 14X1007-0-0-6 14X1007-0-0-61 14X1007-0-0-65 14X1007-0-0-68 14X1007-0-0-71 14X1007-0-0-72 14X1007-0-0-74 14X1007-0-0-77 14X1007-0-0-79 14X1007-0-0-86 14X1007-0-0-88 14X1007-0-0-9 14X1007-0-0-90 14X1007-0-0-91 14X1007-0-0-92 14X1007-0-0-94 14X1007-0-0-96 14X1007-0-0-98 14X1008-0-0-1 14X1008-0-0-10 14X1008-0-0-11 14X1008-0-0-14 14X1008-0-0-17 14X1008-0-0-2 14X1008-0-0-21 14X1008-0-0-22 14X1008-0-0-26 14X1008-0-0-28 14X1008-0-0-32 14X1008-0-0-33 14X1008-0-0-34 14X1008-0-0-4 14X1008-0-0-40 14X1008-0-0-42 14X1008-0-0-45 14X1008-0-0-46 14X1008-0-0-47 14X1008-0-0-48 14X1008-0-0-49 14X1008-0-0-5 14X1008-0-0-50 14X1008-0-0-54 14X1008-0-0-6 14X1008-0-0-61 14X1008-0-0-65 14X1008-0-0-7 14X1008-0-0-77 14X1008-0-0-78 14X1008-0-0-8 14X1008-0-0-82 14X1008-0-0-83 14X1008-0-0-85 14X1008-0-0-9 14X1022-0-0-12 14X1022-0-0-16 14X1022-0-0-2 14X1022-0-0-39 14X1022-0-0-43 14X1022-0-0-46 14X1022-0-0-49 14X1022-0-0-52 14X1022-0-0-53 14X1022-0-0-56 14X1022-0-0-59 14X1022-0-0-60 14X1022-0-0-61 14X1022-0-0-64 14X1022-0-0-66 14X1022-0-0-68 14X1022-0-0-70 14X1022-0-0-72 14X1022-0-0-76 14X1022-0-0-78 14X1023-0-0-18 14X1023-0-0-30 14X1023-0-0-33 14X1023-0-0-38 14X1023-0-0-39 14X1023-0-0-4 14X1023-0-0-45 14X1023-0-0-48 14X1023-0-0-49 14X1023-0-0-59 14X1023-0-0-70 14X1023-0-0-71 14X1023-0-0-73 14X1023-0-0-74 14X1023-0-0-75 14X1023-0-0-76 14X1023-0-0-78 14X1023-0-0-79 14X1023-0-0-80 14X1023-0-0-82 14X1023-0-0-85 14X1023-0-0-89 14X1023-0-0-90 14X1023-0-0-91 14X1027-0-0-104 14X1027-0-0-107 14X1027-0-0-11 14X1027-0-0-110 14X1027-0-0-112 14X1027-0-0-117 14X1027-0-0-121 14X1027-0-0-122 14X1027-0-0-123 14X1027-0-0-126 14X1027-0-0-128 14X1027-0-0-17 14X1027-0-0-22 14X1027-0-0-23 14X1027-0-0-25 14X1027-0-0-36 14X1027-0-0-37 14X1027-0-0-39 14X1027-0-0-4 14X1027-0-0-40 14X1027-0-0-43 14X1027-0-0-44 14X1027-0-0-45 14X1027-0-0-59 14X1027-0-0-62 14X1027-0-0-70 14X1027-0-0-77 14X1027-0-0-8 14X1027-0-0-82 14X1027-0-0-85 14X1027-0-0-92 14X1027-0-0-94 14X1030-0-0-1 14X1030-0-0-111 14X1030-0-0-112 14X1030-0-0-113 14X1030-0-0-120 14X1030-0-0-123 14X1030-0-0-128 14X1030-0-0-13 14X1030-0-0-131 14X1030-0-0-135 14X1030-0-0-14 14X1030-0-0-141 14X1030-0-0-145 14X1030-0-0-149 14X1030-0-0-16 14X1030-0-0-160 14X1030-0-0-161 14X1030-0-0-164 14X1030-0-0-168 14X1030-0-0-17 14X1030-0-0-176 14X1030-0-0-177 14X1030-0-0-18 14X1030-0-0-185 14X1030-0-0-188 14X1030-0-0-2 14X1030-0-0-215 14X1030-0-0-216 14X1030-0-0-220 14X1030-0-0-222 14X1030-0-0-226 14X1030-0-0-228 14X1030-0-0-25 14X1030-0-0-29 14X1030-0-0-36 14X1030-0-0-40 14X1030-0-0-54 14X1030-0-0-55 14X1030-0-0-68 14X1030-0-0-71 14X1030-0-0-72 14X1030-0-0-76 14X1030-0-0-77 14X1030-0-0-78 14X1030-0-0-80 14X1030-0-0-81 14X1030-0-0-84 14X1030-0-0-88 14X1030-0-0-93 14X1030-0-0-97 14X1031-0-0-105 14X1031-0-0-110 14X1031-0-0-112 14X1031-0-0-113 14X1031-0-0-114 14X1031-0-0-117 14X1031-0-0-120 14X1031-0-0-121 14X1031-0-0-125 14X1031-0-0-134 14X1031-0-0-136 14X1031-0-0-14 14X1031-0-0-141 14X1031-0-0-143 14X1031-0-0-147 14X1031-0-0-149 14X1031-0-0-16 14X1031-0-0-160 14X1031-0-0-161 14X1031-0-0-18 14X1031-0-0-2 14X1031-0-0-20 14X1031-0-0-21 14X1031-0-0-22 14X1031-0-0-23 14X1031-0-0-24 14X1031-0-0-28 14X1031-0-0-29 14X1031-0-0-3 14X1031-0-0-30 14X1031-0-0-32 14X1031-0-0-34 14X1031-0-0-35 14X1031-0-0-36 14X1031-0-0-4 14X1031-0-0-51 14X1031-0-0-52 14X1031-0-0-59 14X1031-0-0-6 14X1031-0-0-60 14X1031-0-0-64 14X1031-0-0-90 14X1031-0-0-93 14X1031-0-0-94 14X1031-0-0-96 14X1053-0-0-10 14X1053-0-0-103 14X1053-0-0-106 14X1053-0-0-107 14X1053-0-0-109 14X1053-0-0-110 14X1053-0-0-111 14X1053-0-0-118 14X1053-0-0-120 14X1053-0-0-124 14X1053-0-0-128 14X1053-0-0-13 14X1053-0-0-130 14X1053-0-0-131 14X1053-0-0-132 14X1053-0-0-133 14X1053-0-0-136 14X1053-0-0-137 14X1053-0-0-138 14X1053-0-0-139 14X1053-0-0-14 14X1053-0-0-142 14X1053-0-0-143 14X1053-0-0-146 14X1053-0-0-147 14X1053-0-0-149 14X1053-0-0-15 14X1053-0-0-151 14X1053-0-0-153 14X1053-0-0-154 14X1053-0-0-155 14X1053-0-0-157 14X1053-0-0-158 14X1053-0-0-162 14X1053-0-0-164 14X1053-0-0-166 14X1053-0-0-167 14X1053-0-0-168 14X1053-0-0-169 14X1053-0-0-170 14X1053-0-0-172 14X1053-0-0-174 14X1053-0-0-179 14X1053-0-0-180 14X1053-0-0-182 14X1053-0-0-19 14X1053-0-0-20 14X1053-0-0-23 14X1053-0-0-28 14X1053-0-0-29 14X1053-0-0-31 14X1053-0-0-33 14X1053-0-0-37 14X1053-0-0-4 14X1053-0-0-47 14X1053-0-0-5 14X1053-0-0-51 14X1053-0-0-52 14X1053-0-0-54 14X1053-0-0-55 14X1053-0-0-56 14X1053-0-0-58 14X1053-0-0-59 14X1053-0-0-6 14X1053-0-0-61 14X1053-0-0-63 14X1053-0-0-65 14X1053-0-0-66 14X1053-0-0-7 14X1053-0-0-71 14X1053-0-0-73 14X1053-0-0-74 14X1053-0-0-75 14X1053-0-0-76 14X1053-0-0-77 14X1053-0-0-78 14X1053-0-0-80 14X1053-0-0-81 14X1053-0-0-82 14X1053-0-0-87 14X1053-0-0-89 14X1053-0-0-9 14X1053-0-0-91 14X1053-0-0-92 14X1053-0-0-93 14X1053-0-0-97 14X1053-0-0-98 14X1054-0-0-1 14X1054-0-0-10 14X1054-0-0-14 14X1054-0-0-18 14X1054-0-0-2 14X1054-0-0-27 14X1054-0-0-28 14X1054-0-0-3 14X1054-0-0-31 14X1054-0-0-32 14X1054-0-0-34 14X1054-0-0-46 14X1054-0-0-5 14X1054-0-0-55 14X1054-0-0-6 14X1054-0-0-60 14X1054-0-0-61 14X1054-0-0-62 14X1054-0-0-64 14X1054-0-0-65 14X1054-0-0-9 14X1082-0-0-10 14X1082-0-0-12 14X1082-0-0-19 14X1082-0-0-20 14X1082-0-0-21 14X1082-0-0-22 14X1082-0-0-25 14X1082-0-0-27 14X1082-0-0-34 14X1082-0-0-7 14X1083-0-0-10 14X1083-0-0-100 14X1083-0-0-103 14X1083-0-0-104 14X1083-0-0-108 14X1083-0-0-112 14X1083-0-0-118 14X1083-0-0-12 14X1083-0-0-120 14X1083-0-0-129 14X1083-0-0-130 14X1083-0-0-134 14X1083-0-0-14 14X1083-0-0-140 14X1083-0-0-142 14X1083-0-0-146 14X1083-0-0-15 14X1083-0-0-157 14X1083-0-0-161 14X1083-0-0-162 14X1083-0-0-166 14X1083-0-0-167 14X1083-0-0-168 14X1083-0-0-174 14X1083-0-0-18 14X1083-0-0-183 14X1083-0-0-188 14X1083-0-0-191 14X1083-0-0-192 14X1083-0-0-197 14X1083-0-0-205 14X1083-0-0-213 14X1083-0-0-218 14X1083-0-0-221 14X1083-0-0-223 14X1083-0-0-230 14X1083-0-0-231 14X1083-0-0-234 14X1083-0-0-235 14X1083-0-0-238 14X1083-0-0-24 14X1083-0-0-243 14X1083-0-0-245 14X1083-0-0-251 14X1083-0-0-254 14X1083-0-0-256 14X1083-0-0-26 14X1083-0-0-260 14X1083-0-0-268 14X1083-0-0-3 14X1083-0-0-30 14X1083-0-0-33 14X1083-0-0-4 14X1083-0-0-46 14X1083-0-0-54 14X1083-0-0-59 14X1083-0-0-63 14X1083-0-0-65 14X1083-0-0-67 14X1083-0-0-71 14X1083-0-0-72 14X1083-0-0-76 14X1083-0-0-8 14X1083-0-0-86 14X1083-0-0-88 14X1083-0-0-9 14X1083-0-0-91 14X1083-0-0-93 14X1083-0-0-96 14X1083-0-0-99 14X1085-0-0-10 14X1085-0-0-11 14X1085-0-0-27 14X1085-0-0-34 14X1085-0-0-36 14X1085-0-0-56 14X1085-0-0-58 14X1085-0-0-59 14X1085-0-0-68 14X1085-0-0-71 14X1085-0-0-8 14X1085-0-0-83 14X1085-0-0-90 14X1085-0-0-93 14X1085-0-0-96 14X1098-0-0-10 14X1098-0-0-106 14X1098-0-0-109 14X1098-0-0-18 14X1098-0-0-30 14X1098-0-0-31 14X1098-0-0-34 14X1098-0-0-38 14X1098-0-0-39 14X1098-0-0-4 14X1098-0-0-41 14X1098-0-0-46 14X1098-0-0-48 14X1098-0-0-53 14X1098-0-0-54 14X1098-0-0-57 14X1098-0-0-7 14X1098-0-0-70 14X1098-0-0-72 14X1098-0-0-73 14X1098-0-0-79 14X1098-0-0-8 14X1098-0-0-81 14X1098-0-0-83 14X1098-0-0-94 14X1098-0-0-95 14X1098-0-0-96 14X1098-0-0-98 14X1103-0-0-104 14X1103-0-0-105 14X1103-0-0-106 14X1103-0-0-114 14X1103-0-0-115 14X1103-0-0-116 14X1103-0-0-117 14X1103-0-0-12 14X1103-0-0-120 14X1103-0-0-122 14X1103-0-0-124 14X1103-0-0-130 14X1103-0-0-131 14X1103-0-0-135 14X1103-0-0-136 14X1103-0-0-138 14X1103-0-0-141 14X1103-0-0-143 14X1103-0-0-146 14X1103-0-0-147 14X1103-0-0-148 14X1103-0-0-150 14X1103-0-0-155 14X1103-0-0-157 14X1103-0-0-159 14X1103-0-0-16 14X1103-0-0-162 14X1103-0-0-18 14X1103-0-0-27 14X1103-0-0-3 14X1103-0-0-31 14X1103-0-0-33 14X1103-0-0-37 14X1103-0-0-41 14X1103-0-0-42 14X1103-0-0-50 14X1103-0-0-51 14X1103-0-0-56 14X1103-0-0-58 14X1103-0-0-6 14X1103-0-0-63 14X1103-0-0-64 14X1103-0-0-68 14X1103-0-0-75 14X1103-0-0-76 14X1103-0-0-77 14X1103-0-0-79 14X1103-0-0-8 14X1103-0-0-80 14X1103-0-0-81 14X1103-0-0-83 14X1103-0-0-91 14X1103-0-0-96 14X1114-0-0-1 14X1114-0-0-101 14X1114-0-0-104 14X1114-0-0-105 14X1114-0-0-18 14X1114-0-0-23 14X1114-0-0-25 14X1114-0-0-26 14X1114-0-0-32 14X1114-0-0-36 14X1114-0-0-37 14X1114-0-0-4 14X1114-0-0-45 14X1114-0-0-48 14X1114-0-0-54 14X1114-0-0-60 14X1114-0-0-62 14X1114-0-0-64 14X1114-0-0-7 14X1114-0-0-73 14X1114-0-0-75 14X1114-0-0-79 14X1114-0-0-80 14X1114-0-0-84 14X1114-0-0-85 14X1114-0-0-90 14X1114-0-0-91 14X1114-0-0-92 14X1114-0-0-93 14X1114-0-0-97 14X1115-0-0-11 14X1115-0-0-14 14X1115-0-0-17 14X1115-0-0-2 14X1115-0-0-20 14X1115-0-0-21 14X1115-0-0-22 14X1115-0-0-25 14X1115-0-0-26 14X1115-0-0-28 14X1115-0-0-29 14X1115-0-0-31 14X1115-0-0-37 14X1115-0-0-41 14X1115-0-0-45 14X1115-0-0-48 14X1115-0-0-49 14X1115-0-0-5 14X1115-0-0-50 14X1115-0-0-51 14X1115-0-0-52 14X1115-0-0-53 14X1115-0-0-55 14X1115-0-0-56 14X1115-0-0-58 14X1115-0-0-6 14X1115-0-0-60 14X1115-0-0-62 14X1115-0-0-64 14X1115-0-0-66 14X1115-0-0-68 14X1115-0-0-69 14X1115-0-0-7 14X1115-0-0-73 14X1115-0-0-74 14X1115-0-0-77 14X1117-0-0-104 14X1117-0-0-114 14X1117-0-0-117 14X1117-0-0-12 14X1117-0-0-14 14X1117-0-0-23 14X1117-0-0-24 14X1117-0-0-26 14X1117-0-0-29 14X1117-0-0-3 14X1117-0-0-35 14X1117-0-0-36 14X1117-0-0-37 14X1117-0-0-38 14X1117-0-0-4 14X1117-0-0-43 14X1117-0-0-45 14X1117-0-0-46 14X1117-0-0-49 14X1117-0-0-50 14X1117-0-0-55 14X1117-0-0-6 14X1117-0-0-61 14X1117-0-0-64 14X1117-0-0-67 14X1117-0-0-69 14X1117-0-0-70 14X1117-0-0-72 14X1117-0-0-73 14X1117-0-0-74 14X1117-0-0-79 14X1117-0-0-8 14X1117-0-0-82 14X1117-0-0-83 14X1117-0-0-84 14X1117-0-0-85 14X1117-0-0-89 14X1117-0-0-9 14X1117-0-0-90 14X1117-0-0-92 14X1117-0-0-94 14X1117-0-0-96 14X1117-0-0-98 14X1117-0-0-99 14X1118-0-0-11 14X1118-0-0-119 14X1118-0-0-139 14X1118-0-0-14 14X1118-0-0-142 14X1118-0-0-15 14X1118-0-0-17 14X1118-0-0-173 14X1118-0-0-174 14X1118-0-0-178 14X1118-0-0-18 14X1118-0-0-188 14X1118-0-0-190 14X1118-0-0-194 14X1118-0-0-196 14X1118-0-0-198 14X1118-0-0-199 14X1118-0-0-20 14X1118-0-0-204 14X1118-0-0-208 14X1118-0-0-21 14X1118-0-0-22 14X1118-0-0-226 14X1118-0-0-23 14X1118-0-0-24 14X1118-0-0-26 14X1118-0-0-28 14X1118-0-0-32 14X1118-0-0-34 14X1118-0-0-35 14X1118-0-0-36 14X1118-0-0-37 14X1118-0-0-42 14X1118-0-0-43 14X1118-0-0-48 14X1118-0-0-50 14X1118-0-0-51 14X1118-0-0-52 14X1118-0-0-6 14X1118-0-0-64 14X1118-0-0-72 14X1118-0-0-92 14X1118-0-0-95 14X1118-0-0-99 ARS Crescent BRUEHL Bobtail Jasper LCS-HULK Otto Pritchett SY Banks SY Command
+</td>
+</tr>
+<tr>
+<th class="l rowheader" scope="row">
+d2
+</th>
+<td class="r data">
+2
+</td>
+<td class="l data">
+1 2
+</td>
+</tr>
+</tbody>
+</table>
+<!--ENDTABLE-->
+</div>
+</div>
+<br>
+<a name="IDX2"></a>
+<div>
+<div align="center">
+<!--BEGINTABLE-->
+<table class="table" style=" border-left-width: 0px; border-right-width: 0px;" cellspacing="0" cellpadding="7" rules="groups" frame="hsides" bordercolor="#C1C1C1" summary="Procedure Mixed: Dimensions">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="c b header" colspan="2" scope="colgroup">
+Dimensions
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th class="l rowheader" scope="row">
+Covariance Parameters
+</th>
+<td class="r data">
+1
+</td>
+</tr>
+<tr>
+<th class="l rowheader" scope="row">
+Columns in X
+</th>
+<td class="r data">
+2
+</td>
+</tr>
+<tr>
+<th class="l rowheader" scope="row">
+Columns in Z
+</th>
+<td class="r data">
+0
+</td>
+</tr>
+<tr>
+<th class="l rowheader" scope="row">
+Subjects
+</th>
+<td class="r data">
+1
+</td>
+</tr>
+<tr>
+<th class="l rowheader" scope="row">
+Max Obs per Subject
+</th>
+<td class="r data">
+1151
+</td>
+</tr>
+</tbody>
+</table>
+<!--ENDTABLE-->
+</div>
+</div>
+<br>
+<a name="IDX3"></a>
+<div>
+<div align="center">
+<!--BEGINTABLE-->
+<table class="table" style=" border-left-width: 0px; border-right-width: 0px;" cellspacing="0" cellpadding="7" rules="groups" frame="hsides" bordercolor="#C1C1C1" summary="Procedure Mixed: Number of Observations">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="c b header" colspan="2" scope="colgroup">
+Number of Observations
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th class="l rowheader" scope="row">
+Number of Observations Read
+</th>
+<td class="r data">
+1151
+</td>
+</tr>
+<tr>
+<th class="l rowheader" scope="row">
+Number of Observations Used
+</th>
+<td class="r data">
+1151
+</td>
+</tr>
+<tr>
+<th class="l rowheader" scope="row">
+Number of Observations Not Used
+</th>
+<td class="r data">
+0
+</td>
+</tr>
+</tbody>
+</table>
+<!--ENDTABLE-->
+</div>
+</div>
+<br>
+<a name="IDX4"></a>
+<div>
+<div align="center">
+<!--BEGINTABLE-->
+<table class="table" style=" border-left-width: 0px; border-right-width: 0px;" cellspacing="0" cellpadding="7" rules="groups" frame="hsides" bordercolor="#C1C1C1" summary="Procedure Mixed: Covariance Parameter Estimates">
+<colgroup>
+<col>
+</colgroup>
+<colgroup>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="c b header" colspan="2" scope="colgroup">
+Covariance Parameter Estimates
+</th>
+</tr>
+<tr>
+<th class="l b header" scope="col">
+Cov Parm
+</th>
+<th class="r b header" scope="col">
+Estimate
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th class="l rowheader" scope="row">
+Residual
+</th>
+<td class="r data">
+0.1200
+</td>
+</tr>
+</tbody>
+</table>
+<!--ENDTABLE-->
+</div>
+</div>
+<br>
+<a name="IDX5"></a>
+<div>
+<div align="center">
+<!--BEGINTABLE-->
+<table class="table" style=" border-left-width: 0px; border-right-width: 0px;" cellspacing="0" cellpadding="7" rules="groups" frame="hsides" bordercolor="#C1C1C1" summary="Procedure Mixed: Fit Statistics">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="c b header" colspan="2" scope="colgroup">
+Fit Statistics
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th class="l rowheader" scope="row">
+-2 Res Log Likelihood
+</th>
+<td class="r data">
+836.8
+</td>
+</tr>
+<tr>
+<th class="l rowheader" scope="row">
+AIC (Smaller is Better)
+</th>
+<td class="r data">
+838.8
+</td>
+</tr>
+<tr>
+<th class="l rowheader" scope="row">
+AICC (Smaller is Better)
+</th>
+<td class="r data">
+838.8
+</td>
+</tr>
+<tr>
+<th class="l rowheader" scope="row">
+BIC (Smaller is Better)
+</th>
+<td class="r data">
+843.8
+</td>
+</tr>
+</tbody>
+</table>
+<!--ENDTABLE-->
+</div>
+</div>
+<br>
+<a name="IDX6"></a>
+<div>
+<div align="center">
+<!--BEGINTABLE-->
+<table class="table" style=" border-left-width: 0px; border-right-width: 0px;" cellspacing="0" cellpadding="7" rules="groups" frame="hsides" bordercolor="#C1C1C1" summary="Procedure Mixed: Type 3 Tests of Fixed Effects">
+<colgroup>
+<col>
+</colgroup>
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="c b header" colspan="5" scope="colgroup">
+Type 3 Tests of Fixed Effects
+</th>
+</tr>
+<tr>
+<th class="l b header" scope="col">
+Effect
+</th>
+<th class="r b header" scope="col">
+Num DF
+</th>
+<th class="r b header" scope="col">
+Den DF
+</th>
+<th class="r b header" scope="col">
+F Value
+</th>
+<th class="r b header" scope="col">
+Pr &gt; F
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th class="l rowheader" scope="row">
+d2
+</th>
+<td class="r data">
+2
+</td>
+<td class="r data">
+229
+</td>
+<td class="r data">
+20749.8
+</td>
+<td class="r data">
+&lt;.0001
+</td>
+</tr>
+</tbody>
+</table>
+<!--ENDTABLE-->
+</div>
+</div>
+<br>
+<a name="IDX7"></a>
+<div>
+<div align="center">
+<!--BEGINTABLE-->
+<table class="table" style=" border-left-width: 0px; border-right-width: 0px;" cellspacing="0" cellpadding="7" rules="groups" frame="hsides" bordercolor="#C1C1C1" summary="Procedure Mixed: Least Squares Means">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="c b header" colspan="7" scope="colgroup">
+Least Squares Means
+</th>
+</tr>
+<tr>
+<th class="l b header" scope="col">
+Effect
+</th>
+<th class="l b header" scope="col">
+d2
+</th>
+<th class="r b header" scope="col">
+Estimate
+</th>
+<th class="r b header" scope="col">
+Standard<br/>Error
+</th>
+<th class="r b header" scope="col">
+DF
+</th>
+<th class="r b header" scope="col">
+t Value
+</th>
+<th class="r b header" scope="col">
+Pr &gt; |t|
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th class="l rowheader" scope="row">
+d2
+</th>
+<th class="l data">
+1
+</th>
+<td class="r data">
+2.2018
+</td>
+<td class="r data">
+0.02245
+</td>
+<td class="r data">
+229
+</td>
+<td class="r data">
+98.06
+</td>
+<td class="r data">
+&lt;.0001
+</td>
+</tr>
+<tr>
+<th class="l rowheader" scope="row">
+d2
+</th>
+<th class="l data">
+2
+</th>
+<td class="r data">
+2.0471
+</td>
+<td class="r data">
+0.01146
+</td>
+<td class="r data">
+229
+</td>
+<td class="r data">
+178.56
+</td>
+<td class="r data">
+&lt;.0001
+</td>
+</tr>
+</tbody>
+</table>
+<!--ENDTABLE-->
+</div>
+</div>
+<br>
+</div>
+<div class="branch">
+<p style="page-break-after: always;">
+<br/>
+</p>
+<hr size="3"/>
+<a name="IDX8"></a>
+<div>
+<div class="c">
+<p><img alt="The SGPlot Procedure" src="SAS8_9.png" style=" height: 480px; width: 640px;" border="0" class="c"></p>
+</div>
+</div>
+<br>
+</div>
+<p>The spatial variability evident in the residuals is then modeled as before. Only one model, power, is applicable to this data.<br><br></p>
+<pre class="sashtml"><code>/*
+proc variogram data=residuals plots=pairs(thr=50) ;
+   compute novariogram nhclasses=60;
+   coordinates xc=prow yc=pcol;
+   var resid;
+run;
+
+proc variogram data=residuals plots(only)=(semivar);
+   compute lagd=6.6 maxlags=20;
+   coordinates xc=prow yc=pcol;
+   var resid;
+run;
+
+*/
+proc variogram data=residuals plots(only)=(fitplot);
+   where yieldkg ^= .;
+   coordinates xc=pcol yc=pRow;
+   compute lagd=6.6 maxlags=25;
+   model form=auto(mlist=(gau, exp, pow, sph) nest=1);
+  var resid;
+run;</code></pre>
+<div class="branch">
+<a name="IDX9"></a>
+<div class="c proctitle">
+Dependent Variable: Resid
+</div>
+<p>
+<div>
+<div align="center">
+<!--BEGINTABLE-->
+<table class="table" style=" border-left-width: 0px; border-right-width: 0px;" cellspacing="0" cellpadding="7" rules="groups" frame="hsides" bordercolor="#C1C1C1" summary="Procedure Variogram: Number of Observations">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<tbody>
+<tr>
+<th class="l rowheader" scope="row">
+Number of Observations Read
+</th>
+<td class="r data">
+1151
+</td>
+</tr>
+<tr>
+<th class="l rowheader" scope="row">
+Number of Observations Used
+</th>
+<td class="r data">
+1151
+</td>
+</tr>
+</tbody>
+</table>
+<!--ENDTABLE-->
+</div>
+</div>
+<br>
+<p style="page-break-after: always;">
+<br/>
+</p>
+<hr size="3"/>
+<a name="IDX10"></a>
+<div class="c proctitle">
+Dependent Variable: Resid
+</div>
+<p>
+<div>
+<div align="center">
+<!--BEGINTABLE-->
+<table class="table" style=" border-left-width: 0px; border-right-width: 0px;" cellspacing="0" cellpadding="7" rules="groups" frame="hsides" bordercolor="#C1C1C1" summary="Procedure Variogram: Empirical Semivariogram">
+<colgroup>
+<col>
+</colgroup>
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="c b header" colspan="4" scope="colgroup">
+Empirical Semivariogram
+</th>
+</tr>
+<tr>
+<th class="r b header" scope="col">
+Lag<br/>Class
+</th>
+<th class="r b header" scope="col">
+Pair<br/>Count
+</th>
+<th class="r b header" scope="col">
+Average<br/>Distance
+</th>
+<th class="c b header" scope="col">
+Semivariance
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th class="r data">
+0
+</th>
+<td class="r data">
+0
+</td>
+<td class="r data">
+.
+</td>
+<td class="r data">
+.
+</td>
+</tr>
+<tr>
+<th class="r data">
+1
+</th>
+<td class="r data">
+1132
+</td>
+<td class="r data">
+5.5
+</td>
+<td class="r data">
+0.074
+</td>
+</tr>
+<tr>
+<th class="r data">
+2
+</th>
+<td class="r data">
+6442
+</td>
+<td class="r data">
+13.4
+</td>
+<td class="r data">
+0.091
+</td>
+</tr>
+<tr>
+<th class="r data">
+3
+</th>
+<td class="r data">
+4244
+</td>
+<td class="r data">
+19.7
+</td>
+<td class="r data">
+0.094
+</td>
+</tr>
+<tr>
+<th class="r data">
+4
+</th>
+<td class="r data">
+10058
+</td>
+<td class="r data">
+25.8
+</td>
+<td class="r data">
+0.101
+</td>
+</tr>
+<tr>
+<th class="r data">
+5
+</th>
+<td class="r data">
+11656
+</td>
+<td class="r data">
+33.7
+</td>
+<td class="r data">
+0.105
+</td>
+</tr>
+<tr>
+<th class="r data">
+6
+</th>
+<td class="r data">
+10288
+</td>
+<td class="r data">
+39.4
+</td>
+<td class="r data">
+0.105
+</td>
+</tr>
+<tr>
+<th class="r data">
+7
+</th>
+<td class="r data">
+12614
+</td>
+<td class="r data">
+46.2
+</td>
+<td class="r data">
+0.106
+</td>
+</tr>
+<tr>
+<th class="r data">
+8
+</th>
+<td class="r data">
+14102
+</td>
+<td class="r data">
+51.9
+</td>
+<td class="r data">
+0.110
+</td>
+</tr>
+<tr>
+<th class="r data">
+9
+</th>
+<td class="r data">
+20050
+</td>
+<td class="r data">
+59.4
+</td>
+<td class="r data">
+0.109
+</td>
+</tr>
+<tr>
+<th class="r data">
+10
+</th>
+<td class="r data">
+12140
+</td>
+<td class="r data">
+65.9
+</td>
+<td class="r data">
+0.114
+</td>
+</tr>
+<tr>
+<th class="r data">
+11
+</th>
+<td class="r data">
+21580
+</td>
+<td class="r data">
+72.2
+</td>
+<td class="r data">
+0.113
+</td>
+</tr>
+<tr>
+<th class="r data">
+12
+</th>
+<td class="r data">
+16310
+</td>
+<td class="r data">
+79.2
+</td>
+<td class="r data">
+0.115
+</td>
+</tr>
+<tr>
+<th class="r data">
+13
+</th>
+<td class="r data">
+21474
+</td>
+<td class="r data">
+85.3
+</td>
+<td class="r data">
+0.117
+</td>
+</tr>
+<tr>
+<th class="r data">
+14
+</th>
+<td class="r data">
+21548
+</td>
+<td class="r data">
+92.8
+</td>
+<td class="r data">
+0.117
+</td>
+</tr>
+<tr>
+<th class="r data">
+15
+</th>
+<td class="r data">
+20140
+</td>
+<td class="r data">
+99.1
+</td>
+<td class="r data">
+0.120
+</td>
+</tr>
+<tr>
+<th class="r data">
+16
+</th>
+<td class="r data">
+21671
+</td>
+<td class="r data">
+106.1
+</td>
+<td class="r data">
+0.118
+</td>
+</tr>
+<tr>
+<th class="r data">
+17
+</th>
+<td class="r data">
+18706
+</td>
+<td class="r data">
+112.2
+</td>
+<td class="r data">
+0.123
+</td>
+</tr>
+<tr>
+<th class="r data">
+18
+</th>
+<td class="r data">
+25052
+</td>
+<td class="r data">
+118.9
+</td>
+<td class="r data">
+0.122
+</td>
+</tr>
+<tr>
+<th class="r data">
+19
+</th>
+<td class="r data">
+18018
+</td>
+<td class="r data">
+125.8
+</td>
+<td class="r data">
+0.126
+</td>
+</tr>
+<tr>
+<th class="r data">
+20
+</th>
+<td class="r data">
+23362
+</td>
+<td class="r data">
+131.9
+</td>
+<td class="r data">
+0.126
+</td>
+</tr>
+<tr>
+<th class="r data">
+21
+</th>
+<td class="r data">
+19610
+</td>
+<td class="r data">
+138.9
+</td>
+<td class="r data">
+0.127
+</td>
+</tr>
+<tr>
+<th class="r data">
+22
+</th>
+<td class="r data">
+19241
+</td>
+<td class="r data">
+144.7
+</td>
+<td class="r data">
+0.131
+</td>
+</tr>
+<tr>
+<th class="r data">
+23
+</th>
+<td class="r data">
+22594
+</td>
+<td class="r data">
+151.6
+</td>
+<td class="r data">
+0.132
+</td>
+</tr>
+<tr>
+<th class="r data">
+24
+</th>
+<td class="r data">
+19995
+</td>
+<td class="r data">
+158.3
+</td>
+<td class="r data">
+0.136
+</td>
+</tr>
+<tr>
+<th class="r data">
+25
+</th>
+<td class="r data">
+18681
+</td>
+<td class="r data">
+164.9
+</td>
+<td class="r data">
+0.132
+</td>
+</tr>
+</tbody>
+</table>
+<!--ENDTABLE-->
+</div>
+</div>
+<br>
+<p style="page-break-after: always;">
+<br/>
+</p>
+<hr size="3"/>
+<a name="IDX11"></a>
+<div class="c proctitle">
+Dependent Variable: Resid
+</div>
+<div class="c proctitle">
+Angle: Omnidirectional
+</div>
+<p>
+<div>
+<div align="center">
+<!--BEGINTABLE-->
+<table class="table" style=" border-left-width: 0px; border-right-width: 0px;" cellspacing="0" cellpadding="7" rules="groups" frame="hsides" bordercolor="#C1C1C1" summary="Procedure Variogram: Semivariogram Model Fitting">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="c b header" colspan="2" scope="colgroup">
+Semivariogram Model Fitting
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th class="l rowheader" scope="row">
+Model
+</th>
+<td class="l data">
+Selection from 4 form combinations
+</td>
+</tr>
+</tbody>
+</table>
+<!--ENDTABLE-->
+</div>
+</div>
+<br>
+<a name="IDX12"></a>
+<div>
+<div align="center">
+<!--BEGINTABLE-->
+<table class="table" style=" border-left-width: 0px; border-right-width: 0px;" cellspacing="0" cellpadding="7" rules="groups" frame="hsides" bordercolor="#C1C1C1" summary="Procedure Variogram: Fit Summary">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="c b header" colspan="5" scope="colgroup">
+Fit Summary
+</th>
+</tr>
+<tr>
+<th class="r b header" scope="col">
+Class
+</th>
+<th class="l b header" scope="col">
+Model
+</th>
+<th class="r b header" scope="col">
+Weighted<br/>SSE
+</th>
+<th class="r b header" scope="col">
+AIC
+</th>
+<th class="l b header" scope="col">
+Notes
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th class="r rowheader" scope="row">
+1
+</th>
+<th class="l data">
+Pow
+</th>
+<td class="r data">
+55.66695
+</td>
+<td class="r data">
+26.01277
+</td>
+<td class="l data">
+</td>
+</tr>
+<tr>
+<th class="r rowheader" scope="row">
+</th>
+<th class="l data">
+Exp
+</th>
+<td class="r data">
+70.00313
+</td>
+<td class="r data">
+31.74160
+</td>
+<td class="l data">
+</td>
+</tr>
+<tr>
+<th class="r rowheader" scope="row">
+</th>
+<th class="l data">
+Sph
+</th>
+<td class="r data">
+77.47353
+</td>
+<td class="r data">
+34.27651
+</td>
+<td class="l data">
+Questionable fit
+</td>
+</tr>
+<tr>
+<th class="r rowheader" scope="row">
+</th>
+<th class="l data">
+Gau
+</th>
+<td class="r data">
+119.27905
+</td>
+<td class="r data">
+45.06475
+</td>
+<td class="l data">
+</td>
+</tr>
+</tbody>
+</table>
+<!--ENDTABLE-->
+</div>
+</div>
+<br>
+<a name="IDX13"></a>
+<div>
+<div align="center">
+<!--BEGINTABLE-->
+<table class="table" style=" border-left-width: 0px; border-right-width: 0px;" cellspacing="0" cellpadding="7" rules="groups" frame="hsides" bordercolor="#C1C1C1" summary="Procedure Variogram: Semivariogram Model Fitting">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="c b header" colspan="2" scope="colgroup">
+Semivariogram Model<br/>Fitting
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th class="l rowheader" scope="row">
+Name
+</th>
+<td class="l data">
+Power
+</td>
+</tr>
+<tr>
+<th class="l rowheader" scope="row">
+Label
+</th>
+<td class="l data">
+Pow
+</td>
+</tr>
+</tbody>
+</table>
+<!--ENDTABLE-->
+</div>
+</div>
+<br>
+<a name="IDX14"></a>
+<div>
+<div align="center">
+<!--BEGINTABLE-->
+<table class="table" style=" border-left-width: 0px; border-right-width: 0px;" cellspacing="0" cellpadding="7" rules="groups" frame="hsides" bordercolor="#C1C1C1" summary="Procedure Variogram: Model Information">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="c b header" colspan="2" scope="colgroup">
+Model Information
+</th>
+</tr>
+<tr>
+<th class="l b header" scope="col">
+Parameter
+</th>
+<th class="r b header" scope="col">
+Initial<br/>Value
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th class="l rowheader" scope="row">
+Nugget
+</th>
+<td class="r data">
+0.0628
+</td>
+</tr>
+<tr>
+<th class="l rowheader" scope="row">
+Slope
+</th>
+<td class="r data">
+0.000443
+</td>
+</tr>
+<tr>
+<th class="l rowheader" scope="row">
+Expon
+</th>
+<td class="r data">
+0.5000
+</td>
+</tr>
+</tbody>
+</table>
+<!--ENDTABLE-->
+</div>
+</div>
+<br>
+<a name="IDX15"></a>
+<div>
+<div align="center">
+<!--BEGINTABLE-->
+<table class="table" style=" border-left-width: 0px; border-right-width: 0px;" cellspacing="0" cellpadding="7" rules="groups" frame="hsides" bordercolor="#C1C1C1" summary="Procedure Variogram: Optimization Information">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="c b header" colspan="2" scope="colgroup">
+Optimization Information
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th class="l rowheader" scope="row">
+Optimization Technique
+</th>
+<td class="l data">
+Dual Quasi-Newton
+</td>
+</tr>
+<tr>
+<th class="l rowheader" scope="row">
+Parameters in Optimization
+</th>
+<td class="l data">
+3
+</td>
+</tr>
+<tr>
+<th class="l rowheader" scope="row">
+Lower Boundaries
+</th>
+<td class="l data">
+3
+</td>
+</tr>
+<tr>
+<th class="l rowheader" scope="row">
+Upper Boundaries
+</th>
+<td class="l data">
+1
+</td>
+</tr>
+<tr>
+<th class="l rowheader" scope="row">
+Starting Values From
+</th>
+<td class="l data">
+PROC
+</td>
+</tr>
+</tbody>
+</table>
+<!--ENDTABLE-->
+</div>
+</div>
+<br>
+<a name="IDX16"></a>
+<div>
+<div align="center">
+<!--BEGINTABLE-->
+<table class="table" style=" border-left-width: 0px; border-right-width: 0px;" cellspacing="0" cellpadding="7" rules="groups" frame="hsides" bordercolor="#C1C1C1" summary="Procedure Variogram: Parameter Estimates">
+<colgroup>
+<col>
+</colgroup>
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="c b header" colspan="7" scope="colgroup">
+Parameter Estimates
+</th>
+</tr>
+<tr>
+<th class="l b header" scope="col">
+Parameter
+</th>
+<th class="r b header" scope="col">
+Estimate
+</th>
+<th class="r b header" scope="col">
+Approx<br/>Std Error
+</th>
+<th class="r b header" scope="col">
+DF
+</th>
+<th class="r b header" scope="col">
+t Value
+</th>
+<th class="r b header" scope="col">
+Approx<br/>Pr &gt; |t|
+</th>
+<th class="r b header" scope="col">
+Gradient
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th class="l rowheader" scope="row">
+Nugget
+</th>
+<td class="r data">
+0.07429
+</td>
+<td class="r data">
+0.000554
+</td>
+<td class="r data">
+22
+</td>
+<td class="r data">
+134.20
+</td>
+<td class="r data">
+&lt;.0001
+</td>
+<td class="r data" nowrap>
+-0.10262
+</td>
+</tr>
+<tr>
+<th class="l rowheader" scope="row">
+Slope
+</th>
+<td class="r data">
+0.005178
+</td>
+<td class="r data">
+0
+</td>
+<td class="r data">
+22
+</td>
+<td class="r data">
+.
+</td>
+<td class="r data">
+.
+</td>
+<td class="r data" nowrap>
+-0.74912
+</td>
+</tr>
+<tr>
+<th class="l rowheader" scope="row">
+Expon
+</th>
+<td class="r data">
+0.4748
+</td>
+<td class="r data">
+0.002680
+</td>
+<td class="r data">
+22
+</td>
+<td class="r data">
+177.15
+</td>
+<td class="r data">
+&lt;.0001
+</td>
+<td class="r data" nowrap>
+-0.01655
+</td>
+</tr>
+</tbody>
+</table>
+<!--ENDTABLE-->
+</div>
+</div>
+<br>
+<p style="page-break-after: always;">
+<br/>
+</p>
+<hr size="3"/>
+<a name="IDX17"></a>
+<div class="c proctitle">
+Dependent Variable: Resid
+</div>
+<p>
+<div>
+<div class="c">
+<p><img alt="WLS Fitted Semivariograms Plot for Resid" src="SAS8_10.png" style=" height: 480px; width: 640px;" border="0" class="c"></p>
+</div>
+</div>
+<br>
+</div>
+<p>Using the variogram model parameters estimated above, an adjusted model is then fit to the P2 hypothesis of <span class="citation"><a href="#ref-Burgueno2018" role="doc-biblioref">Juan Burgueño</a> (<a href="#ref-Burgueno2018" role="doc-biblioref">2018</a>)</span>. The residuals from this model show little, if any, spatial variability remains after adjustment.</p>
+<p><em>Note: the lsmeans statement is commented out in this example to avoid a large amount of output.</em><br><br></p>
+<pre class="sashtml"><code>PROC mixed data=augmented;
+    class name d2;
+    model yieldkg = d2 name(d2)/outp=adjresiduals ddf=229 229;
+    lsmeans d2;
+    repeated/subject=intercept type=sp(pow)(prow pcol) local;
+    ods output SolutionR =parms;
+    parms (0.074) (0.0051)(0.475)  ;
+    *lsmeans name(d2)/slice = d2;
+run;
+
+proc sgplot data=adjresiduals;
+    HEATMAPPARM y=pRow x=pCol COLORRESPONSE=resid/ colormodel=(cx014458 cx1E8C6E cxE1FE01); 
+title1 &#39;Field Map&#39;;
+run;</code></pre>
+<div class="branch">
+<a name="IDX17"></a>
+<div>
+<div align="center">
+<!--BEGINTABLE-->
+<table class="table" style=" border-left-width: 0px; border-right-width: 0px;" cellspacing="0" cellpadding="7" rules="groups" frame="hsides" bordercolor="#C1C1C1" summary="Procedure Mixed: Model Information">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="c b header" colspan="2" scope="colgroup">
+Model Information
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th class="l rowheader" scope="row">
+Data Set
+</th>
+<td class="l data">
+WORK.AUGMENTED
+</td>
+</tr>
+<tr>
+<th class="l rowheader" scope="row">
+Dependent Variable
+</th>
+<td class="l data">
+yieldkg
+</td>
+</tr>
+<tr>
+<th class="l rowheader" scope="row">
+Covariance Structure
+</th>
+<td class="l data">
+Spatial Power
+</td>
+</tr>
+<tr>
+<th class="l rowheader" scope="row">
+Subject Effect
+</th>
+<td class="l data">
+Intercept
+</td>
+</tr>
+<tr>
+<th class="l rowheader" scope="row">
+Estimation Method
+</th>
+<td class="l data">
+REML
+</td>
+</tr>
+<tr>
+<th class="l rowheader" scope="row">
+Residual Variance Method
+</th>
+<td class="l data">
+Profile
+</td>
+</tr>
+<tr>
+<th class="l rowheader" scope="row">
+Fixed Effects SE Method
+</th>
+<td class="l data">
+Model-Based
+</td>
+</tr>
+<tr>
+<th class="l rowheader" scope="row">
+Degrees of Freedom Method
+</th>
+<td class="l data">
+Between-Within
+</td>
+</tr>
+</tbody>
+</table>
+<!--ENDTABLE-->
+</div>
+</div>
+<br>
+<a name="IDX18"></a>
+<div>
+<div align="center">
+<!--BEGINTABLE-->
+<table class="table" style=" border-left-width: 0px; border-right-width: 0px;" cellspacing="0" cellpadding="7" rules="groups" frame="hsides" bordercolor="#C1C1C1" summary="Procedure Mixed: Class Level Information">
+<colgroup>
+<col>
+</colgroup>
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="c b header" colspan="3" scope="colgroup">
+Class Level Information
+</th>
+</tr>
+<tr>
+<th class="l b header" scope="col">
+Class
+</th>
+<th class="r b header" scope="col">
+Levels
+</th>
+<th class="l b header" scope="col">
+Values
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th class="l rowheader" scope="row">
+name
+</th>
+<td class="r data">
+922
+</td>
+<td class="l data">
+13X0828-0-0-1 13X0828-0-0-102 13X0828-0-0-105 13X0828-0-0-108 13X0828-0-0-109 13X0828-0-0-110 13X0828-0-0-15 13X0828-0-0-17 13X0828-0-0-18 13X0828-0-0-2 13X0828-0-0-24 13X0828-0-0-27 13X0828-0-0-31 13X0828-0-0-33 13X0828-0-0-36 13X0828-0-0-37 13X0828-0-0-40 13X0828-0-0-41 13X0828-0-0-42 13X0828-0-0-48 13X0828-0-0-49 13X0828-0-0-5 13X0828-0-0-52 13X0828-0-0-55 13X0828-0-0-6 13X0828-0-0-61 13X0828-0-0-62 13X0828-0-0-63 13X0828-0-0-66 13X0828-0-0-68 13X0828-0-0-7 13X0828-0-0-80 13X0828-0-0-81 13X0828-0-0-83 13X0828-0-0-9 13X0828-0-0-90 13X0828-0-0-91 13X0828-0-0-92 13X0828-0-0-94 13X0828-0-0-95 13X0828-0-0-97 13X0828-0-0-99 14X1001-0-0-1 14X1001-0-0-105 14X1001-0-0-106 14X1001-0-0-109 14X1001-0-0-11 14X1001-0-0-115 14X1001-0-0-116 14X1001-0-0-119 14X1001-0-0-12 14X1001-0-0-121 14X1001-0-0-122 14X1001-0-0-127 14X1001-0-0-128 14X1001-0-0-13 14X1001-0-0-130 14X1001-0-0-132 14X1001-0-0-134 14X1001-0-0-140 14X1001-0-0-141 14X1001-0-0-144 14X1001-0-0-146 14X1001-0-0-150 14X1001-0-0-156 14X1001-0-0-157 14X1001-0-0-158 14X1001-0-0-16 14X1001-0-0-160 14X1001-0-0-162 14X1001-0-0-164 14X1001-0-0-166 14X1001-0-0-167 14X1001-0-0-168 14X1001-0-0-169 14X1001-0-0-17 14X1001-0-0-174 14X1001-0-0-175 14X1001-0-0-176 14X1001-0-0-177 14X1001-0-0-178 14X1001-0-0-179 14X1001-0-0-181 14X1001-0-0-183 14X1001-0-0-185 14X1001-0-0-188 14X1001-0-0-193 14X1001-0-0-196 14X1001-0-0-197 14X1001-0-0-199 14X1001-0-0-20 14X1001-0-0-200 14X1001-0-0-203 14X1001-0-0-204 14X1001-0-0-205 14X1001-0-0-206 14X1001-0-0-207 14X1001-0-0-208 14X1001-0-0-209 14X1001-0-0-210 14X1001-0-0-211 14X1001-0-0-212 14X1001-0-0-213 14X1001-0-0-214 14X1001-0-0-219 14X1001-0-0-22 14X1001-0-0-223 14X1001-0-0-224 14X1001-0-0-225 14X1001-0-0-24 14X1001-0-0-25 14X1001-0-0-31 14X1001-0-0-33 14X1001-0-0-36 14X1001-0-0-38 14X1001-0-0-4 14X1001-0-0-41 14X1001-0-0-42 14X1001-0-0-43 14X1001-0-0-46 14X1001-0-0-47 14X1001-0-0-48 14X1001-0-0-49 14X1001-0-0-56 14X1001-0-0-57 14X1001-0-0-6 14X1001-0-0-60 14X1001-0-0-61 14X1001-0-0-64 14X1001-0-0-67 14X1001-0-0-68 14X1001-0-0-69 14X1001-0-0-77 14X1001-0-0-8 14X1001-0-0-81 14X1001-0-0-82 14X1001-0-0-87 14X1001-0-0-89 14X1001-0-0-92 14X1001-0-0-93 14X1001-0-0-97 14X1001-0-0-99 14X1003-0-0-1 14X1003-0-0-10 14X1003-0-0-102 14X1003-0-0-105 14X1003-0-0-106 14X1003-0-0-108 14X1003-0-0-110 14X1003-0-0-115 14X1003-0-0-121 14X1003-0-0-122 14X1003-0-0-124 14X1003-0-0-125 14X1003-0-0-127 14X1003-0-0-13 14X1003-0-0-130 14X1003-0-0-133 14X1003-0-0-140 14X1003-0-0-141 14X1003-0-0-146 14X1003-0-0-147 14X1003-0-0-149 14X1003-0-0-16 14X1003-0-0-167 14X1003-0-0-172 14X1003-0-0-175 14X1003-0-0-176 14X1003-0-0-177 14X1003-0-0-178 14X1003-0-0-18 14X1003-0-0-180 14X1003-0-0-181 14X1003-0-0-182 14X1003-0-0-185 14X1003-0-0-186 14X1003-0-0-190 14X1003-0-0-194 14X1003-0-0-195 14X1003-0-0-196 14X1003-0-0-198 14X1003-0-0-2 14X1003-0-0-20 14X1003-0-0-204 14X1003-0-0-21 14X1003-0-0-24 14X1003-0-0-27 14X1003-0-0-28 14X1003-0-0-30 14X1003-0-0-38 14X1003-0-0-41 14X1003-0-0-42 14X1003-0-0-44 14X1003-0-0-46 14X1003-0-0-47 14X1003-0-0-48 14X1003-0-0-49 14X1003-0-0-5 14X1003-0-0-50 14X1003-0-0-51 14X1003-0-0-52 14X1003-0-0-53 14X1003-0-0-54 14X1003-0-0-55 14X1003-0-0-56 14X1003-0-0-6 14X1003-0-0-60 14X1003-0-0-65 14X1003-0-0-66 14X1003-0-0-67 14X1003-0-0-68 14X1003-0-0-70 14X1003-0-0-71 14X1003-0-0-72 14X1003-0-0-73 14X1003-0-0-77 14X1003-0-0-8 14X1003-0-0-83 14X1003-0-0-86 14X1003-0-0-88 14X1003-0-0-92 14X1007-0-0-100 14X1007-0-0-101 14X1007-0-0-104 14X1007-0-0-109 14X1007-0-0-11 14X1007-0-0-111 14X1007-0-0-114 14X1007-0-0-115 14X1007-0-0-120 14X1007-0-0-122 14X1007-0-0-13 14X1007-0-0-16 14X1007-0-0-17 14X1007-0-0-20 14X1007-0-0-21 14X1007-0-0-25 14X1007-0-0-27 14X1007-0-0-29 14X1007-0-0-3 14X1007-0-0-31 14X1007-0-0-33 14X1007-0-0-37 14X1007-0-0-41 14X1007-0-0-47 14X1007-0-0-5 14X1007-0-0-50 14X1007-0-0-53 14X1007-0-0-54 14X1007-0-0-55 14X1007-0-0-59 14X1007-0-0-6 14X1007-0-0-61 14X1007-0-0-65 14X1007-0-0-68 14X1007-0-0-71 14X1007-0-0-72 14X1007-0-0-74 14X1007-0-0-77 14X1007-0-0-79 14X1007-0-0-86 14X1007-0-0-88 14X1007-0-0-9 14X1007-0-0-90 14X1007-0-0-91 14X1007-0-0-92 14X1007-0-0-94 14X1007-0-0-96 14X1007-0-0-98 14X1008-0-0-1 14X1008-0-0-10 14X1008-0-0-11 14X1008-0-0-14 14X1008-0-0-17 14X1008-0-0-2 14X1008-0-0-21 14X1008-0-0-22 14X1008-0-0-26 14X1008-0-0-28 14X1008-0-0-32 14X1008-0-0-33 14X1008-0-0-34 14X1008-0-0-4 14X1008-0-0-40 14X1008-0-0-42 14X1008-0-0-45 14X1008-0-0-46 14X1008-0-0-47 14X1008-0-0-48 14X1008-0-0-49 14X1008-0-0-5 14X1008-0-0-50 14X1008-0-0-54 14X1008-0-0-6 14X1008-0-0-61 14X1008-0-0-65 14X1008-0-0-7 14X1008-0-0-77 14X1008-0-0-78 14X1008-0-0-8 14X1008-0-0-82 14X1008-0-0-83 14X1008-0-0-85 14X1008-0-0-9 14X1022-0-0-12 14X1022-0-0-16 14X1022-0-0-2 14X1022-0-0-39 14X1022-0-0-43 14X1022-0-0-46 14X1022-0-0-49 14X1022-0-0-52 14X1022-0-0-53 14X1022-0-0-56 14X1022-0-0-59 14X1022-0-0-60 14X1022-0-0-61 14X1022-0-0-64 14X1022-0-0-66 14X1022-0-0-68 14X1022-0-0-70 14X1022-0-0-72 14X1022-0-0-76 14X1022-0-0-78 14X1023-0-0-18 14X1023-0-0-30 14X1023-0-0-33 14X1023-0-0-38 14X1023-0-0-39 14X1023-0-0-4 14X1023-0-0-45 14X1023-0-0-48 14X1023-0-0-49 14X1023-0-0-59 14X1023-0-0-70 14X1023-0-0-71 14X1023-0-0-73 14X1023-0-0-74 14X1023-0-0-75 14X1023-0-0-76 14X1023-0-0-78 14X1023-0-0-79 14X1023-0-0-80 14X1023-0-0-82 14X1023-0-0-85 14X1023-0-0-89 14X1023-0-0-90 14X1023-0-0-91 14X1027-0-0-104 14X1027-0-0-107 14X1027-0-0-11 14X1027-0-0-110 14X1027-0-0-112 14X1027-0-0-117 14X1027-0-0-121 14X1027-0-0-122 14X1027-0-0-123 14X1027-0-0-126 14X1027-0-0-128 14X1027-0-0-17 14X1027-0-0-22 14X1027-0-0-23 14X1027-0-0-25 14X1027-0-0-36 14X1027-0-0-37 14X1027-0-0-39 14X1027-0-0-4 14X1027-0-0-40 14X1027-0-0-43 14X1027-0-0-44 14X1027-0-0-45 14X1027-0-0-59 14X1027-0-0-62 14X1027-0-0-70 14X1027-0-0-77 14X1027-0-0-8 14X1027-0-0-82 14X1027-0-0-85 14X1027-0-0-92 14X1027-0-0-94 14X1030-0-0-1 14X1030-0-0-111 14X1030-0-0-112 14X1030-0-0-113 14X1030-0-0-120 14X1030-0-0-123 14X1030-0-0-128 14X1030-0-0-13 14X1030-0-0-131 14X1030-0-0-135 14X1030-0-0-14 14X1030-0-0-141 14X1030-0-0-145 14X1030-0-0-149 14X1030-0-0-16 14X1030-0-0-160 14X1030-0-0-161 14X1030-0-0-164 14X1030-0-0-168 14X1030-0-0-17 14X1030-0-0-176 14X1030-0-0-177 14X1030-0-0-18 14X1030-0-0-185 14X1030-0-0-188 14X1030-0-0-2 14X1030-0-0-215 14X1030-0-0-216 14X1030-0-0-220 14X1030-0-0-222 14X1030-0-0-226 14X1030-0-0-228 14X1030-0-0-25 14X1030-0-0-29 14X1030-0-0-36 14X1030-0-0-40 14X1030-0-0-54 14X1030-0-0-55 14X1030-0-0-68 14X1030-0-0-71 14X1030-0-0-72 14X1030-0-0-76 14X1030-0-0-77 14X1030-0-0-78 14X1030-0-0-80 14X1030-0-0-81 14X1030-0-0-84 14X1030-0-0-88 14X1030-0-0-93 14X1030-0-0-97 14X1031-0-0-105 14X1031-0-0-110 14X1031-0-0-112 14X1031-0-0-113 14X1031-0-0-114 14X1031-0-0-117 14X1031-0-0-120 14X1031-0-0-121 14X1031-0-0-125 14X1031-0-0-134 14X1031-0-0-136 14X1031-0-0-14 14X1031-0-0-141 14X1031-0-0-143 14X1031-0-0-147 14X1031-0-0-149 14X1031-0-0-16 14X1031-0-0-160 14X1031-0-0-161 14X1031-0-0-18 14X1031-0-0-2 14X1031-0-0-20 14X1031-0-0-21 14X1031-0-0-22 14X1031-0-0-23 14X1031-0-0-24 14X1031-0-0-28 14X1031-0-0-29 14X1031-0-0-3 14X1031-0-0-30 14X1031-0-0-32 14X1031-0-0-34 14X1031-0-0-35 14X1031-0-0-36 14X1031-0-0-4 14X1031-0-0-51 14X1031-0-0-52 14X1031-0-0-59 14X1031-0-0-6 14X1031-0-0-60 14X1031-0-0-64 14X1031-0-0-90 14X1031-0-0-93 14X1031-0-0-94 14X1031-0-0-96 14X1053-0-0-10 14X1053-0-0-103 14X1053-0-0-106 14X1053-0-0-107 14X1053-0-0-109 14X1053-0-0-110 14X1053-0-0-111 14X1053-0-0-118 14X1053-0-0-120 14X1053-0-0-124 14X1053-0-0-128 14X1053-0-0-13 14X1053-0-0-130 14X1053-0-0-131 14X1053-0-0-132 14X1053-0-0-133 14X1053-0-0-136 14X1053-0-0-137 14X1053-0-0-138 14X1053-0-0-139 14X1053-0-0-14 14X1053-0-0-142 14X1053-0-0-143 14X1053-0-0-146 14X1053-0-0-147 14X1053-0-0-149 14X1053-0-0-15 14X1053-0-0-151 14X1053-0-0-153 14X1053-0-0-154 14X1053-0-0-155 14X1053-0-0-157 14X1053-0-0-158 14X1053-0-0-162 14X1053-0-0-164 14X1053-0-0-166 14X1053-0-0-167 14X1053-0-0-168 14X1053-0-0-169 14X1053-0-0-170 14X1053-0-0-172 14X1053-0-0-174 14X1053-0-0-179 14X1053-0-0-180 14X1053-0-0-182 14X1053-0-0-19 14X1053-0-0-20 14X1053-0-0-23 14X1053-0-0-28 14X1053-0-0-29 14X1053-0-0-31 14X1053-0-0-33 14X1053-0-0-37 14X1053-0-0-4 14X1053-0-0-47 14X1053-0-0-5 14X1053-0-0-51 14X1053-0-0-52 14X1053-0-0-54 14X1053-0-0-55 14X1053-0-0-56 14X1053-0-0-58 14X1053-0-0-59 14X1053-0-0-6 14X1053-0-0-61 14X1053-0-0-63 14X1053-0-0-65 14X1053-0-0-66 14X1053-0-0-7 14X1053-0-0-71 14X1053-0-0-73 14X1053-0-0-74 14X1053-0-0-75 14X1053-0-0-76 14X1053-0-0-77 14X1053-0-0-78 14X1053-0-0-80 14X1053-0-0-81 14X1053-0-0-82 14X1053-0-0-87 14X1053-0-0-89 14X1053-0-0-9 14X1053-0-0-91 14X1053-0-0-92 14X1053-0-0-93 14X1053-0-0-97 14X1053-0-0-98 14X1054-0-0-1 14X1054-0-0-10 14X1054-0-0-14 14X1054-0-0-18 14X1054-0-0-2 14X1054-0-0-27 14X1054-0-0-28 14X1054-0-0-3 14X1054-0-0-31 14X1054-0-0-32 14X1054-0-0-34 14X1054-0-0-46 14X1054-0-0-5 14X1054-0-0-55 14X1054-0-0-6 14X1054-0-0-60 14X1054-0-0-61 14X1054-0-0-62 14X1054-0-0-64 14X1054-0-0-65 14X1054-0-0-9 14X1082-0-0-10 14X1082-0-0-12 14X1082-0-0-19 14X1082-0-0-20 14X1082-0-0-21 14X1082-0-0-22 14X1082-0-0-25 14X1082-0-0-27 14X1082-0-0-34 14X1082-0-0-7 14X1083-0-0-10 14X1083-0-0-100 14X1083-0-0-103 14X1083-0-0-104 14X1083-0-0-108 14X1083-0-0-112 14X1083-0-0-118 14X1083-0-0-12 14X1083-0-0-120 14X1083-0-0-129 14X1083-0-0-130 14X1083-0-0-134 14X1083-0-0-14 14X1083-0-0-140 14X1083-0-0-142 14X1083-0-0-146 14X1083-0-0-15 14X1083-0-0-157 14X1083-0-0-161 14X1083-0-0-162 14X1083-0-0-166 14X1083-0-0-167 14X1083-0-0-168 14X1083-0-0-174 14X1083-0-0-18 14X1083-0-0-183 14X1083-0-0-188 14X1083-0-0-191 14X1083-0-0-192 14X1083-0-0-197 14X1083-0-0-205 14X1083-0-0-213 14X1083-0-0-218 14X1083-0-0-221 14X1083-0-0-223 14X1083-0-0-230 14X1083-0-0-231 14X1083-0-0-234 14X1083-0-0-235 14X1083-0-0-238 14X1083-0-0-24 14X1083-0-0-243 14X1083-0-0-245 14X1083-0-0-251 14X1083-0-0-254 14X1083-0-0-256 14X1083-0-0-26 14X1083-0-0-260 14X1083-0-0-268 14X1083-0-0-3 14X1083-0-0-30 14X1083-0-0-33 14X1083-0-0-4 14X1083-0-0-46 14X1083-0-0-54 14X1083-0-0-59 14X1083-0-0-63 14X1083-0-0-65 14X1083-0-0-67 14X1083-0-0-71 14X1083-0-0-72 14X1083-0-0-76 14X1083-0-0-8 14X1083-0-0-86 14X1083-0-0-88 14X1083-0-0-9 14X1083-0-0-91 14X1083-0-0-93 14X1083-0-0-96 14X1083-0-0-99 14X1085-0-0-10 14X1085-0-0-11 14X1085-0-0-27 14X1085-0-0-34 14X1085-0-0-36 14X1085-0-0-56 14X1085-0-0-58 14X1085-0-0-59 14X1085-0-0-68 14X1085-0-0-71 14X1085-0-0-8 14X1085-0-0-83 14X1085-0-0-90 14X1085-0-0-93 14X1085-0-0-96 14X1098-0-0-10 14X1098-0-0-106 14X1098-0-0-109 14X1098-0-0-18 14X1098-0-0-30 14X1098-0-0-31 14X1098-0-0-34 14X1098-0-0-38 14X1098-0-0-39 14X1098-0-0-4 14X1098-0-0-41 14X1098-0-0-46 14X1098-0-0-48 14X1098-0-0-53 14X1098-0-0-54 14X1098-0-0-57 14X1098-0-0-7 14X1098-0-0-70 14X1098-0-0-72 14X1098-0-0-73 14X1098-0-0-79 14X1098-0-0-8 14X1098-0-0-81 14X1098-0-0-83 14X1098-0-0-94 14X1098-0-0-95 14X1098-0-0-96 14X1098-0-0-98 14X1103-0-0-104 14X1103-0-0-105 14X1103-0-0-106 14X1103-0-0-114 14X1103-0-0-115 14X1103-0-0-116 14X1103-0-0-117 14X1103-0-0-12 14X1103-0-0-120 14X1103-0-0-122 14X1103-0-0-124 14X1103-0-0-130 14X1103-0-0-131 14X1103-0-0-135 14X1103-0-0-136 14X1103-0-0-138 14X1103-0-0-141 14X1103-0-0-143 14X1103-0-0-146 14X1103-0-0-147 14X1103-0-0-148 14X1103-0-0-150 14X1103-0-0-155 14X1103-0-0-157 14X1103-0-0-159 14X1103-0-0-16 14X1103-0-0-162 14X1103-0-0-18 14X1103-0-0-27 14X1103-0-0-3 14X1103-0-0-31 14X1103-0-0-33 14X1103-0-0-37 14X1103-0-0-41 14X1103-0-0-42 14X1103-0-0-50 14X1103-0-0-51 14X1103-0-0-56 14X1103-0-0-58 14X1103-0-0-6 14X1103-0-0-63 14X1103-0-0-64 14X1103-0-0-68 14X1103-0-0-75 14X1103-0-0-76 14X1103-0-0-77 14X1103-0-0-79 14X1103-0-0-8 14X1103-0-0-80 14X1103-0-0-81 14X1103-0-0-83 14X1103-0-0-91 14X1103-0-0-96 14X1114-0-0-1 14X1114-0-0-101 14X1114-0-0-104 14X1114-0-0-105 14X1114-0-0-18 14X1114-0-0-23 14X1114-0-0-25 14X1114-0-0-26 14X1114-0-0-32 14X1114-0-0-36 14X1114-0-0-37 14X1114-0-0-4 14X1114-0-0-45 14X1114-0-0-48 14X1114-0-0-54 14X1114-0-0-60 14X1114-0-0-62 14X1114-0-0-64 14X1114-0-0-7 14X1114-0-0-73 14X1114-0-0-75 14X1114-0-0-79 14X1114-0-0-80 14X1114-0-0-84 14X1114-0-0-85 14X1114-0-0-90 14X1114-0-0-91 14X1114-0-0-92 14X1114-0-0-93 14X1114-0-0-97 14X1115-0-0-11 14X1115-0-0-14 14X1115-0-0-17 14X1115-0-0-2 14X1115-0-0-20 14X1115-0-0-21 14X1115-0-0-22 14X1115-0-0-25 14X1115-0-0-26 14X1115-0-0-28 14X1115-0-0-29 14X1115-0-0-31 14X1115-0-0-37 14X1115-0-0-41 14X1115-0-0-45 14X1115-0-0-48 14X1115-0-0-49 14X1115-0-0-5 14X1115-0-0-50 14X1115-0-0-51 14X1115-0-0-52 14X1115-0-0-53 14X1115-0-0-55 14X1115-0-0-56 14X1115-0-0-58 14X1115-0-0-6 14X1115-0-0-60 14X1115-0-0-62 14X1115-0-0-64 14X1115-0-0-66 14X1115-0-0-68 14X1115-0-0-69 14X1115-0-0-7 14X1115-0-0-73 14X1115-0-0-74 14X1115-0-0-77 14X1117-0-0-104 14X1117-0-0-114 14X1117-0-0-117 14X1117-0-0-12 14X1117-0-0-14 14X1117-0-0-23 14X1117-0-0-24 14X1117-0-0-26 14X1117-0-0-29 14X1117-0-0-3 14X1117-0-0-35 14X1117-0-0-36 14X1117-0-0-37 14X1117-0-0-38 14X1117-0-0-4 14X1117-0-0-43 14X1117-0-0-45 14X1117-0-0-46 14X1117-0-0-49 14X1117-0-0-50 14X1117-0-0-55 14X1117-0-0-6 14X1117-0-0-61 14X1117-0-0-64 14X1117-0-0-67 14X1117-0-0-69 14X1117-0-0-70 14X1117-0-0-72 14X1117-0-0-73 14X1117-0-0-74 14X1117-0-0-79 14X1117-0-0-8 14X1117-0-0-82 14X1117-0-0-83 14X1117-0-0-84 14X1117-0-0-85 14X1117-0-0-89 14X1117-0-0-9 14X1117-0-0-90 14X1117-0-0-92 14X1117-0-0-94 14X1117-0-0-96 14X1117-0-0-98 14X1117-0-0-99 14X1118-0-0-11 14X1118-0-0-119 14X1118-0-0-139 14X1118-0-0-14 14X1118-0-0-142 14X1118-0-0-15 14X1118-0-0-17 14X1118-0-0-173 14X1118-0-0-174 14X1118-0-0-178 14X1118-0-0-18 14X1118-0-0-188 14X1118-0-0-190 14X1118-0-0-194 14X1118-0-0-196 14X1118-0-0-198 14X1118-0-0-199 14X1118-0-0-20 14X1118-0-0-204 14X1118-0-0-208 14X1118-0-0-21 14X1118-0-0-22 14X1118-0-0-226 14X1118-0-0-23 14X1118-0-0-24 14X1118-0-0-26 14X1118-0-0-28 14X1118-0-0-32 14X1118-0-0-34 14X1118-0-0-35 14X1118-0-0-36 14X1118-0-0-37 14X1118-0-0-42 14X1118-0-0-43 14X1118-0-0-48 14X1118-0-0-50 14X1118-0-0-51 14X1118-0-0-52 14X1118-0-0-6 14X1118-0-0-64 14X1118-0-0-72 14X1118-0-0-92 14X1118-0-0-95 14X1118-0-0-99 ARS Crescent BRUEHL Bobtail Jasper LCS-HULK Otto Pritchett SY Banks SY Command
+</td>
+</tr>
+<tr>
+<th class="l rowheader" scope="row">
+d2
+</th>
+<td class="r data">
+2
+</td>
+<td class="l data">
+1 2
+</td>
+</tr>
+</tbody>
+</table>
+<!--ENDTABLE-->
+</div>
+</div>
+<br>
+<a name="IDX19"></a>
+<div>
+<div align="center">
+<!--BEGINTABLE-->
+<table class="table" style=" border-left-width: 0px; border-right-width: 0px;" cellspacing="0" cellpadding="7" rules="groups" frame="hsides" bordercolor="#C1C1C1" summary="Procedure Mixed: Dimensions">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="c b header" colspan="2" scope="colgroup">
+Dimensions
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th class="l rowheader" scope="row">
+Covariance Parameters
+</th>
+<td class="r data">
+3
+</td>
+</tr>
+<tr>
+<th class="l rowheader" scope="row">
+Columns in X
+</th>
+<td class="r data">
+925
+</td>
+</tr>
+<tr>
+<th class="l rowheader" scope="row">
+Columns in Z
+</th>
+<td class="r data">
+0
+</td>
+</tr>
+<tr>
+<th class="l rowheader" scope="row">
+Subjects
+</th>
+<td class="r data">
+1
+</td>
+</tr>
+<tr>
+<th class="l rowheader" scope="row">
+Max Obs per Subject
+</th>
+<td class="r data">
+1151
+</td>
+</tr>
+</tbody>
+</table>
+<!--ENDTABLE-->
+</div>
+</div>
+<br>
+<a name="IDX20"></a>
+<div>
+<div align="center">
+<!--BEGINTABLE-->
+<table class="table" style=" border-left-width: 0px; border-right-width: 0px;" cellspacing="0" cellpadding="7" rules="groups" frame="hsides" bordercolor="#C1C1C1" summary="Procedure Mixed: Number of Observations">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="c b header" colspan="2" scope="colgroup">
+Number of Observations
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th class="l rowheader" scope="row">
+Number of Observations Read
+</th>
+<td class="r data">
+1151
+</td>
+</tr>
+<tr>
+<th class="l rowheader" scope="row">
+Number of Observations Used
+</th>
+<td class="r data">
+1151
+</td>
+</tr>
+<tr>
+<th class="l rowheader" scope="row">
+Number of Observations Not Used
+</th>
+<td class="r data">
+0
+</td>
+</tr>
+</tbody>
+</table>
+<!--ENDTABLE-->
+</div>
+</div>
+<br>
+<a name="IDX21"></a>
+<div>
+<div align="center">
+<!--BEGINTABLE-->
+<table class="table" style=" border-left-width: 0px; border-right-width: 0px;" cellspacing="0" cellpadding="7" rules="groups" frame="hsides" bordercolor="#C1C1C1" summary="Procedure Mixed: Parameter Search">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="c b header" colspan="6" scope="colgroup">
+Parameter Search
+</th>
+</tr>
+<tr>
+<th class="r b header" scope="col">
+CovP1
+</th>
+<th class="r b header" scope="col">
+CovP2
+</th>
+<th class="r b header" scope="col">
+CovP3
+</th>
+<th class="r b header" scope="col">
+Variance
+</th>
+<th class="r b header" scope="col">
+Res Log Like
+</th>
+<th class="r b header" scope="col">
+-2 Res Log Like
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="r data">
+0.07400
+</td>
+<td class="r data">
+0.005100
+</td>
+<td class="r data">
+0.4750
+</td>
+<td class="r data">
+0.07973
+</td>
+<td class="r data" nowrap>
+-65.8701
+</td>
+<td class="r data">
+131.7401
+</td>
+</tr>
+</tbody>
+</table>
+<!--ENDTABLE-->
+</div>
+</div>
+<br>
+<a name="IDX22"></a>
+<div>
+<div align="center">
+<!--BEGINTABLE-->
+<table class="table" style=" border-left-width: 0px; border-right-width: 0px;" cellspacing="0" cellpadding="7" rules="groups" frame="hsides" bordercolor="#C1C1C1" summary="Procedure Mixed: Iteration History">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="c b header" colspan="4" scope="colgroup">
+Iteration History
+</th>
+</tr>
+<tr>
+<th class="r b header" scope="col">
+Iteration
+</th>
+<th class="r b header" scope="col">
+Evaluations
+</th>
+<th class="r b header" scope="col">
+-2 Res Log Like
+</th>
+<th class="r b header" scope="col">
+Criterion
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th class="r rowheader" scope="row">
+1
+</th>
+<td class="r data">
+1
+</td>
+<td class="r data">
+131.74010908
+</td>
+<td class="r data">
+0.00000000
+</td>
+</tr>
+</tbody>
+</table>
+<!--ENDTABLE-->
+</div>
+</div>
+<br>
+<a name="IDX23"></a>
+<div>
+<div align="center">
+<!--BEGINTABLE-->
+<table class="table" style=" border-left-width: 0px; border-right-width: 0px;" cellspacing="0" cellpadding="7" rules="groups" frame="hsides" bordercolor="#C1C1C1" summary="Procedure Mixed: Convergence Status">
+<colgroup>
+<col>
+</colgroup>
+<tbody>
+<tr>
+<td class="c data">
+Convergence criteria met but final Hessian is not positive definite.
+</td>
+</tr>
+</tbody>
+</table>
+<!--ENDTABLE-->
+</div>
+</div>
+<br>
+<a name="IDX24"></a>
+<div>
+<div align="center">
+<!--BEGINTABLE-->
+<table class="table" style=" border-left-width: 0px; border-right-width: 0px;" cellspacing="0" cellpadding="7" rules="groups" frame="hsides" bordercolor="#C1C1C1" summary="Procedure Mixed: Covariance Parameter Estimates">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<colgroup>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="c b header" colspan="3" scope="colgroup">
+Covariance Parameter Estimates
+</th>
+</tr>
+<tr>
+<th class="l b header" scope="col">
+Cov Parm
+</th>
+<th class="l b header" scope="col">
+Subject
+</th>
+<th class="r b header" scope="col">
+Estimate
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th class="l rowheader" scope="row">
+Variance
+</th>
+<th class="l data">
+Intercept
+</th>
+<td class="r data">
+0.01242
+</td>
+</tr>
+<tr>
+<th class="l rowheader" scope="row">
+SP(POW)
+</th>
+<th class="l data">
+Intercept
+</th>
+<td class="r data">
+0.005100
+</td>
+</tr>
+<tr>
+<th class="l rowheader" scope="row">
+Residual
+</th>
+<th class="l data">
+</th>
+<td class="r data">
+0.07973
+</td>
+</tr>
+</tbody>
+</table>
+<!--ENDTABLE-->
+</div>
+</div>
+<br>
+<a name="IDX25"></a>
+<div>
+<div align="center">
+<!--BEGINTABLE-->
+<table class="table" style=" border-left-width: 0px; border-right-width: 0px;" cellspacing="0" cellpadding="7" rules="groups" frame="hsides" bordercolor="#C1C1C1" summary="Procedure Mixed: Fit Statistics">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="c b header" colspan="2" scope="colgroup">
+Fit Statistics
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th class="l rowheader" scope="row">
+-2 Res Log Likelihood
+</th>
+<td class="r data">
+131.7
+</td>
+</tr>
+<tr>
+<th class="l rowheader" scope="row">
+AIC (Smaller is Better)
+</th>
+<td class="r data">
+137.7
+</td>
+</tr>
+<tr>
+<th class="l rowheader" scope="row">
+AICC (Smaller is Better)
+</th>
+<td class="r data">
+137.8
+</td>
+</tr>
+<tr>
+<th class="l rowheader" scope="row">
+BIC (Smaller is Better)
+</th>
+<td class="r data">
+148.0
+</td>
+</tr>
+</tbody>
+</table>
+<!--ENDTABLE-->
+</div>
+</div>
+<br>
+<a name="IDX26"></a>
+<div>
+<div align="center">
+<!--BEGINTABLE-->
+<table class="table" style=" border-left-width: 0px; border-right-width: 0px;" cellspacing="0" cellpadding="7" rules="groups" frame="hsides" bordercolor="#C1C1C1" summary="Procedure Mixed: PARMS Model Likelihood Ratio Test">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="c b header" colspan="3" scope="colgroup">
+PARMS Model Likelihood Ratio Test
+</th>
+</tr>
+<tr>
+<th class="r b header" scope="col">
+DF
+</th>
+<th class="r b header" scope="col">
+Chi-Square
+</th>
+<th class="r b header" scope="col">
+Pr &gt; ChiSq
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="r data">
+2
+</td>
+<td class="r data">
+0.00
+</td>
+<td class="r data">
+1.0000
+</td>
+</tr>
+</tbody>
+</table>
+<!--ENDTABLE-->
+</div>
+</div>
+<br>
+<a name="IDX27"></a>
+<div>
+<div align="center">
+<!--BEGINTABLE-->
+<table class="table" style=" border-left-width: 0px; border-right-width: 0px;" cellspacing="0" cellpadding="7" rules="groups" frame="hsides" bordercolor="#C1C1C1" summary="Procedure Mixed: Type 3 Tests of Fixed Effects">
+<colgroup>
+<col>
+</colgroup>
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="c b header" colspan="5" scope="colgroup">
+Type 3 Tests of Fixed Effects
+</th>
+</tr>
+<tr>
+<th class="l b header" scope="col">
+Effect
+</th>
+<th class="r b header" scope="col">
+Num DF
+</th>
+<th class="r b header" scope="col">
+Den DF
+</th>
+<th class="r b header" scope="col">
+F Value
+</th>
+<th class="r b header" scope="col">
+Pr &gt; F
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th class="l rowheader" scope="row">
+d2
+</th>
+<td class="r data">
+1
+</td>
+<td class="r data">
+229
+</td>
+<td class="r data">
+38.04
+</td>
+<td class="r data">
+&lt;.0001
+</td>
+</tr>
+<tr>
+<th class="l rowheader" scope="row">
+name(d2)
+</th>
+<td class="r data">
+920
+</td>
+<td class="r data">
+229
+</td>
+<td class="r data">
+1.38
+</td>
+<td class="r data">
+0.0016
+</td>
+</tr>
+</tbody>
+</table>
+<!--ENDTABLE-->
+</div>
+</div>
+<br>
+<a name="IDX28"></a>
+<div>
+<div align="center">
+<!--BEGINTABLE-->
+<table class="table" style=" border-left-width: 0px; border-right-width: 0px;" cellspacing="0" cellpadding="7" rules="groups" frame="hsides" bordercolor="#C1C1C1" summary="Procedure Mixed: Least Squares Means">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="c b header" colspan="7" scope="colgroup">
+Least Squares Means
+</th>
+</tr>
+<tr>
+<th class="l b header" scope="col">
+Effect
+</th>
+<th class="l b header" scope="col">
+d2
+</th>
+<th class="r b header" scope="col">
+Estimate
+</th>
+<th class="r b header" scope="col">
+Standard<br/>Error
+</th>
+<th class="r b header" scope="col">
+DF
+</th>
+<th class="r b header" scope="col">
+t Value
+</th>
+<th class="r b header" scope="col">
+Pr &gt; |t|
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th class="l rowheader" scope="row">
+d2
+</th>
+<th class="l data">
+1
+</th>
+<td class="r data">
+2.2005
+</td>
+<td class="r data">
+0.02276
+</td>
+<td class="r data">
+229
+</td>
+<td class="r data">
+96.68
+</td>
+<td class="r data">
+&lt;.0001
+</td>
+</tr>
+<tr>
+<th class="l rowheader" scope="row">
+d2
+</th>
+<th class="l data">
+2
+</th>
+<td class="r data">
+2.0471
+</td>
+<td class="r data">
+0.01005
+</td>
+<td class="r data">
+229
+</td>
+<td class="r data">
+203.77
+</td>
+<td class="r data">
+&lt;.0001
+</td>
+</tr>
+</tbody>
+</table>
+<!--ENDTABLE-->
+</div>
+</div>
+<br>
+</div>
+<div class="branch">
+<p style="page-break-after: always;">
+<br/>
+</p>
+<hr size="3"/>
+<a name="IDX29"></a>
+<div>
+<div class="c">
+<p><img alt="The SGPlot Procedure" src="SAS8_11.png" style=" height: 480px; width: 640px;" border="0" class="c"></p>
+</div>
+</div>
+<br>
+</div>
+
+</div>
+</div>
+</div>
+<h3>References</h3>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-Burgueno2018" class="csl-entry">
+Juan Burgueño, Francisco Rodríguez, José Crossa. 2018. <span>“Chapter 13: Augmented Designs-Experimental Designs in Which All Treatments Are Not Replicated.”</span> In <em>Applied Statistics in Agricultural, Biological, and Environmental Sciences</em>, 345–69. <a href="https://doi.org/10.2134/appliedstatistics.2016.0005.c13">https://doi.org/10.2134/appliedstatistics.2016.0005.c13</a>.
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="model-extension-r.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="the-end.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": true,
+"facebook": false,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/IdahoAgStats/Guide-to-Field-Trial-Spatial-Analysis/edit/master/08-model-extension-SAS.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "lunr",
+"options": null
+},
+"toc": {
+"collapse": "section",
+"scroll_highlight": true
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
