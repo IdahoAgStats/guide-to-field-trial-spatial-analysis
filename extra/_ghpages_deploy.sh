@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+git checkout gh-pages
+git pull
+
 # instructions for overwriting gh-pages with master branch and prepping it for gitbook deployment
 # this overwrites some previous gh-pages commits, and that is okay
 git checkout master 
@@ -10,6 +13,7 @@ git merge master
 # need to make docs folder for github to read for gitbook deployment
 cp -r _book docs
 git add . git commit -m '...'
-git push
+git push --all origin
 # remember to return to main branch!
 git checkout master
+
