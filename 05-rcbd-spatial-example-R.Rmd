@@ -35,7 +35,7 @@ nin_lme <- lme(yield ~ gen, random = ~1|rep,
 preds_lme <- as.data.frame(emmeans(nin_lme, "gen"))
 ```
 
-The variables "gen" refers to the cultivar or breeding line being trialed, and "rep" is the block, and the dependent variable, "yield" is grain yield. Basic exploratory analysis of this data set was conducted in \@ref(spatial-r).
+The variables "gen" refers to the cultivar or breeding line being trialled, and "rep" is the block, and the dependent variable, "yield" is grain yield. Basic exploratory analysis of this data set was conducted in \@ref(spatial-r).
 
 ## Correlated errors 
 
