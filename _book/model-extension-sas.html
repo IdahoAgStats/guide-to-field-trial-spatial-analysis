@@ -25,7 +25,7 @@
 <meta name="author" content="William Price" />
 
 
-<meta name="date" content="2021-11-03" />
+<meta name="date" content="2021-11-05" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -271,7 +271,7 @@ div.csl-indent {
 <li class="chapter" data-level="7.1.5" data-path="model-extension-r.html"><a href="model-extension-r.html#split-plot"><i class="fa fa-check"></i><b>7.1.5</b> Split plot</a></li>
 <li class="chapter" data-level="7.1.6" data-path="model-extension-r.html"><a href="model-extension-r.html#split-split-plot"><i class="fa fa-check"></i><b>7.1.6</b> Split-split plot</a></li>
 <li class="chapter" data-level="7.1.7" data-path="model-extension-r.html"><a href="model-extension-r.html#split-block"><i class="fa fa-check"></i><b>7.1.7</b> Split block</a></li>
-<li class="chapter" data-level="7.1.8" data-path="model-extension-r.html"><a href="model-extension-r.html#augmented"><i class="fa fa-check"></i><b>7.1.8</b> Augmented</a></li>
+<li class="chapter" data-level="7.1.8" data-path="model-extension-r.html"><a href="model-extension-r.html#augmented-design"><i class="fa fa-check"></i><b>7.1.8</b> Augmented design</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="8" data-path="model-extension-sas.html"><a href="model-extension-sas.html"><i class="fa fa-check"></i><b>8</b> Other Models - SAS</a>
@@ -285,7 +285,7 @@ div.csl-indent {
 <li class="chapter" data-level="8.1.5" data-path="model-extension-sas.html"><a href="model-extension-sas.html#split-plot-1"><i class="fa fa-check"></i><b>8.1.5</b> Split plot</a></li>
 <li class="chapter" data-level="8.1.6" data-path="model-extension-sas.html"><a href="model-extension-sas.html#split-split-plot-1"><i class="fa fa-check"></i><b>8.1.6</b> Split-split plot</a></li>
 <li class="chapter" data-level="8.1.7" data-path="model-extension-sas.html"><a href="model-extension-sas.html#split-block-or-strip-plot"><i class="fa fa-check"></i><b>8.1.7</b> Split block or Strip plot</a></li>
-<li class="chapter" data-level="8.1.8" data-path="model-extension-sas.html"><a href="model-extension-sas.html#augmented-design"><i class="fa fa-check"></i><b>8.1.8</b> Augmented design</a></li>
+<li class="chapter" data-level="8.1.8" data-path="model-extension-sas.html"><a href="model-extension-sas.html#augmented-design-1"><i class="fa fa-check"></i><b>8.1.8</b> Augmented design</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="9" data-path="the-end.html"><a href="the-end.html"><i class="fa fa-check"></i><b>9</b> Conclusion</a>
@@ -365,8 +365,7 @@ ods html; </code></pre>
 <p>Data: <a href="https://raw.githubusercontent.com/IdahoAgStats/guide-to-field-trial-spatial-analysis/master/data/chinloy_fractionalfactorial.csv">chinloy_fractionalfactorial.csv</a><br><br></p>
 <p>Factorial experiments consider multiple treatments and their combinations. The study here evaluated the effect of 5 different fertilizer treatments (nitrogen, phosphorus, potassium, bagasse, and a filter mud press), each at various concentrations, on sugarcane yield. The levels of {0,1,2} indicate the relative concentrations of each fertilizer. Because all possible treatment combinations were too numerous, only a subset were used (fractional factorial) and only 2-way interactions with nitrogen are evaluated in the model. The treatments were laid out in a randomized complete block design (block).</p>
 <p>A Gaussian spatial model is used below.<br><br></p>
-<pre class="sashtml"><code>
-ods html close;
+<pre class="sashtml"><code>ods html close;
 
 proc format;
 invalue has_NA
@@ -390,14 +389,12 @@ proc mixed data=Factorial maxiter=150;
     parms (6) (.25) (.21) (.1);
 run;
 
-ods html;
-</code></pre>
+ods html;</code></pre>
 </div>
 <div id="alpha-lattice-1" class="section level3" number="8.1.3">
 <h3><span class="header-section-number">8.1.3</span> Alpha lattice</h3>
 <p>The <em>burgueno.alpha</em> data set is set up as an incomplete block alpha design with 16 treatment levels (gen). There are 12 blocks, 2 each within 3 reps. The code below illustrates the layout of the reps and blocks. Two examples of spatial adjustment are shown: 1) assuming a Gaussian spatial adjustment, and 2) utilizing a spline adjustment.<br><br></p>
-<pre class="sashtml"><code>
-proc format;
+<pre class="sashtml"><code>proc format;
 invalue has_NA
  &#39;NA&#39; = .;
 run;
@@ -467,15 +464,13 @@ proc glimmix data=Lattice ;
     random row col/type=rsmooth;
 run;
 
-ods html;
-</code></pre>
+ods html;</code></pre>
 </div>
 <div id="latin-square-1" class="section level3" number="8.1.4">
 <h3><span class="header-section-number">8.1.4</span> Latin square</h3>
 <p>Latin is a special example of a lattice experiment where each treatment occurs once in each row and in each column. As a result, the row and column effects are used to model spatial effects intrinsically.</p>
 <p>The *cochran.latin** data set examines the effect of an 6 “operators” (persons) on the difference between the true plot height and operator-measured shoot height from 6 wheat plots. Each person measured the plots in a different order according to a Latin Square design. While this example is not strictly spatial in nature, it illustrates the setup for analysis.<br><br></p>
-<pre class="sashtml"><code>
-ods html close;
+<pre class="sashtml"><code>ods html close;
 
 proc format;
 invalue has_NA
@@ -497,14 +492,12 @@ proc mixed data=latin;
     random row col;
 run;
 
-ods html;
-</code></pre>
+ods html;</code></pre>
 </div>
 <div id="split-plot-1" class="section level3" number="8.1.5">
 <h3><span class="header-section-number">8.1.5</span> Split plot</h3>
 <p>A split plot is a factorial treatment design with a restriction on the randomization of the factors. In this example, the <em>durban.splitplot</em> data looks at the effect of two factors: fungicide and barley varieties. The study is set up with 4 blocks. Within each block, 2 fungicides are randomized as whole or main plots. Within each fungicide treatment, 70 barley varieties are then randomized separately as subplots. The resulting analysis then breaks out separate error terms for the whole plots and the subplots. The plots are arranged into 10 rows x 56 columns (‘beds’). Spatial adjustment can then be introduced on top of this structure, if needed. The examples below illustrate a spherical spatial model adjustment and a spline adjustment.<br><br></p>
-<pre class="sashtml"><code>
-ods html close;
+<pre class="sashtml"><code>ods html close;
 
 proc format;
 invalue has_NA
@@ -541,8 +534,7 @@ ods html;</code></pre>
 <div id="split-split-plot-1" class="section level3" number="8.1.6">
 <h3><span class="header-section-number">8.1.6</span> Split-split plot</h3>
 <p>Like the Split-Plot above, the Split-Split-Plot is a factorial design, this time with an additional restriction on the randomization. The <em>archbold.apple</em> data used here describes the yield of apple trees under the impact of tree spacing (the whole or main plot), tree root stock (the split plot), and tree variety (the split-split plot). That is, 3 tree spacings are randomized in each block. Within those spacings, 4 root stocks are randomized separately, and then within each of those 2 varieties (‘gen’) are randomized. There are 5 blocks (‘rep’) and separate error terms for spacing, root stock, and variety are broken out in the analysis. In addition, we have row and column (‘pos’) information for the plots. This example uses a spline spatial adjustment.<br><br></p>
-<pre class="sashtml"><code>
-ods html close;
+<pre class="sashtml"><code>ods html close;
 
 proc format;
 invalue has_NA
@@ -571,8 +563,7 @@ run;
 <div id="split-block-or-strip-plot" class="section level3" number="8.1.7">
 <h3><span class="header-section-number">8.1.7</span> Split block or Strip plot</h3>
 <p>This study (<em>little.splitblock</em>) investigated the effects of nitrogen rates (4 levels) and harvest dates (5 dates) on sugarbeet yields using 4 blocks. Similar to a Latin square, the split block design has two main factors defined in rows and columns. Within each block the rows and columns, each representing one of the factors, are independently randomized. The effect of this in the analysis of variance is to break out separate error terms and DF for each main effect as well as their interaction. In this example the spline spatial adjustment is demonstrated.</p>
-<pre class="sashtml"><code>
-ods html close;
+<pre class="sashtml"><code>ods html close;
 
 proc format;
 invalue has_NA
@@ -598,12 +589,11 @@ run;
  
 ods html;</code></pre>
 </div>
-<div id="augmented-design" class="section level3" number="8.1.8">
+<div id="augmented-design-1" class="section level3" number="8.1.8">
 <h3><span class="header-section-number">8.1.8</span> Augmented design</h3>
-<p>The augmented experimental design occurs most commonly, if not exclusively, in plant breeding studies. It can be useful when the number of treatments is very large and the primary goal of the study is to rank or select genotypes that perform to a specified level. The number of treatments and/or limited materials often preclude complete replication of all treatments. To adjust for this, only a select set of genotypes, usually of known performance, are replicated in the design. The error estimated from these select genotypes is then utilized in the analysis to evaluate the remaining genotypes. <span class="citation"><a href="#ref-Burgueno2018" role="doc-biblioref">al.</a> (<a href="#ref-Burgueno2018" role="doc-biblioref">2018</a>)</span> have a very good discussion of this design and analysis of it. The example below uses their ‘P2’ model and the reader is referred to <span class="citation"><a href="#ref-Burgueno2018" role="doc-biblioref">al.</a> (<a href="#ref-Burgueno2018" role="doc-biblioref">2018</a>)</span> for more details.</p>
+<p>The augmented experimental design occurs most commonly, if not exclusively, in plant breeding studies. It can be useful when the number of treatments is very large and the primary goal of the study is to rank or select genotypes that perform to a specified level. The number of treatments and/or limited materials often preclude complete replication of all treatments. To adjust for this, only a select set of genotypes, usually of known performance, are replicated in the design. The error estimated from these select genotypes is then utilized in the analysis to evaluate the remaining genotypes. <span class="citation"><a href="#ref-Burgueno2018" role="doc-biblioref">Juan Burgueño</a> (<a href="#ref-Burgueno2018" role="doc-biblioref">2018</a>)</span> have a very good discussion of this design and analysis of it. The example below uses their ‘P2’ model and the reader is referred to <span class="citation"><a href="#ref-Burgueno2018" role="doc-biblioref">Juan Burgueño</a> (<a href="#ref-Burgueno2018" role="doc-biblioref">2018</a>)</span> for more details.</p>
 <p>The data used here refer to a wheat genotype evaluation study carried out near Lind Washington. The study looked at 922 lines (‘name’), of which, 8 were replicated known varieties. The P2 model, mentioned above, compares the averages of replicated lines to unreplicated lines. The data steps and procedures used below define these groups in an indicator variable named d2. The response variable, ‘yieldg,’ is converted to kilograms (‘yieldkg’) to facilitate computations and avoid numeric overflow errors due to large values. <br><br></p>
-<pre class="sashtml"><code>
-filename AUG url &quot;https://raw.githubusercontent.com/IdahoAgStats/guide-to-field-trial-spatial-analysis/master/data/AB19F5_LIND.csv&quot;;
+<pre class="sashtml"><code>filename AUG url &quot;https://raw.githubusercontent.com/IdahoAgStats/guide-to-field-trial-spatial-analysis/master/data/AB19F5_LIND.csv&quot;;
 
 PROC IMPORT OUT= WORK.augmented
      DATAFILE= AUG
@@ -646,8 +636,7 @@ run;
 </code></pre>
 <p>Following the steps described earlier, we first fit a base model, yieldkg = d2, to obtain residuals. We cannot use a base model of <code>yieldkg = name</code> because all the unreplicated lines will produce residual values of 0. <br><br></p>
 <p>The residuals are then plotted in a heat map. This map shows evidence of spatial patterns and variability across the field. <br><br></p>
-<pre class="sashtml"><code>
-PROC mixed data=augmented;
+<pre class="sashtml"><code>PROC mixed data=augmented;
     class name d2;
     model yieldkg = d2/noint outp=residuals ddf=229 229;
     lsmeans d2;
@@ -657,8 +646,7 @@ run;
 proc sgplot data=residuals;
     HEATMAPPARM y=pRow x=pCol COLORRESPONSE=resid/ colormodel=(cx014458 cx1E8C6E cxE1FE01); 
 title1 &#39;Field Map&#39;;
-run;
-</code></pre>
+run;</code></pre>
 <div class="branch">
 <a name="IDX"></a>
 <div>
@@ -1180,8 +1168,7 @@ d2
 <br>
 </div>
 <p>The spatial variability evident in the residuals is then modeled as before. Only one model, power, is applicable to this data.<br><br></p>
-<pre class="sashtml"><code>
-/*
+<pre class="sashtml"><code>/*
 proc variogram data=residuals plots=pairs(thr=50) ;
    compute novariogram nhclasses=60;
    coordinates xc=prow yc=pcol;
@@ -1201,8 +1188,7 @@ proc variogram data=residuals plots(only)=(fitplot);
    compute lagd=6.6 maxlags=25;
    model form=auto(mlist=(gau, exp, pow, sph) nest=1);
   var resid;
-run;
-</code></pre>
+run;</code></pre>
 <div class="branch">
 <a name="IDX9"></a>
 <div class="c proctitle">
@@ -2097,10 +2083,9 @@ Dependent Variable: Resid
 </div>
 <br>
 </div>
-<p>Using the variogram model parameters estimated above, an adjusted model is then fit to the P2 hypothesis of <span class="citation"><a href="#ref-Burgueno2018" role="doc-biblioref">al.</a> (<a href="#ref-Burgueno2018" role="doc-biblioref">2018</a>)</span>. The residuals from this model show little, if any, spatial variability remains after adjustment.</p>
+<p>Using the variogram model parameters estimated above, an adjusted model is then fit to the P2 hypothesis of <span class="citation"><a href="#ref-Burgueno2018" role="doc-biblioref">Juan Burgueño</a> (<a href="#ref-Burgueno2018" role="doc-biblioref">2018</a>)</span>. The residuals from this model show little, if any, spatial variability remains after adjustment.</p>
 <p><em>Note: the lsmeans statement is commented out in this example to avoid a large amount of output.</em><br><br></p>
-<pre class="sashtml"><code>
-PROC mixed data=augmented;
+<pre class="sashtml"><code>PROC mixed data=augmented;
     class name d2;
     model yieldkg = d2 name(d2)/outp=adjresiduals ddf=229 229;
     lsmeans d2;
@@ -2113,8 +2098,7 @@ run;
 proc sgplot data=adjresiduals;
     HEATMAPPARM y=pRow x=pCol COLORRESPONSE=resid/ colormodel=(cx014458 cx1E8C6E cxE1FE01); 
 title1 &#39;Field Map&#39;;
-run;
-</code></pre>
+run;</code></pre>
 <div class="branch">
 <a name="IDX17"></a>
 <div>
@@ -2881,7 +2865,7 @@ d2
 <h3>References</h3>
 <div id="refs" class="references csl-bib-body hanging-indent">
 <div id="ref-Burgueno2018" class="csl-entry">
-al., Juan Burgueño et. 2018. <span>“Chapter 13: Augmented Designs-Experimental Designs in Which All Treatments Are Not Replicated.”</span> In <em>Applied Statistics in Agricultural, Biological, and Environmental Sciences</em>, 345–69. <a href="https://doi.org/10.2134/appliedstatistics.2016.0005.c13">https://doi.org/10.2134/appliedstatistics.2016.0005.c13</a>.
+Juan Burgueño, Francisco Rodríguez, José Crossa. 2018. <span>“Chapter 13: Augmented Designs-Experimental Designs in Which All Treatments Are Not Replicated.”</span> In <em>Applied Statistics in Agricultural, Biological, and Environmental Sciences</em>, 345–69. <a href="https://doi.org/10.2134/appliedstatistics.2016.0005.c13">https://doi.org/10.2134/appliedstatistics.2016.0005.c13</a>.
 </div>
 </div>
             </section>

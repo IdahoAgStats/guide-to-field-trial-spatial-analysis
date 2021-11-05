@@ -89,7 +89,7 @@ split-plot
 split-split-plot
 estimated-marginal-means
 split-block
-augmented
+augmented-design
 model-extension-sas
 other-experimental-and-treatment-designs-1
 completely-randomized-design-crd
@@ -99,7 +99,7 @@ latin-square-1
 split-plot-1
 split-split-plot-1
 split-block-or-strip-plot
-augmented-design
+augmented-design-1
 the-end
 other-packages
 final-recommendations

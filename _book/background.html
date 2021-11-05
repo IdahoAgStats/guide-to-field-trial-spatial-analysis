@@ -25,7 +25,7 @@
 <meta name="author" content="William Price" />
 
 
-<meta name="date" content="2021-11-03" />
+<meta name="date" content="2021-11-05" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -271,7 +271,7 @@ div.csl-indent {
 <li class="chapter" data-level="7.1.5" data-path="model-extension-r.html"><a href="model-extension-r.html#split-plot"><i class="fa fa-check"></i><b>7.1.5</b> Split plot</a></li>
 <li class="chapter" data-level="7.1.6" data-path="model-extension-r.html"><a href="model-extension-r.html#split-split-plot"><i class="fa fa-check"></i><b>7.1.6</b> Split-split plot</a></li>
 <li class="chapter" data-level="7.1.7" data-path="model-extension-r.html"><a href="model-extension-r.html#split-block"><i class="fa fa-check"></i><b>7.1.7</b> Split block</a></li>
-<li class="chapter" data-level="7.1.8" data-path="model-extension-r.html"><a href="model-extension-r.html#augmented"><i class="fa fa-check"></i><b>7.1.8</b> Augmented</a></li>
+<li class="chapter" data-level="7.1.8" data-path="model-extension-r.html"><a href="model-extension-r.html#augmented-design"><i class="fa fa-check"></i><b>7.1.8</b> Augmented design</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="8" data-path="model-extension-sas.html"><a href="model-extension-sas.html"><i class="fa fa-check"></i><b>8</b> Other Models - SAS</a>
@@ -285,7 +285,7 @@ div.csl-indent {
 <li class="chapter" data-level="8.1.5" data-path="model-extension-sas.html"><a href="model-extension-sas.html#split-plot-1"><i class="fa fa-check"></i><b>8.1.5</b> Split plot</a></li>
 <li class="chapter" data-level="8.1.6" data-path="model-extension-sas.html"><a href="model-extension-sas.html#split-split-plot-1"><i class="fa fa-check"></i><b>8.1.6</b> Split-split plot</a></li>
 <li class="chapter" data-level="8.1.7" data-path="model-extension-sas.html"><a href="model-extension-sas.html#split-block-or-strip-plot"><i class="fa fa-check"></i><b>8.1.7</b> Split block or Strip plot</a></li>
-<li class="chapter" data-level="8.1.8" data-path="model-extension-sas.html"><a href="model-extension-sas.html#augmented-design"><i class="fa fa-check"></i><b>8.1.8</b> Augmented design</a></li>
+<li class="chapter" data-level="8.1.8" data-path="model-extension-sas.html"><a href="model-extension-sas.html#augmented-design-1"><i class="fa fa-check"></i><b>8.1.8</b> Augmented design</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="9" data-path="the-end.html"><a href="the-end.html"><i class="fa fa-check"></i><b>9</b> Conclusion</a>
@@ -459,11 +459,26 @@ Figure 3.5: Power Model
 \end{array} } \right] \]</span></p>
 <p>This covariance model describes the correlation of observations in the <em>range direction only.</em></p>
 <p>In combined AR1xAR1 model, the parameter, <span class="math inline">\(\rho\)</span> may need to estimated separated across the row and column directions depending on the shape of the plots and site-specific field variation. Very rectangular plots are likely to require a separate estimate of the <span class="math inline">\(\rho\)</span> parameter for each direction.</p>
-<p>$$  = ^2
-$$</p>
+<p><span class="math display">\[\begin{equation}
+\mathbf {V_{AR(1)row} \otimes V_{AR(1)range}} = \sigma^2
+\left[ {\begin{array}{cccc | cccc} 
+
+1 &amp; \rho_1 &amp; \rho_1^2 &amp; \rho_1^3 &amp; \rho_2 &amp; \rho_1\rho_2 &amp; \rho_1^2\rho_2 &amp; \rho_1^3\rho_2 \\
+\rho_1 &amp; 1 &amp; \rho_1 &amp; \rho_1^2 &amp; \rho_1\rho_2 &amp; \rho_2 &amp; \rho_1\rho_2 &amp; \rho_1^2\rho_2\\
+\rho_1^2 &amp; \rho_1 &amp; 1 &amp; \rho_1 &amp; \rho_1^2\rho_2 &amp; \rho_1\rho_2 &amp; \rho_2 &amp; \rho_1\rho_2\\
+\rho_1^3 &amp; \rho_1^2 &amp; \rho_1 &amp; 1 &amp; \rho_1^3\rho_2 &amp; \rho_1^2\rho_2 &amp; \rho_1\rho_2 &amp; \rho_2 \\
+\hline
+\rho_2 &amp; \rho_1\rho_2 &amp; \rho_1^2\rho_2 &amp; \rho_1^3\rho_2 &amp; 1 &amp; \rho_1 &amp; \rho_1^2 &amp; \rho_1^3 \\
+\rho_1\rho_2 &amp; \rho_2 &amp; \rho_1\rho_2 &amp; \rho_1^2\rho_2 &amp; \rho_1 &amp; 1 &amp; \rho_1 &amp; \rho_1^2 \\
+\rho_1^2\rho_2 &amp; \rho_1\rho_2 &amp; \rho_2 &amp; \rho_1\rho_2 &amp; \rho_1^2 &amp; \rho_1 &amp; 1 &amp; \rho_1 \\
+\rho_1^3\rho_2 &amp; \rho_1^2\rho_2 &amp; \rho_1\rho_2 &amp; \rho_2 &amp;\rho_1^3 &amp; \rho_1^2 &amp; \rho_1 &amp; 1 \\
+
+\end{array} } \right]
+\end{equation}\]</span></p>
+<p><em>(equation not displaying for unknown reason(s))</em></p>
 <p><strong>Note</strong>: <span class="math inline">\(\rho_1\)</span> and <span class="math inline">\(\rho_2\)</span> are the parameter estimate for <span class="math inline">\(V_{AR1(1) row}\)</span> and <span class="math inline">\(V_{AR(1)range}\)</span>, respectively.</p>
-<p>Please note that these error models are for modelling localised variation based on physical proximity. It is assumed that eventually a distance in the experiment can be reached in which 2 observations can be treated independent.
-If there are spatial trends that extend along the entire scope of an experiment (for instance, due to position on a slope), then an additional trend analysis should be conducted.</p>
+<p>Please note that these error models are for modelling localised variation based on physical proximity. It is assumed that eventually a distance in the experiment can be reached in which 2 observations can be treated independent.</p>
+<p>If there are spatial trends that extend along the entire scope of an experiment (for instance, due to position on a slope), then an additional trend analysis should be conducted.</p>
 </div>
 </div>
 </div>
@@ -489,7 +504,7 @@ If there are spatial trends that extend along the entire scope of an experiment 
 </div>
 <div id="splines" class="section level3" number="3.3.2">
 <h3><span class="header-section-number">3.3.2</span> Splines</h3>
-<p>There is a rich field of research on using localised splines to model field heterogeneity. These models are complex and hence not described here.</p>
+<p>There is a rich field of research on using localised splines to model field heterogeneity. They are similar to trend models where the row and/or column trends are modelled. These models are complex and hence not described here.</p>
 
 </div>
 </div>
