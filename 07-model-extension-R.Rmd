@@ -95,7 +95,6 @@ m_latin <- lmer(diff ~ operator + (1|colf) + (1|rowf),
 The *durban.splitplot* data set looks at the effect of fungicide on barley varieties. The main plot is fungicide (2 levels), and the sub plot is variety (70 levels). There are 4 blocks. 
 ```{r}
 # "bed" refers to the spatial position orthogonal to row (usually called 'column')
-
 data(durban.splitplot)
 
 ggdesplot(durban.splitplot, yield~bed*row, col.regions = vir,
@@ -134,14 +133,18 @@ pairs(preds)
 ```
 
 ### Split block
+
 also, over-dispersed count data
 ```{r}
-data(beall.webworms)  
+# data(beall.webworms)  
+# under construction
 ```
 
-### Augmented
+### Augmented design
+
 ```{r}
-lind <- read.csv("data/AB19F5_LIND.csv")
+# lind <- read.csv("data/AB19F5_LIND.csv")
+# under construction
 ```
 
 

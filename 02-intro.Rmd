@@ -2,7 +2,7 @@
 
 ## Why care about spatial variation?
 
-The goal of variety testing programs is to provide the agricultural industry reliable information about regional crop variety performance. Crop variety trials employ common experimental designs such as randomized complete block design to account for environmental heterogeneity. However, those techniques are quite often inadequate to fully account for spatial heterogeneity that arises due to field position, soil conditions, disease, wildlife impacts and more. 
+The goal of many agricultural field trials is to provide information about crop response to a set a treatments such as soil treatments, disease pressure or crop genetic variation. Agricultural field trials employ common experimental designs such as randomized complete block design to account for environmental heterogeneity. However, those techniques are quite often inadequate to fully account for spatial heterogeneity that arises due to field position, soil conditions, disease, wildlife impacts and more. 
 
 ```{r echo=FALSE, out.width='90%', fig.align='center'}
 knitr::include_graphics('img/plant_sciences_farm.PNG')
@@ -13,7 +13,7 @@ knitr::include_graphics('img/plant_sciences_farm.PNG')
 
 </center>
 
-As a result, the assumption of ANOVA are violated, invalidating the analysis, and variety estimates themselves are incorrect. Incorporating spatial correlation between experimental plots can improve the overall accuracy and precision of these estimates. 
+When spatial autocorrelation is not accounted for in an analysis, the result can be incorrect treatment estimates, correlated errors (that violate the assumption of linear models and invalidate the analysis) and low experimental power. Incorporating spatial correlation between experimental plots can improve the overall accuracy and precision of these estimates. 
 
 ## Diagnosing spatial auto-correlation
 

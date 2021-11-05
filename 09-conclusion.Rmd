@@ -2,6 +2,7 @@
 
 ## Other packages
 There are several other packages for exploring and modeling spatial variability in field trials. 
+é
 
 |package |usage |
 |-------------|-------------|

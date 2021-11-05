@@ -2,11 +2,14 @@
 
 Here are step-by-step instructions for how to incorporate spatial covariates into analysis of a field experiment that uses a randomized complete block design. Several techniques are explored: 
 
-Load data if it is not already in your R environment: 
+Load the NIN data if it is not already in your R environment: 
 
 ```{r message=FALSE, warning=FALSE}
 library(agridat); library(dplyr); library(tidyr); library(purrr);
 library(sp)
+```
+
+```{r}
 data("stroup.nin")
 
 Nin <- stroup.nin %>% mutate(col.width = col * 1.2, 
@@ -167,8 +170,11 @@ In the **nlme** package, there is also an option for a linear model in the `corS
 ## Row/Column Trends: 
 
 The package **lme4** is used since it can handle multiple random effects while **nlme** cannot do this without nesting the effects. I prefer **nlme** for linear modeling in this tutorial because of its built-in functionality for including spatial variation. 
-```{r}
+```{r message=FALSE, warning=FALSE}
 library(lme4); library(lmerTest)
+```
+
+```{r}
 # variables specifying row and column as factors are needed
 Nin$colF <- as.factor(Nin$col)
 Nin$rowF <- as.factor(Nin$row)
@@ -237,7 +243,7 @@ colnames(preds_ar1ar1)[2] <- "emmean"
 
 ```{r}
 #library(INLA) 
-## also need to add model info...
+## under construction....
 ```
 
 ## Model Selection

@@ -6,6 +6,7 @@ This tutorial uses the Nebraska Interstate wheat trials, first published by Stro
 
 ```{r message=FALSE, warning=FALSE}
 library(agridat); library(dplyr); library(tidyr)
+
 data("stroup.nin")
 
 Nin <- stroup.nin %>% mutate(col.width = col * 1.2, 
@@ -27,14 +28,13 @@ This data set actually has no missing data -- this is a balanced trial. However,
 
 Plot raw yield data as it appeared in the field: 
 ```{r message=FALSE, warning=FALSE}
-library(ggplot2)
-library(desplot)
+library(ggplot2); library(desplot)
 ```
 
 ```{r Nin-yield-layout-fig, out.width="100%",fig.asp=.7,message=FALSE, warning=FALSE}
 ggplot(Nin, aes(x = row, y = col)) +
   geom_tile(aes(fill = yield), col = "white") +
-  geom_text(aes(label = name)) +
+  #geom_text(aes(label = name)) +
   geom_tileborder(aes(group = 1, grp = rep), lwd = 1.2) +
   scale_fill_gradient(low = "white", high = "blue") +
   scale_x_continuous(breaks = seq(1,max(Nin$row), 1)) +
@@ -102,6 +102,7 @@ Plot Spatial dependence of residuals
 
 ```{r resid-cor-fig, message=FALSE, warning=FALSE}
 library(purrr)
+
 res.nn1 <- map_dbl(xy_rook, function(j) mean(resid_lme[j]))
   
 rc <- signif(cor(resid_lme, res.nn1, use = "pairwise.complete.obs"), 2)
@@ -223,14 +224,31 @@ Nin_variofit1a <- fit.variogram(resid_var1, Nin_vgm1a)
 Nin_variofit2a <- fit.variogram(resid_var1, Nin_vgm2a)
 Nin_variofit3a <- fit.variogram(resid_var1, Nin_vgm3a)
 Nin_variofit4a <- fit.variogram(resid_var1, Nin_vgm4a, fit.kappa = T)
-
-print("Exponential"); attr(Nin_variofit1a, "SSErr")
-print("Spherical"); attr(Nin_variofit2a, "SSErr")
-print("Gaussian"); attr(Nin_variofit3a, "SSErr")
-print("Matern"); attr(Nin_variofit4a, "SSErr")
 ```
 
-Error terms are considerably higher than in the isotropic model.
+Look at rums of squares error: 
+
+* Exponential 
+```{r}
+attr(Nin_variofit1a, "SSErr")
+```
+
+* Spherical
+```{r}
+attr(Nin_variofit2a, "SSErr")
+```
+
+* Gaussian
+```{r}
+attr(Nin_variofit3a, "SSErr")
+```
+
+* Matérn
+```{r}
+attr(Nin_variofit4a, "SSErr")
+```
+
+These error terms are considerably higher than in the isotropic model.
 
 ```{r}
 plot(resid_var1, Nin_variofit1a, main = "Exponential model")

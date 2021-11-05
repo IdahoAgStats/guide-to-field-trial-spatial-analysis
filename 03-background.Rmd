@@ -285,7 +285,8 @@ This covariance model describes the correlation of observations in the *range di
 
 In combined AR1xAR1 model, the parameter, $\rho$ may need to estimated separated across the row and column directions depending on the shape of the plots and site-specific field variation. Very rectangular plots are likely to require a separate estimate of the $\rho$ parameter for each direction. 
 
-$$ \mathbf {V_{AR(1)row} \otimes V_{AR(1)range}} = \sigma^2
+\begin{equation}
+\mathbf {V_{AR(1)row} \otimes V_{AR(1)range}} = \sigma^2
 \left[ {\begin{array}{cccc | cccc} 
 
 1 & \rho_1 & \rho_1^2 & \rho_1^3 & \rho_2 & \rho_1\rho_2 & \rho_1^2\rho_2 & \rho_1^3\rho_2 \\
@@ -299,11 +300,15 @@ $$ \mathbf {V_{AR(1)row} \otimes V_{AR(1)range}} = \sigma^2
 \rho_1^3\rho_2 & \rho_1^2\rho_2 & \rho_1\rho_2 & \rho_2 &\rho_1^3 & \rho_1^2 & \rho_1 & 1 \\
 
 \end{array} } \right]
-$$
+\end{equation}
+
+*(equation not displaying for unknown reason(s))*
+
 
 **Note**: $\rho_1$ and  $\rho_2$ are the parameter estimate for $V_{AR1(1) row}$ and $V_{AR(1)range}$, respectively.
 
 Please note that these error models are for modelling localised variation based on physical proximity. It is assumed that eventually a distance in the experiment can be reached in which 2 observations can be treated independent. 
+
 If there are spatial trends that extend along the entire scope of an experiment (for instance, due to position on a slope), then an additional trend analysis should be conducted.
 
 ## Spatial Regression methods
@@ -334,4 +339,4 @@ If the assumption of independent, normal, and identical errors are met, then thi
 
 ### Splines
 
-There is a rich field of research on using localised splines to model field heterogeneity. These models are complex and hence not described here.  
+There is a rich field of research on using localised splines to model field heterogeneity. They are similar to trend models where the row and/or column trends are modelled. These models are complex and hence not described here.  

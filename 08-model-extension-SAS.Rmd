@@ -63,7 +63,6 @@ Factorial experiments consider multiple treatments and their combinations. The s
 A Gaussian spatial model is used below.<br><br>
 
 ```{r SAS8_2, engine="sashtml", collectcode=TRUE, engine.path=saspath, include=TRUE, engine.opts=sasopts, comment=""}
-
 ods html close;
 
 proc format;
@@ -89,7 +88,6 @@ proc mixed data=Factorial maxiter=150;
 run;
 
 ods html;
-
 ```
 
 ### Alpha lattice
@@ -97,7 +95,6 @@ ods html;
 The *burgueno.alpha* data set is set up as an incomplete block alpha design with 16 treatment levels (gen). There are 12 blocks, 2 each within 3 reps. The code below illustrates the layout of the reps and blocks. Two examples of spatial adjustment are shown: 1) assuming a Gaussian spatial adjustment, and 2) utilizing a spline adjustment.<br><br>
 
 ```{r SAS8_3, engine="sashtml", collectcode=TRUE, engine.path=saspath, include=TRUE, engine.opts=sasopts, comment=""}
-
 proc format;
 invalue has_NA
  'NA' = .;
@@ -150,7 +147,6 @@ proc glimmix data=Lattice ;
 run;
 
 ods html;
-
 ```
 
 
@@ -162,7 +158,6 @@ Latin is a special example of a lattice experiment where each treatment occurs o
 The *cochran.latin** data set examines the effect of an 6 "operators" (persons) on the difference between the true plot height and operator-measured shoot height from 6 wheat plots. Each person measured the plots in a different order according to a Latin Square design. While this example is not strictly spatial in nature, it illustrates the setup for analysis.<br><br>
 
 ```{r SAS8_4, engine="sashtml", collectcode=TRUE, engine.path=saspath, include=TRUE, engine.opts=sasopts, comment=""}
-
 ods html close;
 
 proc format;
@@ -186,7 +181,6 @@ proc mixed data=latin;
 run;
 
 ods html;
-
 ```
 
 ### Split plot
@@ -194,7 +188,6 @@ ods html;
 A split plot is a factorial treatment design with a restriction on the randomization of the factors. In this example, the *durban.splitplot* data looks at the effect of two factors: fungicide and barley varieties. The study is set up with 4 blocks. Within each block, 2 fungicides are randomized as whole or main plots. Within each fungicide treatment, 70 barley varieties are then randomized separately as subplots. The resulting analysis then breaks out separate error terms for the whole plots and the subplots. The plots are arranged into 10 rows x 56 columns ('beds'). Spatial adjustment can then be introduced on top of this structure, if needed. The examples below illustrate a spherical spatial model adjustment and a spline adjustment.<br><br>
 
 ```{r SAS8_5, engine="sashtml", collectcode=TRUE, engine.path=saspath, include=TRUE, engine.opts=sasopts, comment=""}
-
 ods html close;
 
 proc format;
@@ -236,7 +229,6 @@ ods html;
 Like the Split-Plot above, the Split-Split-Plot is a factorial design, this time with an additional restriction on the randomization. The *archbold.apple* data used here describes the yield of apple trees under the impact of tree spacing (the whole or main plot), tree root stock (the split plot), and tree variety (the split-split plot). That is, 3 tree spacings are randomized in each block. Within those spacings, 4 root stocks are randomized separately, and then within each of those 2 varieties ('gen') are randomized. There are 5 blocks ('rep') and separate error terms for spacing, root stock, and variety are broken out in the analysis. In addition, we have row and column ('pos') information for the plots. This example uses a spline spatial adjustment.<br><br>
 
 ```{r SAS8_6, engine="sashtml", collectcode=TRUE, engine.path=saspath, include=TRUE, engine.opts=sasopts, comment=""}
-
 ods html close;
 
 proc format;
@@ -269,7 +261,6 @@ run;
 This study (*little.splitblock*) investigated the effects of nitrogen rates (4 levels) and harvest dates (5 dates) on sugarbeet yields using 4 blocks. Similar to a Latin square, the split block design has two main factors defined in rows and columns. Within each block the rows and columns, each representing one of the factors, are independently randomized. The effect of this in the analysis of variance is to break out separate error terms and DF for each main effect as well as their interaction. In this example the spline spatial adjustment is demonstrated.
 
 ```{r SAS8_7, engine="sashtml", collectcode=TRUE, engine.path=saspath, include=TRUE, engine.opts=sasopts, comment=""}
-
 ods html close;
 
 proc format;
@@ -307,7 +298,6 @@ The data used here refer to a wheat genotype evaluation study carried out near L
 
 
 ```{r SAS8_8, engine="sashtml", collectcode=TRUE, engine.path=saspath, include=TRUE, engine.opts=sasopts, comment=""}
-
 filename AUG url "https://raw.githubusercontent.com/IdahoAgStats/guide-to-field-trial-spatial-analysis/master/data/AB19F5_LIND.csv";
 
 PROC IMPORT OUT= WORK.augmented
@@ -356,7 +346,6 @@ Following the steps described earlier, we first fit a base model, yieldkg = d2, 
 The residuals are then plotted in a heat map. This map shows evidence of spatial patterns and variability across the field. <br><br>
 
 ```{r SAS8_9, engine="sashtml", collectcode=TRUE, engine.path=saspath, include=TRUE, engine.opts=sasopts, comment=""}
-
 PROC mixed data=augmented;
 	class name d2;
 	model yieldkg = d2/noint outp=residuals ddf=229 229;
@@ -368,14 +357,11 @@ proc sgplot data=residuals;
 	HEATMAPPARM y=pRow x=pCol COLORRESPONSE=resid/ colormodel=(cx014458 cx1E8C6E cxE1FE01); 
 title1 'Field Map';
 run;
-
-
 ```
 
 The  spatial variability evident in the residuals is then modeled as before. Only one model, power, is applicable to this data.<br><br>
 
 ```{r SAS8_10, engine="sashtml", collectcode=TRUE, engine.path=saspath, include=TRUE, engine.opts=sasopts, comment=""}
-
 /*
 proc variogram data=residuals plots=pairs(thr=50) ;
    compute novariogram nhclasses=60;
@@ -397,7 +383,6 @@ proc variogram data=residuals plots(only)=(fitplot);
    model form=auto(mlist=(gau, exp, pow, sph) nest=1);
   var resid;
 run;
-
 ```
 
 Using the variogram model parameters estimated above, an adjusted model is then fit to the P2 hypothesis of @Burgueno2018. The residuals from this model show little, if any, spatial variability remains after adjustment. 
@@ -405,7 +390,6 @@ Using the variogram model parameters estimated above, an adjusted model is then 
 *Note: the lsmeans statement is commented out in this example to avoid a large amount of output.*<br><br>
 
 ```{r SAS8_11, engine="sashtml", collectcode=TRUE, engine.path=saspath, include=TRUE, engine.opts=sasopts, comment=""}
-
 PROC mixed data=augmented;
 	class name d2;
 	model yieldkg = d2 name(d2)/outp=adjresiduals ddf=229 229;
@@ -420,5 +404,4 @@ proc sgplot data=adjresiduals;
 	HEATMAPPARM y=pRow x=pCol COLORRESPONSE=resid/ colormodel=(cx014458 cx1E8C6E cxE1FE01); 
 title1 'Field Map';
 run;
-
 ```
