@@ -10,6 +10,7 @@ bibliography: [book.bib, packages.bib, extra.bib]
 biblio-style: apalike
 link-citations: yes
 description: "Instructions for identifying spatial autocorrelation in agricultural field trials and incorporating spatial variation into analysis of trial using R and SAS."
+github-repo: IdahoAgStats/guide-to-field-trial-spatial-analysis
 ---
 
 # Preface
