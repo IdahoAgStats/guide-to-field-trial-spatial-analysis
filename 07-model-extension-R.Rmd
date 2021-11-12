@@ -143,7 +143,7 @@ also, over-dispersed count data
 ### Augmented design
 
 ```{r}
-# lind <- read.csv("data/AB19F5_LIND.csv")
+# lind <- read.csv("data/augmented_lind.csv")
 # under construction
 ```
 

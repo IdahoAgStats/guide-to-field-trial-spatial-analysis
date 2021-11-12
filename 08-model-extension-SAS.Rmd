@@ -298,7 +298,7 @@ The data used here refer to a wheat genotype evaluation study carried out near L
 
 
 ```{r SAS8_8, engine="sashtml", collectcode=TRUE, engine.path=saspath, include=TRUE, engine.opts=sasopts, comment=""}
-filename AUG url "https://raw.githubusercontent.com/IdahoAgStats/guide-to-field-trial-spatial-analysis/master/data/AB19F5_LIND.csv";
+filename AUG url "https://raw.githubusercontent.com/IdahoAgStats/guide-to-field-trial-spatial-analysis/master/data/augmented_lind.csv";
 
 PROC IMPORT OUT= WORK.augmented
      DATAFILE= AUG
