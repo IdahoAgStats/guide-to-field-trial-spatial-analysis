@@ -450,13 +450,13 @@ Figure 3.5: Power Model
 \end{array} } \right] \otimes \mathbf{I_4} \]</span></p>
 <p>This covariance model describes the correlation of observations in the <em>row direction only.</em></p>
 <p>And similarly the AR1 structure across 4 ranges is modeled as thus:</p>
-<p><span class="math display">\[ \mathbf {V_{AR(1)range}} = \sigma^2 \mathbf{I_4} \otimes
+<p><span class="math display">\[ \mathbf {V_{AR(1)range}} = \sigma^2 
 \left[ {\begin{array}{cccc} 
 1 &amp; \rho &amp; \rho^2 &amp; \rho^3 \\
 \rho &amp; 1 &amp; \rho &amp; \rho^2  \\
 \rho^2 &amp; \rho &amp; 1 &amp; \rho  \\
 \rho^3 &amp; \rho^2 &amp; \rho &amp; 1
-\end{array} } \right] \]</span></p>
+\end{array} } \right] \otimes \mathbf{I_2} \]</span></p>
 <p>This covariance model describes the correlation of observations in the <em>range direction only.</em></p>
 <p>In combined AR1xAR1 model, the parameter, <span class="math inline">\(\rho\)</span> may need to estimated separated across the row and column directions depending on the shape of the plots and site-specific field variation. Very rectangular plots are likely to require a separate estimate of the <span class="math inline">\(\rho\)</span> parameter for each direction.</p>
 <p><span class="math display">\[\begin{equation}

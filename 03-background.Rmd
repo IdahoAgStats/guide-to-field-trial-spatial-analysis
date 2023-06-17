@@ -267,19 +267,19 @@ $$\mathbf { V_{AR(1)row}}  = \sigma^2
 \left[ {\begin{array}{cc} 
 1 & \rho \\
 \rho & 1 
-\end{array} } \right] \otimes \mathbf{I_4} $$
+\end{array} } \right] \otimes \mathbf{I_4}$$
 
 This covariance model describes the correlation of observations in the *row direction only.* 
 
 And similarly the AR1 structure across 4 ranges is modeled as thus: 
 
-$$ \mathbf {V_{AR(1)range}} = \sigma^2 \mathbf{I_4} \otimes
+$$ \mathbf {V_{AR(1)range}} = \sigma^2 \mathbf{I_4} 
 \left[ {\begin{array}{cccc} 
 1 & \rho & \rho^2 & \rho^3 \\
 \rho & 1 & \rho & \rho^2  \\
 \rho^2 & \rho & 1 & \rho  \\
 \rho^3 & \rho^2 & \rho & 1
-\end{array} } \right] $$
+\end{array} } \right] \otimes \mathbf{I_2} $$
 
 This covariance model describes the correlation of observations in the *range direction only.* 
 
@@ -301,8 +301,6 @@ In combined AR1xAR1 model, the parameter, $\rho$ may need to estimated separated
 
 \end{array} } \right]
 \end{equation}
-
-*(equation not displaying for unknown reason(s))*
 
 
 **Note**: $\rho_1$ and  $\rho_2$ are the parameter estimate for $V_{AR1(1) row}$ and $V_{AR(1)range}$, respectively.
