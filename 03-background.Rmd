@@ -273,7 +273,7 @@ This covariance model describes the correlation of observations in the *row dire
 
 And similarly the AR1 structure across 4 ranges is modeled as thus: 
 
-$$ \mathbf {V_{AR(1)range}} = \sigma^2 \mathbf{I_4} 
+$$ \mathbf {V_{AR(1)range}} = \sigma^2  
 \left[ {\begin{array}{cccc} 
 1 & \rho & \rho^2 & \rho^3 \\
 \rho & 1 & \rho & \rho^2  \\
