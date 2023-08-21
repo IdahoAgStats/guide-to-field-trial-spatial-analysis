@@ -6,14 +6,13 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Section 3 Spatial Models | Incorporating Spatial Analysis into Agricultural Field Experiments.</title>
   <meta name="description" content="Instructions for identifying spatial autocorrelation in agricultural field trials and incorporating spatial variation into analysis of trial using R and SAS." />
-  <meta name="generator" content="bookdown 0.23.1 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.35 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Section 3 Spatial Models | Incorporating Spatial Analysis into Agricultural Field Experiments." />
   <meta property="og:type" content="book" />
   
-  
   <meta property="og:description" content="Instructions for identifying spatial autocorrelation in agricultural field trials and incorporating spatial variation into analysis of trial using R and SAS." />
-  
+  <meta name="github-repo" content="IdahoAgStats/guide-to-field-trial-spatial-analysis" />
 
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Section 3 Spatial Models | Incorporating Spatial Analysis into Agricultural Field Experiments." />
@@ -25,7 +24,7 @@
 <meta name="author" content="William Price" />
 
 
-<meta name="date" content="2021-11-05" />
+<meta name="date" content="2023-08-21" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -34,8 +33,8 @@
   
 <link rel="prev" href="intro.html"/>
 <link rel="next" href="spatial-r.html"/>
-<script src="libs/header-attrs-2.11/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -51,9 +50,9 @@
 
 
 
-
-<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
-<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
 
 
 <style type="text/css">
@@ -94,7 +93,7 @@ code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
 code span.at { color: #7d9029; } /* Attribute */
 code span.bn { color: #40a070; } /* BaseN */
-code span.bu { } /* BuiltIn */
+code span.bu { color: #008000; } /* BuiltIn */
 code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
 code span.ch { color: #4070a0; } /* Char */
 code span.cn { color: #880000; } /* Constant */
@@ -107,7 +106,7 @@ code span.er { color: #ff0000; font-weight: bold; } /* Error */
 code span.ex { } /* Extension */
 code span.fl { color: #40a070; } /* Float */
 code span.fu { color: #06287e; } /* Function */
-code span.im { } /* Import */
+code span.im { color: #008000; font-weight: bold; } /* Import */
 code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
 code span.kw { color: #007020; font-weight: bold; } /* Keyword */
 code span.op { color: #666666; } /* Operator */
@@ -121,6 +120,10 @@ code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
 <style type="text/css">
 /* Used with Pandoc 2.11+ new --citeproc when CSL is used */
 div.csl-bib-body { }
@@ -318,8 +321,8 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="background" class="section level1" number="3">
-<h1><span class="header-section-number">Section 3</span> Spatial Models</h1>
+<div id="background" class="section level1 hasAnchor" number="3">
+<h1><span class="header-section-number">Section 3</span> Spatial Models<a href="background.html#background" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <p>This section contains some of the statistical background behind why spatial models are used and how they work. Understanding this section is not essential, but it is extremely helpful. This section relies on information introduced in <a href="intro.html#intro">2</a>, so please make sure you have read that section if you are new to empirical variograms and spatial statistics.</p>
 <p>General linear statistical models are commonly modeled as thus:</p>
 <p><span class="math display">\[Y_i = \beta_0 + X_i\beta_1 + \epsilon_i\]</span>
@@ -328,20 +331,20 @@ div.csl-indent {
 <p><span class="math display">\[e_i ~\sim N(0, \sigma^2)\]</span>
 The error terms, or residuals, are assumed to be <em>identically</em> and <em>independently</em> distributed (sometimes abbreviated “iid”). This implies a constant variance of the error terms and zero covariance between residuals.</p>
 <p>If N = 3, the expanded model looks like this:</p>
-<p><span class="math display">\[\left[ {\begin{array}{ccc} Y_1\\ Y_2\\ Y_3 \end{array} } \right] = \beta_0 + 
+<p><span class="math display">\[\left[ {\begin{array}{ccc} Y_1\\ Y_2\\ Y_3 \end{array} } \right] = \beta_0 +
 \left[ {\begin{array}{ccc} X_1\\ X_2\\ X_3 \end{array}  } \right] \beta_1 +
 \left[ {\begin{array}{ccc} \epsilon_1\\ \epsilon_2\\ \epsilon_3 \end{array}  } \right] \]</span></p>
-<p><span class="math display">\[e_i ~\sim N \Bigg( 0, 
+<p><span class="math display">\[e_i ~\sim N \Bigg( 0,
 \left[ {\begin{array}{ccc} \sigma^2 &amp; 0 &amp; 0 \\ 0 &amp; \sigma^2 &amp; 0\\ 0 &amp; 0 &amp; \sigma^2\end{array}  } \right] \Bigg) \]</span></p>
 <p>If spatial variation is present, the off-diagonals of the variance-covariance matrix are not zero - hence the error terms are not independently distributed. As a result, hypotheses test and parameter estimates from uncorrected linear models will provide erroneous results.</p>
-<div id="correlated-error-models" class="section level2" number="3.1">
-<h2><span class="header-section-number">3.1</span> Correlated error models</h2>
-<div id="distance-based-correlation-error-models" class="section level3" number="3.1.1">
-<h3><span class="header-section-number">3.1.1</span> Distance-based correlation error models</h3>
+<div id="correlated-error-models" class="section level2 hasAnchor" number="3.1">
+<h2><span class="header-section-number">3.1</span> Correlated error models<a href="background.html#correlated-error-models" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="distance-based-correlation-error-models" class="section level3 hasAnchor" number="3.1.1">
+<h3><span class="header-section-number">3.1.1</span> Distance-based correlation error models<a href="background.html#distance-based-correlation-error-models" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>There are mathematical tools for modelling how error terms are correlated with each other based on pairwise physical distance between observations. These models can be used to weight observations. Often, the data are assumed to be <em>isotropic</em>, where distance but not direction impacts the spatial error correlation.</p>
 <p>There are several methods for estimating the semivariance as a direct function of distance.</p>
-<div id="exponential" class="section level4" number="3.1.1.1">
-<h4><span class="header-section-number">3.1.1.1</span> Exponential</h4>
+<div id="exponential" class="section level4 hasAnchor" number="3.1.1.1">
+<h4><span class="header-section-number">3.1.1.1</span> Exponential<a href="background.html#exponential" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <p><span class="math display">\[ \gamma (h)\left\{ {\begin{array}{cc} 0 &amp; h = 0\\ C_0+C_1 \left [ 1-e^{-(\frac{h}{r})} \right] &amp; h &gt; 0 \end{array} } \right. \]</span>
 where</p>
 <p><span class="math display">\[ C_0 = nugget \\ C_1 = partial \: sill \\ r = range\]</span></p>
@@ -351,10 +354,10 @@ where</p>
 Figure 3.1: Exponential Model
 </p>
 </div>
-<p><span class="math inline">\(3r = r_p\)</span> is the “practical range,” which is 95% of the true value for <span class="math inline">\(C_1\)</span>.</p>
+<p><span class="math inline">\(3r = r_p\)</span> is the “practical range”, which is 95% of the true value for <span class="math inline">\(C_1\)</span>.</p>
 </div>
-<div id="gaussian" class="section level4" number="3.1.1.2">
-<h4><span class="header-section-number">3.1.1.2</span> Gaussian</h4>
+<div id="gaussian" class="section level4 hasAnchor" number="3.1.1.2">
+<h4><span class="header-section-number">3.1.1.2</span> Gaussian<a href="background.html#gaussian" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <p>(a squared version of the exponential model)</p>
 <p><span class="math display">\[ \gamma (h)\left\{ {\begin{array}{cc} 0 &amp; h = 0\\ C_0+C_1 \left [ 1-e^{-(\frac{h}{r})^2} \right] &amp; h &gt; 0 \end{array} } \right. \]</span>
 where</p>
@@ -365,11 +368,11 @@ where</p>
 Figure 3.2: Gaussian Model
 </p>
 </div>
-<p><span class="math inline">\(\sqrt 3r = r_p\)</span> is the “practical range,” which is 95% of the true value for <span class="math inline">\(C_1\)</span>.</p>
+<p><span class="math inline">\(\sqrt 3r = r_p\)</span> is the “practical range”, which is 95% of the true value for <span class="math inline">\(C_1\)</span>.</p>
 </div>
-<div id="spherical" class="section level4" number="3.1.1.3">
-<h4><span class="header-section-number">3.1.1.3</span> Spherical</h4>
-<p><span class="math display">\[ \gamma (h) = \left\{ {\begin{array}{cc} 0 &amp; h = 0\\ C_0+C_1 \left[ \frac{3h}{2r}-0.5\bigg( \frac{h}{r}\bigg)^3 \right] &amp; 0 &lt;h \leq r \\ 
+<div id="spherical" class="section level4 hasAnchor" number="3.1.1.3">
+<h4><span class="header-section-number">3.1.1.3</span> Spherical<a href="background.html#spherical" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p><span class="math display">\[ \gamma (h) = \left\{ {\begin{array}{cc} 0 &amp; h = 0\\ C_0+C_1 \left[ \frac{3h}{2r}-0.5\bigg( \frac{h}{r}\bigg)^3 \right] &amp; 0 &lt;h \leq r \\
 C_0 + C_1 &amp; h &gt; r \end{array} } \right. \]</span>
 where</p>
 <p><span class="math display">\[ C_0 = nugget \\ C_1 = partial \: sill \\ r = range\]</span></p>
@@ -380,13 +383,13 @@ Figure 3.3: Spherical Model
 </p>
 </div>
 </div>
-<div id="other-correlated-error-distance-models" class="section level4" number="3.1.1.4">
-<h4><span class="header-section-number">3.1.1.4</span> Other correlated error distance models</h4>
+<div id="other-correlated-error-distance-models" class="section level4 hasAnchor" number="3.1.1.4">
+<h4><span class="header-section-number">3.1.1.4</span> Other correlated error distance models<a href="background.html#other-correlated-error-distance-models" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <p>There are many more models - Matérn, Cauchy, Logistic - that may describe spatial correlation in a data set.</p>
 <p>There are two addition models that have no range or sill, the linear model and power model. If your data fits these, consider doing a trend analysis.</p>
 </div>
-<div id="linear" class="section level4" number="3.1.1.5">
-<h4><span class="header-section-number">3.1.1.5</span> Linear</h4>
+<div id="linear" class="section level4 hasAnchor" number="3.1.1.5">
+<h4><span class="header-section-number">3.1.1.5</span> Linear<a href="background.html#linear" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <p><span class="math display">\[ \gamma (h)=\left\{ {\begin{array}{cc} 0 &amp; h = 0\\ C_0+C_1h &amp; h &gt; 0 \end{array} } \right. \]</span>
 where</p>
 <p><span class="math display">\[ C_0 = nugget \\ C_1 = slope \]</span></p>
@@ -398,8 +401,8 @@ Figure 3.4: Linear Error Model
 </div>
 <p>There is no sill or range in the linear model, so the variance will continue to increase as a function of distance.</p>
 </div>
-<div id="power" class="section level4" number="3.1.1.6">
-<h4><span class="header-section-number">3.1.1.6</span> Power</h4>
+<div id="power" class="section level4 hasAnchor" number="3.1.1.6">
+<h4><span class="header-section-number">3.1.1.6</span> Power<a href="background.html#power" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <p><span class="math display">\[ \gamma (h)=\left\{ {\begin{array}{cc} 0 &amp; h = 0\\ C_0+C_1h^\lambda &amp; h &gt; 0 \end{array} } \right. \]</span>
 where</p>
 <span class="math display">\[ 0 \leq \lambda &lt;\leq 2 \\ C_0 = nugget \\ C_1 = scaling \: factor \]</span>
@@ -411,13 +414,13 @@ Figure 3.5: Power Model
 </div>
 <p>When <span class="math inline">\(\lambda = 1\)</span>, that is equivalent to the linear model. Example above is when <span class="math inline">\(\lambda = 0.5\)</span> (i.e. a square-root transformation) and <span class="math inline">\(C_1 = 1\)</span>. There is also no sill or range in the power model.</p>
 </div>
-<div id="matérn" class="section level4" number="3.1.1.7">
-<h4><span class="header-section-number">3.1.1.7</span> Matérn</h4>
+<div id="matérn" class="section level4 hasAnchor" number="3.1.1.7">
+<h4><span class="header-section-number">3.1.1.7</span> Matérn<a href="background.html#matérn" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <p><span class="math display">\[\gamma(h) = c_0 + c_1 \bigg( 1- \frac{1}{2^{\kappa -1}\Gamma(\kappa)}
 \Big( \frac{h}{\alpha} \Big) ^{\kappa} K_\kappa
 \Big( \frac{h}{\alpha} \Big) \bigg)\]</span></p>
 <p>Where</p>
-<p><span class="math display">\[ C_0 = nugget \\ C_1 = partial \: scale \\ 
+<p><span class="math display">\[ C_0 = nugget \\ C_1 = partial \: scale \\
 \alpha = smoothing \: factor \\ \kappa = covariance \: parameter
 \]</span></p>
 <p><span class="math inline">\(\Gamma(\kappa)\)</span> is the gamma function:</p>
@@ -426,32 +429,32 @@ Figure 3.5: Power Model
 <p><span class="math display">\[ K_\kappa(t) = \frac{\Gamma(\alpha)}{2} \big( \frac{t}{2} \big) ^{-\kappa}\]</span></p>
 </div>
 </div>
-<div id="correlated-error-model-for-gridded-data" class="section level3" number="3.1.2">
-<h3><span class="header-section-number">3.1.2</span> Correlated error model for gridded data</h3>
+<div id="correlated-error-model-for-gridded-data" class="section level3 hasAnchor" number="3.1.2">
+<h3><span class="header-section-number">3.1.2</span> Correlated error model for gridded data<a href="background.html#correlated-error-model-for-gridded-data" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Planned field experiments often have the advantage of being arranged in regular grid pattern that can be adequately described using Euclidean space. This simplifies aspects of understanding how error terms are related by distance since the data occur in evenly spaced increments. Furthermore, in many agricultural trials, there may be no interest in spatial interpolation between units. Some of the following models work with irregularly-spaced data, but the models below are simplified forms when the experimental units are arranged in regular grid.</p>
 <p>For example, imagine an experiment consisting of 8 plots (plot = the experiment units) arranged in 2 rows, each with 4 ranges with this layout:</p>
 <p><img src="Field-Trial-Spatial-Analysis-Guide_files/figure-html/plot-grid-fig-1.png" width="672" /></p>
 <p>The statistical model for that experiment:</p>
-<p><span class="math display">\[ 
-\left[ {\begin{array} \ Y_1 \\ Y_2 \\ \vdots \\ Y_n \end{array} } \right] = \beta_0 + 
+<p><span class="math display">\[
+\left[ {\begin{array} \ Y_1 \\ Y_2 \\ \vdots \\ Y_n \end{array} } \right] = \beta_0 +
 \left[ {\begin{array} \ X_1 \\ X_2 \\ \vdots \\ X_n \end{array} } \right] \beta_1 +
 \left[ {\begin{array} \ \epsilon_1 \\ \epsilon_2 \\ \vdots \\ \epsilon_n \end{array} } \right]
 \]</span>
 <span class="math inline">\(X\beta\)</span> refer to independent variable effects. This same model is also often presented in an abbreviated matrix form:</p>
 <p><span class="math display">\[ \mathbf{Y = X\beta + \epsilon}\]</span></p>
-<div id="first-order-auto-regressive-model-ar1" class="section level4" number="3.1.2.1">
-<h4><span class="header-section-number">3.1.2.1</span> First order auto-regressive model (AR1)</h4>
+<div id="first-order-auto-regressive-model-ar1" class="section level4 hasAnchor" number="3.1.2.1">
+<h4><span class="header-section-number">3.1.2.1</span> First order auto-regressive model (AR1)<a href="background.html#first-order-auto-regressive-model-ar1" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <p>This assumes that variance can be modelled as exponential function based on unit distance (e.g. row or range), either in a single direction or anistropic.</p>
 <p>The AR1 structure across 2 rows is modeled as thus:</p>
 <p><span class="math display">\[\mathbf { V_{AR(1)row}}  = \sigma^2
-\left[ {\begin{array}{cc} 
+\left[ {\begin{array}{cc}
 1 &amp; \rho \\
-\rho &amp; 1 
-\end{array} } \right] \otimes \mathbf{I_4} \]</span></p>
+\rho &amp; 1
+\end{array} } \right] \otimes \mathbf{I_4}\]</span></p>
 <p>This covariance model describes the correlation of observations in the <em>row direction only.</em></p>
 <p>And similarly the AR1 structure across 4 ranges is modeled as thus:</p>
-<p><span class="math display">\[ \mathbf {V_{AR(1)range}} = \sigma^2 
-\left[ {\begin{array}{cccc} 
+<p><span class="math display">\[ \mathbf {V_{AR(1)range}} = \sigma^2 \mathbf{I_4}
+\left[ {\begin{array}{cccc}
 1 &amp; \rho &amp; \rho^2 &amp; \rho^3 \\
 \rho &amp; 1 &amp; \rho &amp; \rho^2  \\
 \rho^2 &amp; \rho &amp; 1 &amp; \rho  \\
@@ -461,7 +464,7 @@ Figure 3.5: Power Model
 <p>In combined AR1xAR1 model, the parameter, <span class="math inline">\(\rho\)</span> may need to estimated separated across the row and column directions depending on the shape of the plots and site-specific field variation. Very rectangular plots are likely to require a separate estimate of the <span class="math inline">\(\rho\)</span> parameter for each direction.</p>
 <p><span class="math display">\[\begin{equation}
 \mathbf {V_{AR(1)row} \otimes V_{AR(1)range}} = \sigma^2
-\left[ {\begin{array}{cccc | cccc} 
+\left[ {\begin{array}{cccc | cccc}
 
 1 &amp; \rho_1 &amp; \rho_1^2 &amp; \rho_1^3 &amp; \rho_2 &amp; \rho_1\rho_2 &amp; \rho_1^2\rho_2 &amp; \rho_1^3\rho_2 \\
 \rho_1 &amp; 1 &amp; \rho_1 &amp; \rho_1^2 &amp; \rho_1\rho_2 &amp; \rho_2 &amp; \rho_1\rho_2 &amp; \rho_1^2\rho_2\\
@@ -475,18 +478,17 @@ Figure 3.5: Power Model
 
 \end{array} } \right]
 \end{equation}\]</span></p>
-<p><em>(equation not displaying for unknown reason(s))</em></p>
 <p><strong>Note</strong>: <span class="math inline">\(\rho_1\)</span> and <span class="math inline">\(\rho_2\)</span> are the parameter estimate for <span class="math inline">\(V_{AR1(1) row}\)</span> and <span class="math inline">\(V_{AR(1)range}\)</span>, respectively.</p>
 <p>Please note that these error models are for modelling localised variation based on physical proximity. It is assumed that eventually a distance in the experiment can be reached in which 2 observations can be treated independent.</p>
 <p>If there are spatial trends that extend along the entire scope of an experiment (for instance, due to position on a slope), then an additional trend analysis should be conducted.</p>
 </div>
 </div>
 </div>
-<div id="spatial-regression-methods" class="section level2" number="3.2">
-<h2><span class="header-section-number">3.2</span> Spatial Regression methods</h2>
+<div id="spatial-regression-methods" class="section level2 hasAnchor" number="3.2">
+<h2><span class="header-section-number">3.2</span> Spatial Regression methods<a href="background.html#spatial-regression-methods" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>These approaches look use information from adjacent plots to adjust for spatial auto-correlation.</p>
-<div id="spatial-autoregressive-sar" class="section level3" number="3.2.1">
-<h3><span class="header-section-number">3.2.1</span> Spatial autoregressive (SAR)</h3>
+<div id="spatial-autoregressive-sar" class="section level3 hasAnchor" number="3.2.1">
+<h3><span class="header-section-number">3.2.1</span> Spatial autoregressive (SAR)<a href="background.html#spatial-autoregressive-sar" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Sometimes called a “lag” model, the SAR model uses correlations with neighboring plots dependent variable to predict Y. The auto-regressive model explicitly models correlations between neighboring points.</p>
 <p><span class="math display">\[\mathbf{Y =  \rho W Y + X\beta + \epsilon} \]</span></p>
 <p>While this may look strange, <span class="math inline">\(\mathbf{W}\)</span> is an <span class="math inline">\(n\)</span> x <span class="math inline">\(n\)</span> matrix weighting the neighbors with a diagonal of zero so the value at <span class="math inline">\(i=j\)</span>, that is <span class="math inline">\(Y_{ijk}\)</span> itself, is not used on the right-hand side to predict <span class="math inline">\(Y_{ijk}\)</span> on the left-hand side of the equation. The error terms are assumed iid.</p>
@@ -494,16 +496,16 @@ Figure 3.5: Power Model
 <p>Setting weights of neighbors is dealt with in the next chapter <a href="rcbd-r.html#rcbd-r">5</a>.</p>
 </div>
 </div>
-<div id="trend-analysis" class="section level2" number="3.3">
-<h2><span class="header-section-number">3.3</span> Trend analysis</h2>
-<div id="row-and-column-trends" class="section level3" number="3.3.1">
-<h3><span class="header-section-number">3.3.1</span> Row and column trends</h3>
+<div id="trend-analysis" class="section level2 hasAnchor" number="3.3">
+<h2><span class="header-section-number">3.3</span> Trend analysis<a href="background.html#trend-analysis" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="row-and-column-trends" class="section level3 hasAnchor" number="3.3.1">
+<h3><span class="header-section-number">3.3.1</span> Row and column trends<a href="background.html#row-and-column-trends" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Experiment wide-trends should be modeled with directional trend models. These are comparatively simple models:</p>
 <p><span class="math display">\[Y_{ijk} = \beta_0 + X_{i1}\beta_1 +  Row_{j2}\beta_2 + Range_{k3}\beta_3 +\epsilon_{ijk}\]</span></p>
 <p>If the assumption of independent, normal, and identical errors are met, then this model will suffice. If spatial variation is still present, additional measures will need to be taken.</p>
 </div>
-<div id="splines" class="section level3" number="3.3.2">
-<h3><span class="header-section-number">3.3.2</span> Splines</h3>
+<div id="splines" class="section level3 hasAnchor" number="3.3.2">
+<h3><span class="header-section-number">3.3.2</span> Splines<a href="background.html#splines" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>There is a rich field of research on using localised splines to model field heterogeneity. They are similar to trend models where the row and/or column trends are modelled. These models are complex and hence not described here.</p>
 
 </div>
@@ -519,7 +521,6 @@ Figure 3.5: Power Model
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
-<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
 <script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
@@ -560,7 +561,7 @@ gitbook.start({
 },
 "download": null,
 "search": {
-"engine": "lunr",
+"engine": "fuse",
 "options": null
 },
 "toc": {
@@ -577,7 +578,7 @@ gitbook.start({
     var script = document.createElement("script");
     script.type = "text/javascript";
     var src = "true";
-    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
     if (location.protocol !== "file:")
       if (/^https?:/.test(src))
         src = src.replace(/^https?:/, '');

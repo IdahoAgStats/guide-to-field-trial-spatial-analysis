@@ -120,6 +120,7 @@ At this time, the **spdep** function `geary.test()` for Geary's C does not handl
 First, create a spatial object by adding spatial coordinates to an ordinary data frame. I like to use the actual size of the plots since they are often exaggerated rectangles that have a significantly greater length than width.
 
 ```{r}
+library(sp)
 Nin_spatial <- Nin_na
 coordinates(Nin_spatial) <- ~ col.width + row.length
 class(Nin_spatial)

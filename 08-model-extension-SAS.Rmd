@@ -4,6 +4,9 @@
 require(SASmarkdown)
 saspath <- "C:/Program Files/SASHome/SASFoundation/9.4/sas.exe"
 sasopts <- "-nosplash -ls 200"
+knitr::opts_chunk$set(engine.path=list(sas=saspath, saslog=saspath),
+                  engine.opts=list(sas=sasopts, saslog=sasopts), 
+                  comment=NA)
 ```
 
 ## Other Experimental and Treatment Designs 

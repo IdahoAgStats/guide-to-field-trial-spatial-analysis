@@ -6,14 +6,13 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Section 6 RCBD Example: SAS | Incorporating Spatial Analysis into Agricultural Field Experiments.</title>
   <meta name="description" content="Instructions for identifying spatial autocorrelation in agricultural field trials and incorporating spatial variation into analysis of trial using R and SAS." />
-  <meta name="generator" content="bookdown 0.23.1 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.35 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Section 6 RCBD Example: SAS | Incorporating Spatial Analysis into Agricultural Field Experiments." />
   <meta property="og:type" content="book" />
   
-  
   <meta property="og:description" content="Instructions for identifying spatial autocorrelation in agricultural field trials and incorporating spatial variation into analysis of trial using R and SAS." />
-  
+  <meta name="github-repo" content="IdahoAgStats/guide-to-field-trial-spatial-analysis" />
 
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Section 6 RCBD Example: SAS | Incorporating Spatial Analysis into Agricultural Field Experiments." />
@@ -25,7 +24,7 @@
 <meta name="author" content="William Price" />
 
 
-<meta name="date" content="2021-11-05" />
+<meta name="date" content="2023-08-21" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -34,8 +33,8 @@
   
 <link rel="prev" href="rcbd-r.html"/>
 <link rel="next" href="model-extension-r.html"/>
-<script src="libs/header-attrs-2.11/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -51,9 +50,9 @@
 
 
 
-
-<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
-<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
 
 
 <style type="text/css">
@@ -94,7 +93,7 @@ code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
 code span.at { color: #7d9029; } /* Attribute */
 code span.bn { color: #40a070; } /* BaseN */
-code span.bu { } /* BuiltIn */
+code span.bu { color: #008000; } /* BuiltIn */
 code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
 code span.ch { color: #4070a0; } /* Char */
 code span.cn { color: #880000; } /* Constant */
@@ -107,7 +106,7 @@ code span.er { color: #ff0000; font-weight: bold; } /* Error */
 code span.ex { } /* Extension */
 code span.fl { color: #40a070; } /* Float */
 code span.fu { color: #06287e; } /* Function */
-code span.im { } /* Import */
+code span.im { color: #008000; font-weight: bold; } /* Import */
 code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
 code span.kw { color: #007020; font-weight: bold; } /* Keyword */
 code span.op { color: #666666; } /* Operator */
@@ -121,6 +120,10 @@ code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
 <style type="text/css">
 /* Used with Pandoc 2.11+ new --citeproc when CSL is used */
 div.csl-bib-body { }
@@ -318,12 +321,12 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="rcbd-sas" class="section level1" number="6">
-<h1><span class="header-section-number">Section 6</span> RCBD Example: SAS</h1>
-<div id="load-and-explore-data" class="section level2" number="6.1">
-<h2><span class="header-section-number">6.1</span> Load and Explore Data</h2>
-<p>These data are from a winter wheat variety trial in Alliance, Nebraska <span class="citation">(<a href="#ref-stroup1994" role="doc-biblioref">Stroup, Baenziger, and Mulitze 1994</a>)</span> and are commonly used to demonstrate spatial adjustment in linear modeling. The data represent yields of 56 varieties originally laid out in a randomized complete block design (RCB). The local topography combined with winter kill, however, induced spatial variability that did not correspond to the RCB design <span class="citation">(<a href="#ref-stroup2013" role="doc-biblioref">Stroup 2013</a>)</span> which produced biased estimates in a standard unadjusted analysis. <br><br></p>
-<p>The code below reads the data from a CSV file located the GitHub repo for this book. The data file can be downloaded from <a href="https://raw.githubusercontent.com/IdahoAgStats/guide-to-field-trial-spatial-analysis/master/data/stroup_nin_wheat.csv">here</a>. In this file, missing values for yield are denoted as ‘NA.’ These values are not actually missing, but represent blank plots separating blocks in the original design of the study. The <strong>PROC FORMAT</strong> section converts these to numeric missing values in SAS (defined as a single period). They are then removed from the data before proceeding to analyses. Also note that row and column indices are multiplied by constants to convert them to the meter dimensions of the plots. . <br><br></p>
+<div id="rcbd-sas" class="section level1 hasAnchor" number="6">
+<h1><span class="header-section-number">Section 6</span> RCBD Example: SAS<a href="rcbd-sas.html#rcbd-sas" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="load-and-explore-data" class="section level2 hasAnchor" number="6.1">
+<h2><span class="header-section-number">6.1</span> Load and Explore Data<a href="rcbd-sas.html#load-and-explore-data" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>These data are from a winter wheat variety trial in Alliance, Nebraska <span class="citation">(<a href="#ref-stroup1994">Stroup, Baenziger, and Mulitze 1994</a>)</span> and are commonly used to demonstrate spatial adjustment in linear modeling. The data represent yields of 56 varieties originally laid out in a randomized complete block design (RCB). The local topography combined with winter kill, however, induced spatial variability that did not correspond to the RCB design <span class="citation">(<a href="#ref-stroup2013">Stroup 2013</a>)</span> which produced biased estimates in a standard unadjusted analysis. <br><br></p>
+<p>The code below reads the data from a CSV file located the GitHub repo for this book. The data file can be downloaded from <a href="https://raw.githubusercontent.com/IdahoAgStats/guide-to-field-trial-spatial-analysis/master/data/stroup_nin_wheat.csv">here</a>. In this file, missing values for yield are denoted as ‘NA’. These values are not actually missing, but represent blank plots separating blocks in the original design of the study. The <strong>PROC FORMAT</strong> section converts these to numeric missing values in SAS (defined as a single period). They are then removed from the data before proceeding to analyses. Also note that row and column indices are multiplied by constants to convert them to the meter dimensions of the plots. . <br><br></p>
 <p>The first six observations are displayed. The data contains variables for variety (gen), replication (rep), yield, and column and row identifiers.<br><br> Last, a map of the 4 replications (blocks) from the original experimental design is shown.</p>
 <pre class="sashtml"><code>proc format;
   invalue has_NA
@@ -537,10 +540,10 @@ R1
 <p><img alt="The SGPlot Procedure" src="img/SAS6_1.png" style=" height: 480px; width: 640px;" border="0" class="c"></p>
 </div>
 </div>
-<br>
+<p><br></p>
 </div>
-<div id="plots-of-field-trends" class="section level3" number="6.1.1">
-<h3><span class="header-section-number">6.1.1</span> Plots of Field Trends</h3>
+<div id="plots-of-field-trends" class="section level3 hasAnchor" number="6.1.1">
+<h3><span class="header-section-number">6.1.1</span> Plots of Field Trends<a href="rcbd-sas.html#plots-of-field-trends" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>A first step in assessing spatial variability is to plot the data to visually assess any trends or patterns. This code uses the <strong>SGPLOT</strong> procedure to examine spatial patterns through a heat map of yields, as well as potential trends across replications, columns, and rows using box plots.</p>
 <pre class="sashtml"><code>ODS html GPATH = &quot;.\img\&quot; ;
 
@@ -579,7 +582,7 @@ run;</code></pre>
 <p><img alt="The SGPlot Procedure" src="img/SAS6_21.png" style=" height: 480px; width: 640px;" border="0" class="c"></p>
 </div>
 </div>
-<br>
+<p><br></p>
 </div>
 <div class="branch">
 <p style="page-break-after: always;">
@@ -592,7 +595,7 @@ run;</code></pre>
 <p><img alt="The SGPlot Procedure" src="img/SAS6_22.png" style=" height: 480px; width: 640px;" border="0" class="c"></p>
 </div>
 </div>
-<br>
+<p><br></p>
 </div>
 <div class="branch">
 <p style="page-break-after: always;">
@@ -605,16 +608,16 @@ run;</code></pre>
 <p><img alt="The SGPlot Procedure" src="img/SAS6_23.png" style=" height: 480px; width: 640px;" border="0" class="c"></p>
 </div>
 </div>
-<br>
+<p><br></p>
 </div>
-<p>In the heat map, there is a notable region where yield dips in the north west corner of the study area. This area runs across the two top most blocks and is positioned towards their ends, making those blocks non-homogeneous. As Stroup <span class="citation">(<a href="#ref-stroup2013" role="doc-biblioref">Stroup 2013</a>)</span> notes, this is due to a hilly area with low snow cover and high exposure to low winter temperatures. The box plots demonstrate this pattern across blocks, columns, and rows as well. From these initial graphics, it is clear there are discernible spatial patterns and trends present.<br><br></p>
+<p>In the heat map, there is a notable region where yield dips in the north west corner of the study area. This area runs across the two top most blocks and is positioned towards their ends, making those blocks non-homogeneous. As Stroup <span class="citation">(<a href="#ref-stroup2013">Stroup 2013</a>)</span> notes, this is due to a hilly area with low snow cover and high exposure to low winter temperatures. The box plots demonstrate this pattern across blocks, columns, and rows as well. From these initial graphics, it is clear there are discernible spatial patterns and trends present.<br><br></p>
 </div>
 </div>
-<div id="estimating-and-testing-spatial-correlation" class="section level2" number="6.2">
-<h2><span class="header-section-number">6.2</span> Estimating and Testing Spatial Correlation</h2>
-<div id="examine-the-number-of-distance-pairs-and-maximum-lags-between-residuals" class="section level3" number="6.2.1">
-<h3><span class="header-section-number">6.2.1</span> Examine the Number of Distance Pairs and Maximum Lags between Residuals</h3>
-<p>The process of modeling spatial variability begins by obtaining the residuals from the original RCB analysis. Here <strong>PROC MIXED</strong> is used to fit the RCB model and output the model residuals to the SAS data set “residuals.”<br><br></p>
+<div id="estimating-and-testing-spatial-correlation" class="section level2 hasAnchor" number="6.2">
+<h2><span class="header-section-number">6.2</span> Estimating and Testing Spatial Correlation<a href="rcbd-sas.html#estimating-and-testing-spatial-correlation" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="examine-the-number-of-distance-pairs-and-maximum-lags-between-residuals" class="section level3 hasAnchor" number="6.2.1">
+<h3><span class="header-section-number">6.2.1</span> Examine the Number of Distance Pairs and Maximum Lags between Residuals<a href="rcbd-sas.html#examine-the-number-of-distance-pairs-and-maximum-lags-between-residuals" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The process of modeling spatial variability begins by obtaining the residuals from the original RCB analysis. Here <strong>PROC MIXED</strong> is used to fit the RCB model and output the model residuals to the SAS data set “residuals”.<br><br></p>
 <pre class="sashtml"><code>
 ods html close;
 proc mixed data=alliance;
@@ -1487,8 +1490,8 @@ Percentage<br/>of Pairs
 </div>
 <p>This output indicates that, with 40 bins, the minimum lag distance is approximately 1.2m and that the maximum lag distances vary from 25 to 43m in rows and columns, respectively. The histogram graphically displays the number of pairs at each lag distance bin. Ideally, we want bins that have at least 30 pairs to improve accuracy in estimation of the empirical semivariance. There is sufficient data here such that setting the maximum lag to 30 results in bins that have much more than 30 pairs and will provide an accurate estimate of semivariance. <br><br></p>
 </div>
-<div id="compute-morans-i-and-gearys-c." class="section level3" number="6.2.2">
-<h3><span class="header-section-number">6.2.2</span> Compute Moran’s I and Geary’s C.</h3>
+<div id="compute-morans-i-and-gearys-c." class="section level3 hasAnchor" number="6.2.2">
+<h3><span class="header-section-number">6.2.2</span> Compute Moran’s I and Geary’s C.<a href="rcbd-sas.html#compute-morans-i-and-gearys-c." class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Two common metrics of spatial correlation are Moran’s I and Geary’s c. Both these measures are essentially weighted correlations between pairs of observations and measure global and local variability, respectively. If no spatial correlation is present, Moran’s I has an expected value close to 0.0 while Geary’s C will be close to 1.0. The estimates for I and C can be computed and tested against these null values with the <strong>PROC VARIOGRAM</strong> code below. <br><br></p>
 <pre class="sashtml"><code>ODS html GPATH = &quot;.\img\&quot; ;
 
@@ -1932,10 +1935,10 @@ Geary's c
 <p>Both Moran’s I and Geary’s C are significant here, indicating the presence of spatial correlation. The accompanying scatter plot of residuals vs lag distance also show a positive correlation where residuals increase in magnitude with increasing distance between points.<br><br></p>
 </div>
 </div>
-<div id="estimation-and-modeling-of-semivariance" class="section level2" number="6.3">
-<h2><span class="header-section-number">6.3</span> Estimation and Modeling of Semivariance</h2>
-<div id="estimating-empirical-semivariance" class="section level3" number="6.3.1">
-<h3><span class="header-section-number">6.3.1</span> Estimating Empirical Semivariance</h3>
+<div id="estimation-and-modeling-of-semivariance" class="section level2 hasAnchor" number="6.3">
+<h2><span class="header-section-number">6.3</span> Estimation and Modeling of Semivariance<a href="rcbd-sas.html#estimation-and-modeling-of-semivariance" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="estimating-empirical-semivariance" class="section level3 hasAnchor" number="6.3.1">
+<h3><span class="header-section-number">6.3.1</span> Estimating Empirical Semivariance<a href="rcbd-sas.html#estimating-empirical-semivariance" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Using the lag distance and maximum lag values obtained in the previous steps, we can now use the <strong>compute</strong> statement to estimate an empirical variogram as described in Section <a href="intro.html#intro">2</a></p>
 <pre class="sashtml"><code>ODS html GPATH = &quot;.\img\&quot; ;
 
@@ -2482,8 +2485,8 @@ Dependent Variable: Resid
 </div>
 <p>In the plot, the semi-variance increases as distance between points increases up to approximately 20m where it begins to level off. This type of pattern is very common for spatial relationships.<br><br></p>
 </div>
-<div id="fitting-an-empirical-variogram-model" class="section level3" number="6.3.2">
-<h3><span class="header-section-number">6.3.2</span> Fitting an Empirical Variogram Model</h3>
+<div id="fitting-an-empirical-variogram-model" class="section level3 hasAnchor" number="6.3.2">
+<h3><span class="header-section-number">6.3.2</span> Fitting an Empirical Variogram Model<a href="rcbd-sas.html#fitting-an-empirical-variogram-model" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>In Section <a href="background.html#background">3</a>, several theoretical variogram models were described. We can use <strong>PROC VARIOGRAM</strong> to fit and compare any number of these models. In the code below, the Gaussian, Exponential, Power, and Spherical models are fit using the <strong>model</strong> statement. By default when several models are listed, SAS will carry out a more sophisticated spatial modeling approach that uses combinations of these models. We, however, just want to focus on single model scenarios. Hence, the <strong>nest=1</strong> option is given which restricts the variogram modeling to single models only.<br><br></p>
 <pre class="sashtml"><code>ODS html GPATH = &quot;.\img\&quot; ;
 
@@ -3434,18 +3437,18 @@ Dependent Variable: Resid
 </div>
 <br>
 </div>
-<p>The table <strong>Fit Summary</strong> provides statistics on each variogram model fit. The AIC or SSE statistics can be used as a guide for model selection where smaller values indicate a better fit. For this data, the Gaussian model is rated as “best,” although the Spherical model is relatively similar. Given the numerically lower AIC and SSE values, however, <strong>PROC VARIOGRAM</strong> selects the Gaussian model and reports those semivariogram model parameter estimates in the final table. These parameter estimates will be used in the next step. The plot shown at the end provides a visual comparison each variogram model fit with the selected Gaussian model highlighted in bold.<br><br></p>
+<p>The table <strong>Fit Summary</strong> provides statistics on each variogram model fit. The AIC or SSE statistics can be used as a guide for model selection where smaller values indicate a better fit. For this data, the Gaussian model is rated as “best”, although the Spherical model is relatively similar. Given the numerically lower AIC and SSE values, however, <strong>PROC VARIOGRAM</strong> selects the Gaussian model and reports those semivariogram model parameter estimates in the final table. These parameter estimates will be used in the next step. The plot shown at the end provides a visual comparison each variogram model fit with the selected Gaussian model highlighted in bold.<br><br></p>
 </div>
 </div>
-<div id="using-the-estimated-variogram-in-an-adjusted-analysis" class="section level2" number="6.4">
-<h2><span class="header-section-number">6.4</span> Using the Estimated variogram in an Adjusted Analysis</h2>
+<div id="using-the-estimated-variogram-in-an-adjusted-analysis" class="section level2 hasAnchor" number="6.4">
+<h2><span class="header-section-number">6.4</span> Using the Estimated variogram in an Adjusted Analysis<a href="rcbd-sas.html#using-the-estimated-variogram-in-an-adjusted-analysis" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>The previous steps have:<br>
 1. Diagnosed the presence and pattern of spatial variability.<br>
 2. Identified and estimated the a model to describe the variability<br></p>
 <p>The last step is to utilize this information in a statistical analysis as outlined at the beginning of Section <a href="background.html#background">3</a>. To do this, the linear mixed model procedure <strong>PROC MIXED</strong> will be used to incorporate the spatial variability into the linear model variance-covariance matrix, assuming the variogram model identified above.<br></p>
-<p>As an initial step, for comparison purposes, the unadjusted RCB model is run first and the means saved in data set “NIN_RCBD_means.”<br><br></p>
-<div id="unadjusted-rcbd-model" class="section level3" number="6.4.1">
-<h3><span class="header-section-number">6.4.1</span> Unadjusted RCBD Model</h3>
+<p>As an initial step, for comparison purposes, the unadjusted RCB model is run first and the means saved in data set “NIN_RCBD_means”.<br><br></p>
+<div id="unadjusted-rcbd-model" class="section level3 hasAnchor" number="6.4.1">
+<h3><span class="header-section-number">6.4.1</span> Unadjusted RCBD Model<a href="rcbd-sas.html#unadjusted-rcbd-model" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <pre class="sashtml"><code>
 /** Fit unadjusted RCBD model **/
 ODS html GPATH = &quot;.\img\&quot; ;
@@ -5826,10 +5829,10 @@ Vona
 <br>
 </div>
 <p>The F-statistic and accompanying large p-value for ‘gen’ indicate no differences between cultivars. This is surprising for a variety trial. The fit statistics (e.g. AIC) are helpful for model comparison, although on their own, these metrics do not have much meaning. The AIC value for this standard RCB analysis is 1221.7; let’s compare that number to that for the spatially-adjusted models (in the case of AIC, smaller numbers indicate a better fitting model). Another point of comparison is the standard error of the means: 3.8557.<br></p>
-<p>The next step is to try a spatially-adjusted model. This is done by adding a <strong>repeated</strong> statement specifying the spatial model form (Gaussian, <strong>type=sp(gau)</strong>) and the variables related to spatial positions in the study (row, col). The <strong>local</strong> option tells SAS to use a nugget parameter in the Gaussian variogram model. The second additional statement is <strong>parms</strong>. This gives SAS a starting place for estimating the range, sill, and nugget parameters. The values given here are taken from the <strong>PROC VARIOGRAM</strong> output above. While this step can be omitted, it is recommended not to do so because, on its own, <strong>PROC MIXED</strong> can often have trouble narrowing in on reasonable parameter estimates. One reason for the preceding variogram steps was to obtain these parameter values so <strong>PROC MIXED</strong> has a good starting place for estimation. As before, the estimated means (adjusted now) are saved, this time in data set “NIN_Spatial_means.”<br></p>
+<p>The next step is to try a spatially-adjusted model. This is done by adding a <strong>repeated</strong> statement specifying the spatial model form (Gaussian, <strong>type=sp(gau)</strong>) and the variables related to spatial positions in the study (row, col). The <strong>local</strong> option tells SAS to use a nugget parameter in the Gaussian variogram model. The second additional statement is <strong>parms</strong>. This gives SAS a starting place for estimating the range, sill, and nugget parameters. The values given here are taken from the <strong>PROC VARIOGRAM</strong> output above. While this step can be omitted, it is recommended not to do so because, on its own, <strong>PROC MIXED</strong> can often have trouble narrowing in on reasonable parameter estimates. One reason for the preceding variogram steps was to obtain these parameter values so <strong>PROC MIXED</strong> has a good starting place for estimation. As before, the estimated means (adjusted now) are saved, this time in data set “NIN_Spatial_means”.<br></p>
 </div>
-<div id="rcb-model-with-spatial-covariance" class="section level3" number="6.4.2">
-<h3><span class="header-section-number">6.4.2</span> RCB Model with Spatial Covariance</h3>
+<div id="rcb-model-with-spatial-covariance" class="section level3 hasAnchor" number="6.4.2">
+<h3><span class="header-section-number">6.4.2</span> RCB Model with Spatial Covariance<a href="rcbd-sas.html#rcb-model-with-spatial-covariance" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <pre class="sashtml"><code>
 /** Fit Gaussian adjusted model **/
 /** Parms statement order: Range, Sill, Nugget **/
@@ -8416,10 +8419,10 @@ Vona
 </div>
 <p>From this output, we see the AIC value is now 1073.1. This is substantially lower than the AIC=1221.7 from the unadjusted model indicating a better model fit. Additionally, the gen effect in the model now has a low p-value (p=0.0024) giving evidence for differences among cultivars where we did not see them previously. Lastly, the standard errors for the means are now lower than those of the unadjusted model indicating an increased precision in mean estimation.<br></p>
 </div>
-<div id="other-spatial-adjustments" class="section level3" number="6.4.3">
-<h3><span class="header-section-number">6.4.3</span> Other Spatial Adjustments</h3>
-<div id="rcb-model-with-row-and-column-covariates" class="section level4" number="6.4.3.1">
-<h4><span class="header-section-number">6.4.3.1</span> RCB Model with Row and Column Covariates</h4>
+<div id="other-spatial-adjustments" class="section level3 hasAnchor" number="6.4.3">
+<h3><span class="header-section-number">6.4.3</span> Other Spatial Adjustments<a href="rcbd-sas.html#other-spatial-adjustments" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="rcb-model-with-row-and-column-covariates" class="section level4 hasAnchor" number="6.4.3.1">
+<h4><span class="header-section-number">6.4.3.1</span> RCB Model with Row and Column Covariates<a href="rcbd-sas.html#rcb-model-with-row-and-column-covariates" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <p>Spatial variability might also be addressed by including covariates in the model for row and/or column trends. The following script fits this model where rows and columns enter the model as continuous effects (not in the class statement).</p>
 <pre class="sashtml"><code>
 /** Row column model **/
@@ -8436,9 +8439,9 @@ run;
 ods html;
 </code></pre>
 </div>
-<div id="rcb-with-spline-adjustment" class="section level4" number="6.4.3.2">
-<h4><span class="header-section-number">6.4.3.2</span> RCB with Spline Adjustment</h4>
-<p>Polynomial splines are an additional method for spatial adjustment and represent a more non-parametric method that does not rely on estimation or modeling of variograms. Instead, it uses the raw data and residuals to fit a surface to the spatial data and adjust the variance covariance matrix accordingly. <strong>PROC MIXED</strong>, however, does not have an option for this, so the code below moves to <strong>PROC GLIMMIX</strong>, the generalized Linear Mixed Model procedure in SAS. The syntax for the two procedures are very similar, so, in this example adapted from <span class="citation">(<a href="#ref-stroup2013" role="doc-biblioref">Stroup 2013</a>)</span>, only a few changes are required. First, a random statement is added for rows and columns with a “type=rsmooth” option. This fits a spline to the residuals over the row and column axes of the study area. Second, an “effect” statement is given defining a new covariate, sm_r, which is a splined surface for raw yields over the study area. When entered into the model as a continuous covariate, this centers the data such that the resulting model residuals will have a mean of zero.</p>
+<div id="rcb-with-spline-adjustment" class="section level4 hasAnchor" number="6.4.3.2">
+<h4><span class="header-section-number">6.4.3.2</span> RCB with Spline Adjustment<a href="rcbd-sas.html#rcb-with-spline-adjustment" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>Polynomial splines are an additional method for spatial adjustment and represent a more non-parametric method that does not rely on estimation or modeling of variograms. Instead, it uses the raw data and residuals to fit a surface to the spatial data and adjust the variance covariance matrix accordingly. <strong>PROC MIXED</strong>, however, does not have an option for this, so the code below moves to <strong>PROC GLIMMIX</strong>, the generalized Linear Mixed Model procedure in SAS. The syntax for the two procedures are very similar, so, in this example adapted from <span class="citation">(<a href="#ref-stroup2013">Stroup 2013</a>)</span>, only a few changes are required. First, a random statement is added for rows and columns with a “type=rsmooth” option. This fits a spline to the residuals over the row and column axes of the study area. Second, an “effect” statement is given defining a new covariate, sm_r, which is a splined surface for raw yields over the study area. When entered into the model as a continuous covariate, this centers the data such that the resulting model residuals will have a mean of zero.</p>
 <pre class="sashtml"><code>
 ods html close;
 /** Fit  RCBD model with Spline **/
@@ -8458,8 +8461,8 @@ ods html;
 </div>
 </div>
 </div>
-<div id="compare-estimated-means" class="section level2" number="6.5">
-<h2><span class="header-section-number">6.5</span> Compare Estimated Means</h2>
+<div id="compare-estimated-means" class="section level2 hasAnchor" number="6.5">
+<h2><span class="header-section-number">6.5</span> Compare Estimated Means<a href="rcbd-sas.html#compare-estimated-means" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Presence of spatial variability can also bias the mean estimates. In this data, this would result in the means ranking incorrectly relative to one another under the unadjusted model. The steps below combine the saved means from the unadjusted and spatially adjusted models above so that we can see how the ranking changes.<br><br></p>
 <pre class="sashtml"><code>
 data NIN_RCBD_means (drop=tvalue probt alpha estimate stderr lower upper df);
@@ -8943,7 +8946,7 @@ NE87409
 </div>
 <br>
 </div>
-<p>This comparison of the first 15 means shows some clear changes in rank. In his discussion of this data, Stroup <span class="citation">(<a href="#ref-stroup2013" role="doc-biblioref">Stroup 2013</a>)</span>, writes:<br></p>
+<p>This comparison of the first 15 means shows some clear changes in rank. In his discussion of this data, Stroup <span class="citation">(<a href="#ref-stroup2013">Stroup 2013</a>)</span>, writes:<br></p>
 <blockquote>
 <p>… Buckskin was a variety known to be a high-yielding benchmark; its mediocre mean yield in the RCB analysis despite being observed in the field outperforming all varieties in the vicinity was one symptom that the RCB analysis was giving nonsense results.</p>
 <p>— Stroup (2013)</p>
@@ -8972,7 +8975,6 @@ Stroup, Walter W., Stephen B. Baenziger, and Dieter K. Mulitze. 1994. <span>“R
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
-<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
 <script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
@@ -9013,7 +9015,7 @@ gitbook.start({
 },
 "download": null,
 "search": {
-"engine": "lunr",
+"engine": "fuse",
 "options": null
 },
 "toc": {
@@ -9030,7 +9032,7 @@ gitbook.start({
     var script = document.createElement("script");
     script.type = "text/javascript";
     var src = "true";
-    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
     if (location.protocol !== "file:")
       if (/^https?:/.test(src))
         src = src.replace(/^https?:/, '');

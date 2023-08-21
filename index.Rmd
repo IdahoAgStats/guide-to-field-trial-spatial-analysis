@@ -82,7 +82,7 @@ In order to run the SAS portion of this tutorial, a valid copy of SAS Base and S
 
 ## Contributors
 
-[Julia Piaskowski](mailto:jpiaskowski@uidaho.edu) wrote the R sections and [William Price](mailto:bprice@uidaho.edu) wrote the SAS portions of this tutorial.
+[Julia Piaskowski](mailto:jpiaskowski@uidaho.edu) wrote the R sections and William Price wrote the SAS portions of this tutorial.
 
 This book was written in [bookdown](https://bookdown.org/yihui/bookdown). 
 

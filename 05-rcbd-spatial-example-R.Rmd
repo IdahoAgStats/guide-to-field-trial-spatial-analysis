@@ -9,7 +9,7 @@ library(agridat); library(dplyr); library(tidyr); library(purrr);
 library(sp)
 ```
 
-```{r}
+```{r error-chunk}
 data("stroup.nin")
 
 Nin <- stroup.nin %>% mutate(col.width = col * 1.2, 
@@ -17,7 +17,7 @@ Nin <- stroup.nin %>% mutate(col.width = col * 1.2,
   fill(rep, .direction = "up") %>%  arrange(col, row) 
 
 Nin_na <- filter(Nin, !is.na(yield))
-Nin_spatial <- Nin_na
+Nin_spatial = Nin_na
 coordinates(Nin_spatial) <- ~ col.width + row.length
 ```
 
@@ -49,7 +49,7 @@ In order to fit models using correlated error model, we will need to first obtai
 ```{r}
 library(gstat)
 max_dist <- 0.6*max(dist(coordinates(Nin_spatial)))
-resid.var1 <- variogram(yield ~ rep + gen, 
+resid.var1 <- gstat::variogram(yield ~ rep + gen, 
                         cutoff = max_dist,
                         width = max_dist/10, 
                         data = Nin_spatial)
@@ -206,7 +206,16 @@ preds_spline <- predict(nin_spline, which = "gen") %>%
 
 ## AR1xAR1
 
-```{r}
+```{r include=FALSE}
+if(!require(breedR)) {
+  #devtools::install_github('famuvie/breedR')
+  source("http://famuvie.github.io/breedR/src/setup_repo.R")
+  install.packages('breedR')
+}
+```
+
+
+```{r message=FALSE, include=FALSE, echo=TRUE}
 library(breedR); library(ggplot2)
 
 nin_ar1ar1  <- remlf90(fixed  = yield ~ gen,
@@ -225,7 +234,7 @@ qplot(rho_r, rho_c, fill = loglik, geom = 'tile', data = nin_ar1ar1$rho)
 rho.grid <- expand.grid(rho_r = seq(0.5, 0.95, length = 4),
                         rho_c = seq(0.5, 0.95, length = 4))
 ```
-```{r}
+```{r message=FALSE, include=FALSE, echo=TRUE}
 nin_ar1ar1  <- remlf90(fixed  = yield ~ gen, 
                        #random = ~ rep, #this also did not converge
                        spatial = list(model = 'AR',
@@ -256,7 +265,7 @@ Now that we have built these spatial models, how do we pick the right one? Unfor
 
 In order to make comparisons, the code below assembles all the model objects into one list. They are generated from different processes, as shown by the `class` attribute of each one, so this takes some data conditioning.  
 
-```{r include=FALSE}
+```{r include=FALSE, message=FALSE}
 rm(nin_variofit, nin_vgm)
 rm(nin_vgm, nin_variofit, nugget, sill, range, nugget.effect)
 ```
@@ -380,7 +389,7 @@ Retrieve predictions generated in the previous section:
 ```{r}
 #(standardise names for downstream merging step)
 #preds_ar1ar1 <- preds_ar1ar1  %>% rename(emmean = "predicted.value", SE = "standard.error") 
-all.preds <- mget(ls(pattern = "^preds_*"))
+all.preds <- mget(ls(pattern = "^preds_*")) 
 ```
 
 Extract standard errors and plot: 
