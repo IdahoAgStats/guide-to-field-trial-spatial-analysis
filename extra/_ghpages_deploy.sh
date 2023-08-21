@@ -8,11 +8,12 @@ git pull
 git checkout master 
 git merge -s ours gh-pages -m 'update book' # Merge branches, but use our (=master) branch head
         # need merge message. to leave vim: esc, :w, :q!
-git checkout gh-pages
-git merge master
+
+
 # need to make docs folder for github to read for gitbook deployment
 cp -r _book docs
-git add . git commit -m '...'
+git add . 
+git commit -m '...'
 git push --all origin
 # remember to return to main branch!
 git checkout master
